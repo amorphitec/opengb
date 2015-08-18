@@ -8,17 +8,21 @@ process and communicates with it via queues.
 import os
 import sys
 import json
+import logging
 import multiprocessing
 
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+import tornado.log
 from tornado.options import options
 
 import opengb.config
 import opengb.printer
 
+
+LOGGER = tornado.log.app_log
 
 # Local cache of printer state.
 # TODO: store this in the DB somewhere?
@@ -47,40 +51,54 @@ class StatusHandler(tornado.web.RequestHandler):
         self.write('printer state:' + PRINTER['state'].name)
 
 
+def broadcast_message(message):
+    """
+    Broadcast message to websocket clients.
+    """
+    pass
+
+
 def process_message(message):
     """
     Process a message from the printer.
     """
-    # Store printer status in local cache for JSON API calls.
+    broadcast_message(message)
     global PRINTER
-    if message['cmd'] == 'STATE':
-        # TODO: if state changes from printing to ready, reset progress.
-        PRINTER['state'] = opengb.printer.States(message['new'])
-    elif message['cmd'] == 'TEMP':
-        PRINTER['temp']['bed'] = message['bed']
-        PRINTER['temp']['nozzle1'] = message['nozzle1']
-        PRINTER['temp']['nozzle1'] = message['nozzle2']
-    elif message['cmd'] == 'PROGRESS':
-        PRINTER['progress']['current'] = message['current']
-        PRINTER['progress']['total'] = message['total']
-    elif message['cmd'] == 'ZCHANGE':
-        # TODO: trigger update camera image. 
-        pass
-    #TODO: for each in clients: each.write_message(message)
+    try:
+        cmd = message.pop('cmd')
+        if cmd == 'STATE':
+            # TODO: if state changes from printing to ready, reset progress.
+            PRINTER['state'] = opengb.printer.States(message['new'])
+        elif cmd == 'TEMP':
+            PRINTER['temp'] = message
+        elif cmd  == 'PROGRESS':
+            PRINTER['progress'] = message
+        elif cmd == 'ZCHANGE':
+            # TODO: trigger update camera image. 
+            pass
+    except KeyError as e:
+        LOGGER.error('Malformed message from printer: {0}'.format(message))
 
 
 def process_printer_messages(from_printer):
+    """
+    Process messages from printer.
+
+    Runs via a :class:`tornado.ioloop.PeriodicCallback`.
+
+    :param from_printer: Queue containing messages from the printer.
+    :type from_printer: :class:`multiprocessing.Queue`
+    """
     if not from_printer.empty():
         try:
             message = json.loads(from_printer.get())
             if message['cmd'] == 'LOG':
-                # TODO: log the message
-                pass
+                LOGGER.log(message['level'], message['msg'])
             else:
+                broadcast_message(message)
                 process_message(message)
-        except TypeError:
-            #TODO: debug log this
-            pass
+        except TypeError as e:
+            LOGGER.exception(e)
 
 
 def main():
@@ -96,7 +114,8 @@ def main():
 
     # Initialize printer using queued callbacks.
     printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
-    printer = opengb.printer.Marlin(to_printer, printer_callbacks)
+    printer_type = getattr(opengb.printer, options.printer)
+    printer = printer_type(to_printer, printer_callbacks)
     printer.daemon = True
     printer.start()
 
@@ -105,7 +124,7 @@ def main():
         handlers=[
             (r"/", IndexHandler),
             (r"/api/status", StatusHandler),
-            #(r"/ws", WebSocketHandler),
+            #TODO: (r"/ws", WebSocketHandler),
         ],
         debug=options.debug,
     )
