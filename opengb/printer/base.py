@@ -203,29 +203,18 @@ class IPrinter(multiprocessing.Process):
 
     def __init__(self, to_printer, printer_callbacks=None):
         self._to_printer = to_printer
-        self._state = States.INITIALIZING
+        self._state = States.READY
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
         else:
             self._callbacks = printer_callbacks
         super().__init__()
 
+    @abc.abstractmethod
     def run(self):
-        # TODO: Test code only
-        import time
-        import random
-        while True:
-            old_state = self._state
-            new_state = random.choice(list(States))
-            self._state = new_state
-            self._callbacks.state_change(old_state, new_state)
-            time.sleep(1)
- 
-            '''
-            # look for incoming serial data
-            if (self.sp.inWaiting() > 0):
-                result = self.sp.readline().replace("\n", "")
- 
-                # send it back to tornado
-                self.resultQ.put(result)
-            '''
+        """
+        Printer run loop.
+
+        * Processes incoming messages on the :obj:`self._to_printer` queue.
+        * Calls :obj:`self.callbacks` on printer events.
+        """
