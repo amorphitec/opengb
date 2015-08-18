@@ -1,0 +1,14 @@
+* Setup logging
+* Setup database connectivity
+* Add get_base_temp() to printer.Base
+* Create dummy printer implementing Base
+* Make /api/temp GET return base temp (options for all temps or individual a-la Octoprint?)
+* Make /api/status GET return status (including base temp)
+* Add tests
+
+* Add websocket interface
+* On status update -> post to all clients
+* On temp update -> post to all clients
+
+* Make /api/temp POST set base_target temp (don't forget to 
+* Make /api/temp GET return base temp *and* base_target temp
