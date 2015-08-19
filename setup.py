@@ -19,6 +19,7 @@ setup(
     install_requires=[
         'pyserial>=2.7,<3',
         'tornado>=4.2.1,<5',
+        'peewee>=2.6.3<3',
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

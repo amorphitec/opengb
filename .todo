@@ -1,4 +1,3 @@
-* Setup database connectivity
 * Add get_base_temp() to printer.Base
 * Create dummy printer implementing Base
 * Make /api/temp GET return base temp (options for all temps or individual a-la Octoprint?)

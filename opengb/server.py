@@ -20,6 +20,7 @@ from tornado.options import options
 
 import opengb.config
 import opengb.printer
+import opengb.database
 
 
 LOGGER = tornado.log.app_log
@@ -103,16 +104,16 @@ def process_printer_messages(from_printer):
 
 def main():
 
-    # TODO: handle this file not being present
-    # TODO: include a sample config file to be deployed via a package
-    #       manager or optionally on startup
-    options.parse_config_file("/etc/opengb/opengb.conf")
+    options.parse_config_file(opengb.config.CONFIG_FILE)
+
+    # Initialise database.
+    opengb.database.initialize(options.db_file)
 
     # Initialise queues.
     to_printer = multiprocessing.Queue()
     from_printer = multiprocessing.Queue()
 
-    # Initialize printer using queued callbacks.
+    # Initialize printer using queue callbacks.
     printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
     printer_type = getattr(opengb.printer, options.printer)
     printer = printer_type(to_printer, printer_callbacks)
