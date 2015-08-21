@@ -1,8 +1,8 @@
-# openGB
+# Open Gigabot Controller.
 
-Open Gigabot's Software
+_Not yet ready for production use._
 
-This is currently just a place holder until we can push the openGB software here.  It is still changing fast so we are waiting until it becomes a little more stable to push.
+## Installation:
 
-
-
+    git clone git@github.com:re-3D/openGB.git
+    pip install -e openGB
