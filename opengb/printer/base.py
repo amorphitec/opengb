@@ -1,10 +1,13 @@
 """
 Printer exceptions and interface.
+
+TODO: Handle Farenheit vs Celsius
 """
 
 import multiprocessing
 import abc
 import json
+import time
 from enum import Enum
 
 
@@ -13,9 +16,10 @@ class States(Enum):
     Printer states.
     """
 
-    INITIALIZING = 10
-    READY = 20
-    PRINTING = 30
+    DISCONNECTED = 10
+    INITIALIZING = 20
+    READY = 30
+    PRINTING = 40
     ERROR = 100
 
 
@@ -202,42 +206,126 @@ class IPrinter(multiprocessing.Process):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, to_printer, printer_callbacks=None):
+        # TODO: make these delays configurable
+        self._connect_retry_sec = 2
+        self._run_loop_delay_sec = 1
+        self._metric_interval_print_sec = 5
+        self._metric_interval_idle_sec = 2
+        self._metric_update_time = time.time() - self._metric_interval_idle_sec
         self._temp_bed = 0
         self._temp_nozzle1 = 0
         self._temp_nozzle2 = 0
+        self._target_temp_bed = 0
+        self._target_temp_nozzle1 = 0
+        self._target_temp_nozzle2 = 0
+        self._state = States.DISCONNECTED
         self._to_printer = to_printer
-        # connect if not connected
-        self._state = States.READY
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
         else:
             self._callbacks = printer_callbacks
+        try:
+            self._connect()
+        except ConnectionError as e:
+            self._callbacks.log(logging.ERROR, e)
         super().__init__()
 
     @abc.abstractmethod
-    def run(self):
+    def _connect(self):
         """
-        Printer run loop.
-        
-        0. Connect if unconnected
-        1. Collect a message from the :obj:`self._to_printer` queue and
-            generate a corresponding printer request.
-        2. Request periodic data from the printer.
-        3. Collect a message from the printer and  :obj:`self.callbacks` on printer events.
-        4. Sleeps for defined interval.
-        TODO: make sleep interval configurable?
-        """
-        if not self._to_printer.empty():
-            message = json.loads(to_printer.get())
+        Establish connection to printer hardware.
 
+        Internal method.
 
-    @abc.abstractmethod
-    def set_bed_target_temp(self, temp):
-        """
-        Set the bed target temperature.
-
-        :param temp: Bed target temperature.
-        :type temp: :class:`float`
+        :raises: :class:`ConnectionError` if connection is unsuccessful.
         """
         pass
 
+    @abc.abstractmethod
+    def _request_printer_metrics(self):
+        """
+        Request a temperature update from the printer.
+
+        Internal method.
+        """
+        pass
+
+    @abc.abstractmethod
+    def _get_message_from_printer(self):
+        """
+        Get a message from the printer
+
+        Internal method
+
+        :returns: A message or None if no messages.
+        """
+        pass
+
+    @abc.abstractmethod
+    def _process_message_from_printer(self):
+        """
+        Process a message from the printer
+
+        Internal method
+        """
+        pass
+
+    '''
+    TODO: not yet implemented
+    @abc.abstractmethod
+    def _set_target_temperatures(self, bed=None, nozzle1=None, nozzle2=None):
+        """
+        Set the printer's target temperatures.
+
+        :param bed: Target bed temperature. Remains unchanged if not provided.
+        :type bed: :class:`float`
+        """
+        pass
+    '''
+
+    def _process_message_to_printer(self, message):
+        """
+        Process a message that was sent to the printer via the
+        :obj:`self._to_printer` queue.
+
+        TODO: if printing, queue command. Otherwise call the relevant function.
+        TODO: implement abstract handlers for all valid incoming messages.
+        TODO: enumerate valid incoming message commands + map to abstract functions?
+        """
+        pass
+
+    def run(self):
+        """
+        Printer run loop.
+        """
+        while True:
+            # Ensure printer is connected 
+            if self._state == States.DISCONNECTED:
+                try:
+                    self._connect()
+                except ConnectionError as e:
+                    self._callbacks.log(logging.ERROR, e)
+                    time.sleep(self._connect_retry_sec)
+                    continue
+            # Process a message sent from the printer.
+            msg_from_printer = self._get_message_from_printer()
+            if msg_from_printer:
+                self._process_message_from_printer(msg_from_printer)
+            # Request printer metrics if interval has passed for current state.
+            metric_interval = time.now() - self._metric_update_time
+            if (self._state == States.PRINTING and
+                metric_interval > self._metric_interval_print_sec) or
+               (self._state == States.READY and
+                metric_interval > self._metric_interval_idle_sec):
+                   self._request_printer_metrics()
+            # TODO: if printing print next line?
+            # If not requesting metrics, process a message sent to the printer, (messages will be queued if printing)
+            else if not self._to_printer.empty():
+                try:
+                    # TODO: Consider handling json and bs messages in func to make this uniform.
+                    msg_to_printer = json.loads(to_printer.get())
+                    self._process_message_to_printer(msg_to_printer)
+                except KeyError as e:
+                    self._callbacks.log(logging.ERROR,
+                        'Malformed message to printer: {0}'.format(message))
+            time.sleep(self._run_loop_delay_sec)

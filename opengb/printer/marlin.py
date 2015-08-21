@@ -11,13 +11,17 @@ class Marlin(IPrinter):
         self._state = States.READY
         super().__init__(to_addr, from_addr)
 
-    def run(self):
+    def _process_message_from_printer(self):
+        """
+        Process a message from the printer.
+        """
         '''
-        # look for incoming serial data
-        if (self.sp.inWaiting() > 0):
-            result = self.sp.readline().replace("\n", "")
-
-            # send it back to tornado
-            self.resultQ.put(result)
+        if temp_message:
+            update local
+            temp callback
+        if error_message:
+            log error callback
+        if position_message:
+            update local
+            if z change: zchange callback
         '''
-        pass

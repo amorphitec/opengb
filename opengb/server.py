@@ -24,11 +24,11 @@ import opengb.database
 
 
 LOGGER = tornado.log.app_log
+# TODO: use rotated file logging.
 
 # Local cache of printer state.
-# TODO: store this in the DB somewhere?
 PRINTER = {
-    'state':    opengb.printer.States.INITIALIZING,
+    'state':    opengb.printer.States.DISCONNECTED,
     'temp':     {
         'bed':      0,
         'nozzle1':  0,
