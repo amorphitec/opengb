@@ -202,7 +202,11 @@ class IPrinter(multiprocessing.Process):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, to_printer, printer_callbacks=None):
+        self._temp_bed = 0
+        self._temp_nozzle1 = 0
+        self._temp_nozzle2 = 0
         self._to_printer = to_printer
+        # connect if not connected
         self._state = States.READY
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
@@ -214,7 +218,26 @@ class IPrinter(multiprocessing.Process):
     def run(self):
         """
         Printer run loop.
-
-        * Processes incoming messages on the :obj:`self._to_printer` queue.
-        * Calls :obj:`self.callbacks` on printer events.
+        
+        0. Connect if unconnected
+        1. Collect a message from the :obj:`self._to_printer` queue and
+            generate a corresponding printer request.
+        2. Request periodic data from the printer.
+        3. Collect a message from the printer and  :obj:`self.callbacks` on printer events.
+        4. Sleeps for defined interval.
+        TODO: make sleep interval configurable?
         """
+        if not self._to_printer.empty():
+            message = json.loads(to_printer.get())
+
+
+    @abc.abstractmethod
+    def set_bed_target_temp(self, temp):
+        """
+        Set the bed target temperature.
+
+        :param temp: Bed target temperature.
+        :type temp: :class:`float`
+        """
+        pass
+
