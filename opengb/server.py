@@ -13,10 +13,10 @@ import multiprocessing
 
 import tornado.httpserver
 import tornado.ioloop
-import tornado.web
 import tornado.websocket
 import tornado.log
 from tornado.options import options
+from tornado.web import Application, RequestHandler, StaticFileHandler
 
 import opengb.config
 import opengb.printer
@@ -28,7 +28,7 @@ LOGGER = tornado.log.app_log
 
 # Local cache of printer state.
 PRINTER = {
-    'state':    opengb.printer.States.DISCONNECTED,
+    'state':    opengb.printer.State.DISCONNECTED,
     'temp':     {
         'bed':      0,
         'nozzle1':  0,
@@ -41,21 +41,17 @@ PRINTER = {
 }
 
 
-class IndexHandler(tornado.web.RequestHandler):
+class StatusHandler(RequestHandler):
     def get(self):
-        # TODO: make this return the web app from /static
-        self.write('Hello world!')
-
-
-class StatusHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write('printer state:' + PRINTER['state'].name)
+        self.write(json.dumps(PRINTER, cls=opengb.printer.StateEncoder))
+        self.set_header("Content-Type", "application/json") 
 
 
 def broadcast_message(message):
     """
     Broadcast message to websocket clients.
     """
+    # TODO: implement
     pass
 
 
@@ -69,7 +65,7 @@ def process_message(message):
         cmd = message.pop('cmd')
         if cmd == 'STATE':
             # TODO: if state changes from printing to ready, reset progress.
-            PRINTER['state'] = opengb.printer.States(message['new'])
+            PRINTER['state'] = opengb.printer.State(message['new'])
         elif cmd == 'TEMP':
             PRINTER['temp'] = message
         elif cmd  == 'PROGRESS':
@@ -121,14 +117,16 @@ def main():
     printer.start()
 
     # Initialize web server.
-    app = tornado.web.Application(
-        handlers=[
-            (r"/", IndexHandler),
-            (r"/api/status", StatusHandler),
-            #TODO: (r"/ws", WebSocketHandler),
-        ],
-        debug=options.debug,
-    )
+    handlers = [
+        (r"/api/status", StatusHandler),
+        (r"/fonts/(.*)", StaticFileHandler, {"path": "static/fonts"}),
+        (r"/img/(.*)", StaticFileHandler, {"path": "static/img"}),
+        (r"/js/(.*)", StaticFileHandler, {"path": "static/js"}),
+        (r"/css/(.*)", StaticFileHandler, {"path": "static/css"}),
+        (r"/(.*)", StaticFileHandler, {"path": "static/index.html"}),
+        #TODO: (r"/ws", WebSocketHandler),
+    ]
+    app = Application(handlers=handlers, debug=options.debug)
     httpServer = tornado.httpserver.HTTPServer(app)
     httpServer.listen(options.port)
 
