@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <title>OpenGB</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/opengb.gui.css" />
+    <script src="js/jquery-1.11.3.min.js" type="text/javascript" /></script>
+    <script src="js/bootstrap.min.js" type="text/javascript" /></script>
+    <script src="js/opengb_gui.js" type="text/javascript" /></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+              <img src="img/open_gigabot_inverse.png" width=160>
+          </li>
+          <li>
+            <a class="menu-item" onclick="switchContent('page-checklist')">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Checklist
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" onclick="switchContent('page-control')">
+              <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Control
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" onclick="switchContent('page-print')">
+              <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" onclick="switchContent('page-statistics')">
+              <span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Statistics
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" onclick="switchContent('page-help')">
+              <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="page-content-wrapper">
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4">
+              <h4><strong>Status: </strong><span id="status">Initializing</span></h4>
+            </div>
+            <div class="col-sm-4">
+              <h4><strong>Bed Temp: </strong><span id="bed-temp">0</span>&deg;</h4>
+            </div>
+            <div class="col-sm-2"></div>
+          </div>
+          <div id="page-splash" class="content" style="display:none">
+            <img src="img/re3d.png" class="re3d-logo">
+          </div>
+          <div id="page-checklist" class="content" style="display: none">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <h1 class=content-header>OpenGB Checklist</h1>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <p class="checklist-text centered">To ensure your Open Gigabot is set up correctly follow the steps below:</p>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Filament Loaded?</h3>
+                  </div>
+                  <div class="panel-body centered">
+                    <span class="glyphicon glyphicon-ok-circle status-icon" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Bed Level?</h3>
+                  </div>
+                  <div class="panel-body centered">
+                    <span class="glyphicon glyphicon-ok-circle status-icon" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Quick Upload</h3>
+                  </div>
+                  <div class="panel-body centered">
+                    <span class="glyphicon glyphicon-play-circle status-icon" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Swap Material</h3>
+                  </div>
+                  <div class="panel-body centered">
+                    <span class="glyphicon glyphicon-play-circle status-icon" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+          </div>
+          <div id="page-control" class="content" style="display: none">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <h1 class=content-header>OpenGB Control</h1>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-10">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Lighting</h3>
+                  </div>
+                  <div class="panel-body">
+                    <label class="radio-inline">
+                      <input type="radio" name="lighting-options" id="lighting-solid" value="solid" checked>
+                      Solid 
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="lighting-options" id="lighting-ambience" value="ambience">
+                      Ambience
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="lighting-options" id="lighting-strobe" value="strobe">
+                      Strobe
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="lighting-options" id="lighting-temperature" value="temperature">
+                      Temperature
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="lighting-options" id="lighting-none" value="none">
+                      None
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-10">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">WiFi</h3>
+                  </div>
+                  <div class="panel-body">
+                    <form class="form-inline">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" id="ssid" placeholder="SSID">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <input type="password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-10">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title centered">Date/Time</h3>
+                  </div>
+                  <div class="panel-body">
+                    <form class="form-inline">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" id="date" placeholder="07/14/2015">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <input type="password" class="form-control" id="password" placeholder="09:00">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1"></div>
+            </div>
+           </div>
+          </div>
+          <div id="page-print" class="content" style="display: none">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <h1 class=content-header>OpenGB Print</h1>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6"><strong><h3>Filename</h3></strong></div>
+              <div class="col-sm-2"><strong><h3>Size</h3></strong></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6">Test_print.gco</div>
+              <div class="col-sm-2"><strong>121KB</strong></div>
+              <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6">Plane.gco</div>
+              <div class="col-sm-2"><strong>280KB</strong></div>
+              <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6">Teapot.gco</div>
+              <div class="col-sm-2"><strong>499KB</strong></div>
+              <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6">Shifting_spanner.gco</div>
+              <div class="col-sm-2"><strong>349KB</strong></div>
+              <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-6">Spare_part_1.gco</div>
+              <div class="col-sm-2"><strong>93KB</strong></div>
+              <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
+              <div class="col-sm-1"></div>
+            </div>
+          </div>
+          <div id="page-statistics" class="content" style="display: none">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <h1 class=content-header>OpenGB Statistics</h1>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+          </div>
+          <div id="page-help" class="content" style="display: none">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <h1 class=content-header>OpenGB Help</h1>
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var tempBed = 0;
+      $("#page-splash").fadeIn(3000);
+      setInterval(function(){
+        updateStatus();
+      }, 1000);
+    });
+  </script>
+</html>
