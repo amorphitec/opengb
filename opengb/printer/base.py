@@ -8,19 +8,30 @@ import multiprocessing
 import abc
 import json
 import time
-from enum import Enum
+import logging
+import enum
 
 
-class States(Enum):
+
+class State(enum.Enum):
     """
-    Printer states.
+    Printer state.
     """
 
     DISCONNECTED = 10
-    INITIALIZING = 20
-    READY = 30
-    PRINTING = 40
+    READY = 20
+    PRINTING = 30
     ERROR = 100
+
+
+class StateEncoder(json.JSONEncoder):
+    """
+    JSON encoder which serializes an Enum as a string of its name.
+    """
+    def default(self, obj):
+        if isinstance(obj, enum.Enum):
+            return obj.name
+        return json.JSONEncoder.default(self, obj)
 
 
 class PrinterCallbacks(object):
@@ -102,8 +113,6 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
     def _publish(self, message):
         """
         Publish a message from the printer to the `_from_printer` queue.
-
-        Internal method.
 
         :param message: Message to be placed on the queue. 
         :type message: :class:`dict`
@@ -218,7 +227,9 @@ class IPrinter(multiprocessing.Process):
         self._target_temp_bed = 0
         self._target_temp_nozzle1 = 0
         self._target_temp_nozzle2 = 0
-        self._state = States.DISCONNECTED
+        self._gcode = None
+        self._gcode_position = 0
+        self._state = State.DISCONNECTED
         self._to_printer = to_printer
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
@@ -226,6 +237,8 @@ class IPrinter(multiprocessing.Process):
             self._callbacks = printer_callbacks
         try:
             self._connect()
+            self._callbacks.log(logging.INFO, 'Connected to printer.')
+            self._update_state(State.READY)
         except ConnectionError as e:
             self._callbacks.log(logging.ERROR, e)
         super().__init__()
@@ -235,8 +248,6 @@ class IPrinter(multiprocessing.Process):
         """
         Establish connection to printer hardware.
 
-        Internal method.
-
         :raises: :class:`ConnectionError` if connection is unsuccessful.
         """
         pass
@@ -245,8 +256,16 @@ class IPrinter(multiprocessing.Process):
     def _request_printer_metrics(self):
         """
         Request a temperature update from the printer.
+        """
+        pass
 
-        Internal method.
+    @abc.abstractmethod
+    def _print_line(self, line):
+        """
+        Print a line of GCode.
+
+        :param line: Line of gcode to print.
+        :type line: :class:`str`
         """
         pass
 
@@ -255,8 +274,6 @@ class IPrinter(multiprocessing.Process):
         """
         Get a message from the printer
 
-        Internal method
-
         :returns: A message or None if no messages.
         """
         pass
@@ -264,24 +281,20 @@ class IPrinter(multiprocessing.Process):
     @abc.abstractmethod
     def _process_message_from_printer(self):
         """
-        Process a message from the printer
-
-        Internal method
+        Process a message from the printer.
         """
         pass
 
-    '''
-    TODO: not yet implemented
-    @abc.abstractmethod
-    def _set_target_temperatures(self, bed=None, nozzle1=None, nozzle2=None):
+    def _update_state(self, new_state):
         """
-        Set the printer's target temperatures.
+        Update printer state.
 
-        :param bed: Target bed temperature. Remains unchanged if not provided.
-        :type bed: :class:`float`
+        :param new_state: New printer state.
+        :type new_state: :class:`State`
         """
-        pass
-    '''
+        old_state = self._state
+        self._state = new_state
+        self._callbacks.state_change(old_state, new_state)
 
     def _process_message_to_printer(self, message):
         """
@@ -294,15 +307,28 @@ class IPrinter(multiprocessing.Process):
         """
         pass
 
+    def _print_next_line(self):
+        """
+        Print the next line of the current gcode file.
+
+        TODO:
+            1. print line
+            2. update self._current_line
+            3. if finished, update status
+        """
+        pass
+
     def run(self):
         """
         Printer run loop.
         """
         while True:
             # Ensure printer is connected 
-            if self._state == States.DISCONNECTED:
+            if self._state == State.DISCONNECTED:
                 try:
                     self._connect()
+                    self._callbacks.log(logging.INFO, 'Connected to printer.')
+                    self._update_state(State.READY)
                 except ConnectionError as e:
                     self._callbacks.log(logging.ERROR, e)
                     time.sleep(self._connect_retry_sec)
@@ -312,15 +338,16 @@ class IPrinter(multiprocessing.Process):
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
             # Request printer metrics if interval has passed for current state.
-            metric_interval = time.now() - self._metric_update_time
-            if (self._state == States.PRINTING and
-                metric_interval > self._metric_interval_print_sec) or
-               (self._state == States.READY and
+            metric_interval = time.time() - self._metric_update_time
+            if (self._state == State.PRINTING and
+                metric_interval > self._metric_interval_print_sec):
+                   self._request_printer_metrics()
+            if (self._state == State.READY and
                 metric_interval > self._metric_interval_idle_sec):
                    self._request_printer_metrics()
-            # TODO: if printing print next line?
-            # If not requesting metrics, process a message sent to the printer, (messages will be queued if printing)
-            else if not self._to_printer.empty():
+                   self._metric_update_time = time.time()
+            # Process a message sent to the printer.
+            if self._state == State.READY and not self._to_printer.empty():
                 try:
                     # TODO: Consider handling json and bs messages in func to make this uniform.
                     msg_to_printer = json.loads(to_printer.get())
@@ -328,4 +355,7 @@ class IPrinter(multiprocessing.Process):
                 except KeyError as e:
                     self._callbacks.log(logging.ERROR,
                         'Malformed message to printer: {0}'.format(message))
+            # Print a line if printing.
+            if self._state == State.PRINTING:
+                self._print_next_line()
             time.sleep(self._run_loop_delay_sec)

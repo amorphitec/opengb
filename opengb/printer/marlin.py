@@ -1,5 +1,5 @@
 from opengb.printer import IPrinter
-from opengb.printer import States 
+from opengb.printer import State 
 
 
 class Marlin(IPrinter):
@@ -8,7 +8,6 @@ class Marlin(IPrinter):
     """
 
     def __init__(self, to_addr, from_addr):
-        self._state = States.READY
         super().__init__(to_addr, from_addr)
 
     def _process_message_from_printer(self):
@@ -16,6 +15,7 @@ class Marlin(IPrinter):
         Process a message from the printer.
         """
         '''
+        TODO:
         if temp_message:
             update local
             temp callback
