@@ -33,7 +33,7 @@ def initialize(path):
     except OperationalError:
         # TODO: handle this, though it shouldn't happen if we ensure path
         # exists and is writeable upstream.
-        pass
+        raise 
 
     # Create database tables if not already present.
     DB.create_tables([
