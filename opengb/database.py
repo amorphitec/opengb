@@ -11,7 +11,8 @@ class BaseModel(Model):
     class Meta:
         database = DB
 
-class PrintJob(Model):
+
+class PrintJob(BaseModel):
     start = DateTimeField()
     end = DateTimeField()
 
