@@ -334,16 +334,19 @@ class IPrinter(multiprocessing.Process):
         #    thread_printer.setName('print_file')
         #    thread_printer.start()
 
-    def _print_next_line(self):
+    def _load_gcode_file(self, path):
         """
-        Print the next line of the current gcode file.
+        Load a gcode file into memory, ready to be sent to the printer.
 
-        TODO:
-            1. print line
-            2. update self._current_line
-            3. if finished, update status
+        :param path: Path to gcode file.
+        :type path: :class:`str`
+        :raises IOError: if unable to open gcode file
         """
-        pass
+        self._reset_gcode_state()
+        #TODO: Currently just loads raw file lines into list. Replace this and
+        # all gcode refs in this class with GCode class from original codebase.
+        with open(path) as gcode:
+            self.gcode = list(gcode)
 
     def _reader(self):
         """
