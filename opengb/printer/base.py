@@ -305,9 +305,18 @@ class IPrinter(multiprocessing.Process):
         :param new_state: New printer state.
         :type new_state: :class:`State`
         """
+
         old_state = self._state
         self._state = new_state
         self._callbacks.state_change(old_state, new_state)
+
+    def _reset_gcode_state(self):
+        """
+        Reset globals related to gcode state.
+        """
+        self._gcode = [] 
+        self._gcode_file = None
+        self._gcode_position = 0
 
     def _process_message_to_printer(self, message):
         """
