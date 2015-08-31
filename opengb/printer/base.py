@@ -425,7 +425,7 @@ class IPrinter(multiprocessing.Process):
         if self._state == State.DISCONNECTED:
             try:
                 self._connect()
-                self._callbacks.log(logging.INFO, 'Connected to printer.')
+                self._callbacks.log(logging.INFO, 'Connected to printer')
                 self._update_state(State.READY)
             except ConnectionError as e:
                 self._callbacks.log(logging.ERROR, e)

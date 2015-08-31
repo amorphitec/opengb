@@ -16,10 +16,10 @@ class Dummy(IPrinter):
         super().__init__(to_addr, from_addr)
 
     def _connect(self):
-        self._callbacks.log(logging.DEBUG, 'Connecting to printer.')
+        self._callbacks.log(logging.DEBUG, 'Connecting to printer')
 
     def _request_printer_metrics(self):
-        self._callbacks.log(logging.DEBUG, 'Requesting printer metrics.')
+        self._callbacks.log(logging.DEBUG, 'Requesting printer metrics')
         # For now we just generate a random bed temperature.
         self._temp_bed = random.randrange(20, 30)
         # For now we cut out the middle man and initate the callback directly. 
