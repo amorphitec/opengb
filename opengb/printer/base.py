@@ -5,6 +5,7 @@ TODO: Handle Farenheit vs Celsius
 """
 
 import multiprocessing
+import threading
 import abc
 import json
 import time
@@ -318,9 +319,12 @@ class IPrinter(multiprocessing.Process):
         """
         pass
 
-    def run(self):
+    def _reader(self):
         """
-        Printer run loop.
+        Loop forever collecting messages from the printer and converting
+        them to `self._callbacks`.
+        
+        Runs as a separate thread.
         """
         while True:
             # Ensure printer is connected 
@@ -337,7 +341,19 @@ class IPrinter(multiprocessing.Process):
             msg_from_printer = self._get_message_from_printer()
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
-            # Request printer metrics if interval has passed for current state.
+            time.sleep(self._run_loop_delay_sec)
+    
+    def _writer(self):
+        """
+        Loops forver sending messages to the printer:
+
+        * Requesting metric updates.
+        * Forwarding message from the `self._to_printer` queue.
+
+        Runs as a separate thread.
+        """
+        while True:
+            # Request a metric update if the requisite interval has passed.
             metric_interval = time.time() - self._metric_update_time
             if (self._state == State.PRINTING and
                 metric_interval > self._metric_interval_print_sec):
@@ -359,3 +375,55 @@ class IPrinter(multiprocessing.Process):
             if self._state == State.PRINTING:
                 self._print_next_line()
             time.sleep(self._run_loop_delay_sec)
+            
+    def _print_file(self, gcode_file_path):
+        """
+        Load a gcode file into memory and print.
+
+        Runs as a separate thread for the duration of a print.
+
+        :param file_path: File path to print.
+        """
+        try:
+            self._load_gcode_file(gcode_file_path)
+        except IOError as e:
+            self._callbacks.log(logging.ERROR, e)
+        self._update_state(State.Printing)
+        while self._gcode_position <= len(self._gcode):
+            try:
+                self._print_line(self._gcode[self._gcode_position])
+                self._gcode_position += 1
+            except Exception as e:
+                # TODO: catch specific exceptions
+                self._callbacks.log(logging.ERROR, e)
+            time.sleep(self._print_loop_delay_sec)
+        self._reset_gcode_state()
+        self._update_state(State.Ready)
+
+    def run(self):
+        """
+        Printer run loop.
+        """
+
+        # TODO: move this check to read/write serial method
+        if self._state == State.DISCONNECTED:
+            try:
+                self._connect()
+                self._callbacks.log(logging.INFO, 'Connected to printer.')
+                self._update_state(State.READY)
+            except ConnectionError as e:
+                self._callbacks.log(logging.ERROR, e)
+                time.sleep(self._connect_retry_sec)
+
+        thread_writer = threading.Thread(target=self._writer)
+        thread_writer.setDaemon(True)
+        thread_writer.setName('writer')
+        thread_writer.start()
+
+        thread_reader = threading.Thread(target=self._reader)
+        thread_reader.setDaemon(True)
+        thread_reader.setName('reader')
+        thread_reader.start()
+
+        for each in [thread_reader, thread_writer]:
+            each.join()
