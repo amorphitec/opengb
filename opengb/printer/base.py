@@ -356,17 +356,7 @@ class IPrinter(multiprocessing.Process):
         Runs as a separate thread.
         """
         while True:
-            # Ensure printer is connected 
-            if self._state == State.DISCONNECTED:
-                try:
-                    self._connect()
-                    self._callbacks.log(logging.INFO, 'Connected to printer.')
-                    self._update_state(State.READY)
-                except ConnectionError as e:
-                    self._callbacks.log(logging.ERROR, e)
-                    time.sleep(self._connect_retry_sec)
-                    continue
-            # Process a message sent from the printer.
+            self._callbacks.log(logging.DEBUG, 'Reading from_printer queue')
             msg_from_printer = self._get_message_from_printer()
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
