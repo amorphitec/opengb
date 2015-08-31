@@ -171,10 +171,12 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             'nozzle2':  nozzle2,
         })
 
-    def print_progress(self, current_line, total_lines):
+    def print_progress(self, current_file, current_line, total_lines):
         """
         Publish a print progress message.
 
+        :param current_file: File currently being printed.
+        :type current_file: :class:`str`
         :param current_line: Line number currently being printed.
         :type current_line: :class:`int`
         :param total_lines: Total number of lines to be printed.
