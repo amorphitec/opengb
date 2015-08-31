@@ -377,22 +377,19 @@ class IPrinter(multiprocessing.Process):
             if (self._state == State.PRINTING and
                 metric_interval > self._metric_interval_print_sec):
                    self._request_printer_metrics()
-            if (self._state == State.READY and
+                   self._metric_update_time = time.time()
+            elif (self._state == State.READY and
                 metric_interval > self._metric_interval_idle_sec):
                    self._request_printer_metrics()
                    self._metric_update_time = time.time()
-            # Process a message sent to the printer.
+            # Process a message from the to_printer queue.
             if self._state == State.READY and not self._to_printer.empty():
+                msg_to_printer = to_printer.get()
                 try:
-                    # TODO: Consider handling json and bs messages in func to make this uniform.
-                    msg_to_printer = json.loads(to_printer.get())
-                    self._process_message_to_printer(msg_to_printer)
+                    self._process_message_to_printer(json.loads(msg_to_printer))
                 except KeyError as e:
                     self._callbacks.log(logging.ERROR,
                         'Malformed message to printer: {0}'.format(message))
-            # Print a line if printing.
-            if self._state == State.PRINTING:
-                self._print_next_line()
             time.sleep(self._run_loop_delay_sec)
             
     def _print_file(self, gcode_file_path):
