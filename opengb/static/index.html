@@ -47,7 +47,7 @@
           <div class="row">
             <div class="col-sm-2"></div>
             <div class="col-sm-4">
-              <h4><strong>Status: </strong><span id="status">Initializing</span></h4>
+              <h4><strong>Status: </strong><span id="state">Initializing</span></h4>
             </div>
             <div class="col-sm-4">
               <h4><strong>Bed Temp: </strong><span id="bed-temp">0</span>&deg;</h4>
@@ -288,12 +288,12 @@
     </div>
   </body>
   <script type="text/javascript">
+    var socket = new WebSocket("ws://" + window.location.host + "/ws");
+    socket.onmessage = function (message) {
+      parseMessage(message)
+    };
     $(document).ready(function() {
-      var tempBed = 0;
       $("#page-splash").fadeIn(3000);
-      setInterval(function(){
-        updateStatus();
-      }, 1000);
     });
   </script>
 </html>

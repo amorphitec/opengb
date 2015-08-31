@@ -10,11 +10,12 @@ import sys
 import json
 import logging
 import multiprocessing
+from pkg_resources import Requirement, resource_filename
 
 import tornado.httpserver
 import tornado.ioloop
-import tornado.websocket
 import tornado.log
+import tornado.websocket
 from tornado.options import options
 from tornado.web import Application, RequestHandler, StaticFileHandler
 
@@ -23,9 +24,10 @@ import opengb.printer
 import opengb.database
 
 
-LOGGER = tornado.log.app_log
 # TODO: use rotated file logging.
-
+LOGGER = tornado.log.app_log
+# Websocket clients.
+CLIENTS = []
 # Local cache of printer state.
 PRINTER = {
     'state':    opengb.printer.State.DISCONNECTED,
@@ -41,6 +43,24 @@ PRINTER = {
 }
 
 
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    def open(self):
+        LOGGER.info('New connection from {0}'.format(self.request.remote_ip))
+        CLIENTS.append(self)
+        self.write_message(json.dumps(
+            {'cmd': 'STATE', 'new': PRINTER['state']},
+            cls=opengb.printer.StateEncoder))
+ 
+    def on_message(self, message):
+        LOGGER.debug('Message received from {0}: {1)'.format(
+            message ,self.request.remote_ip))
+        # TODO: Parse incoming control/print messages and send to Printer
+ 
+    def on_close(self):
+        LOGGER.info('Connection closed to {0}'.format(self.request.remote_ip))
+        CLIENTS.remove(self)
+
+
 class StatusHandler(RequestHandler):
     def get(self):
         self.write(json.dumps(PRINTER, cls=opengb.printer.StateEncoder))
@@ -51,8 +71,8 @@ def broadcast_message(message):
     """
     Broadcast message to websocket clients.
     """
-    # TODO: implement
-    pass
+    for each in CLIENTS:
+        each.write_message(message)
 
 
 def process_message(message):
@@ -99,7 +119,7 @@ def process_printer_messages(from_printer):
 
 
 def main():
-
+    # Load config.
     options.parse_config_file(opengb.config.CONFIG_FILE)
 
     # Initialise database.
@@ -117,14 +137,16 @@ def main():
     printer.start()
 
     # Initialize web server.
+    install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
+    static_dir = os.path.join(install_dir, 'static')
     handlers = [
+        (r"/ws", WebSocketHandler),
         (r"/api/status", StatusHandler),
-        (r"/fonts/(.*)", StaticFileHandler, {"path": "static/fonts"}),
-        (r"/img/(.*)", StaticFileHandler, {"path": "static/img"}),
-        (r"/js/(.*)", StaticFileHandler, {"path": "static/js"}),
-        (r"/css/(.*)", StaticFileHandler, {"path": "static/css"}),
-        (r"/(.*)", StaticFileHandler, {"path": "static/index.html"}),
-        #TODO: (r"/ws", WebSocketHandler),
+        (r"/fonts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "fonts")}),
+        (r"/img/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "img")}),
+        (r"/js/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "js")}),
+        (r"/css/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "css")}),
+        (r"/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "index.html")}),
     ]
     app = Application(handlers=handlers, debug=options.debug)
     httpServer = tornado.httpserver.HTTPServer(app)

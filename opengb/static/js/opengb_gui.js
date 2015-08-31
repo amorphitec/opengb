@@ -4,11 +4,17 @@ function switchContent(content) {
   $("#" + content).show();
 } 
 
-function updateStatus() {
-  console.log('updating status');
-  $.getJSON( "api/status", function( data ) {
-    $("#status").text(data['state']);
-    $("#bed-temp").text(data['temp']['bed']);
-    console.log(data);
-  });
+function parseMessage(message) {
+  console.log(message.data)
+  data = JSON.parse(message.data)
+  switch(data.cmd) {
+    case 'TEMP':
+      $("#bed-temp").text(data.bed);
+      break;
+    case 'STATE':
+      $("#state").text(data.new);
+      break;
+    default:
+      console.log('Could not parse message: ' + data);
+  }
 }
