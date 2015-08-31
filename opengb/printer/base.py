@@ -218,22 +218,32 @@ class IPrinter(multiprocessing.Process):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, to_printer, printer_callbacks=None):
-        # TODO: make these delays configurable
+        # Configuration.
+        # TODO: make these configurable in config file?
         self._connect_retry_sec = 2
-        self._run_loop_delay_sec = 1
-        self._metric_interval_print_sec = 5
-        self._metric_interval_idle_sec = 2
+        self._run_loop_delay_sec = 0.1
+        self._print_loop_delay_sec = 0.001
+        self._metric_interval_print_sec = 5 
+        self._metric_interval_idle_sec = 1  
         self._metric_update_time = time.time() - self._metric_interval_idle_sec
+
+        # State.
         self._temp_bed = 0
         self._temp_nozzle1 = 0
         self._temp_nozzle2 = 0
         self._target_temp_bed = 0
         self._target_temp_nozzle1 = 0
         self._target_temp_nozzle2 = 0
-        self._gcode = None
+        self._gcode = [] 
+        self._gcode_file = None
         self._gcode_position = 0
         self._state = State.DISCONNECTED
+
+        # Multithreading/multiprocessing.
         self._to_printer = to_printer
+        self._lock = threading.Lock()
+
+        # Callbacks.
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
         else:
