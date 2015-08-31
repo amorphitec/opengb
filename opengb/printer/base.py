@@ -323,11 +323,16 @@ class IPrinter(multiprocessing.Process):
         Process a message that was sent to the printer via the
         :obj:`self._to_printer` queue.
 
-        TODO: if printing, queue command. Otherwise call the relevant function.
         TODO: implement abstract handlers for all valid incoming messages.
         TODO: enumerate valid incoming message commands + map to abstract functions?
         """
-        pass
+        print('Got message: ' + message)
+        
+        #if message['cmd'] = 'PRINTFILE':
+        #    thread_printer = threading.Thread(target=self._print_file)
+        #    thread_printer.setDaemon(True)
+        #    thread_printer.setName('print_file')
+        #    thread_printer.start()
 
     def _print_next_line(self):
         """
