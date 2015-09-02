@@ -1,10 +1,29 @@
 import serial
+import time
 import threading
 import random
 import logging
+import re
 
 from opengb.printer import IPrinter
 from opengb.printer import State 
+
+
+# Map Marlin message patterns to callbacks.
+MSG_PATTERNS = [
+    # Standard 'echo' message.
+    (re.compile(r'echo:\s*(?P<msg>.*)$'),
+     lambda g, c: (getattr(c, 'log')(logging.INFO, g['msg']))),
+    # Temperature update.
+    (re.compile(r'ok T:(?P<n1temp>.*)\s/'
+                '(?P<n1target>.*)\s'
+                'B:(?P<btemp>.*)\s/'
+                '(?P<btarget>.*)\s'
+                'T0:(?P<n2temp>.*)\s/'
+                '(?P<n2target>.*).*$'),
+     lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['n1temp'],
+                                             g['n2temp']))),
+]
 
 
 class Marlin(IPrinter):
@@ -107,7 +126,14 @@ class Marlin(IPrinter):
 
     def _process_message_from_printer(self, message):
         """
-        Parse Marlin response message...
+        Process Marlin messages and fire appropriate callbacks.
         """
-        # Last chance saloon if no match
-        self._callbacks.log(logging.DEBUG, 'Unparsed: ' + str(message))
+        message = message.decode().rstrip()
+        for each in MSG_PATTERNS:
+            m = each[0].match(message)
+            if m:
+                each[1](m.groupdict(), self._callbacks)
+                break
+            time.sleep(1)
+        else:
+            self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
