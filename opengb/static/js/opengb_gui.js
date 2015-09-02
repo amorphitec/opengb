@@ -10,6 +10,8 @@ function parseMessage(message) {
   switch(data.cmd) {
     case 'TEMP':
       $("#bed-temp").text(data.bed);
+      $("#nozzle1-temp").text(data.nozzle1);
+      $("#nozzle2-temp").text(data.nozzle2);
       break;
     case 'STATE':
       $("#state").text(data.new);
