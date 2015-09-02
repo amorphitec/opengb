@@ -238,10 +238,7 @@ class IPrinter(multiprocessing.Process):
         self._gcode_file = None
         self._gcode_position = 0
         self._state = State.DISCONNECTED
-
-        # Multithreading/multiprocessing.
         self._to_printer = to_printer
-        self._lock = threading.Lock()
 
         # Callbacks.
         if printer_callbacks == None:
@@ -249,11 +246,12 @@ class IPrinter(multiprocessing.Process):
         else:
             self._callbacks = printer_callbacks
         try:
+            self._callbacks.log(logging.INFO, 'Connecting to printer.')
             self._connect()
             self._callbacks.log(logging.INFO, 'Connected to printer.')
             self._update_state(State.READY)
         except ConnectionError as e:
-            self._callbacks.log(logging.ERROR, e)
+            self._callbacks.log(logging.ERROR, 'Connection error: ' + str(e))
         super().__init__()
 
     @abc.abstractmethod
@@ -292,9 +290,15 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
-    def _process_message_from_printer(self):
+    def _process_message_from_printer(self, message):
         """
         Process a message from the printer.
+
+        If the message contains relevant data, extract this data and pass
+        it to the most appropriate of the `self._callbacks`.
+
+        :param message: Message from the printer.
+        :type message: :class:`str`
         """
         pass
 
