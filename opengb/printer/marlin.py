@@ -31,15 +31,10 @@ class Marlin(IPrinter):
     A printer controlled by `Marlin <http://www.marlinfirmware.org>`_ firmware.
     """
 
-    def __init__(self, to_printer, printer_callbacks=None, baud_rate=115200,
-                 port='/dev/ttyACM0'):
-        self._baud_rate = baud_rate
-        # TODO: make default port None and auto-find if unspecified.
-        self._port = port
-        self._timeout = 0.01
+    def __init__(self, *args, **kwargs):
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
-        super().__init__(to_printer, printer_callbacks=printer_callbacks)
+        super().__init__(*args, **kwargs)
 
     def _connect(self):
         try:

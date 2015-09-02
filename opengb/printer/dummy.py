@@ -15,9 +15,9 @@ class Dummy(IPrinter):
         (self._callbacks.temp_update, [205, 108, 109])
     """
 
-    def __init__(self, to_printer, printer_callbacks=None):
+    def __init__(self, *args, **kwargs):
         self._dummy_responses = []
-        super().__init__(to_printer, printer_callbacks=printer_callbacks)
+        super().__init__(*args, **kwargs)
 
     def _connect(self):
         self._callbacks.log(logging.DEBUG, 'Connecting to printer')
