@@ -39,8 +39,6 @@ class Marlin(IPrinter):
         self._timeout = 0.01
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
-        # TODO: get rid of this.
-        self._dummy_responses = []
         super().__init__(to_printer, printer_callbacks=printer_callbacks)
 
     def _connect(self):
@@ -49,6 +47,8 @@ class Marlin(IPrinter):
             self._serial.setPort(self._port)
             self._serial.setTimeout(self._timeout)
             self._serial.open()
+            # Allow time for serial open to complete before reading/writing.
+            time.sleep(1)
         except serial.SerialException as e:
             raise ConnectionError(e)
 
@@ -84,9 +84,8 @@ class Marlin(IPrinter):
         return True
 
     def _request_printer_metrics(self):
-        #self._callbacks.log(logging.DEBUG, 'Requesting printer metrics')
-        #self._send_command(b'M105')
-        pass
+        self._callbacks.log(logging.DEBUG, 'Requesting printer metrics')
+        self._send_command(b'M105')
 
     def _print_line(self, line):
         """
@@ -95,10 +94,7 @@ class Marlin(IPrinter):
         :param line: Line of gcode.
         :type line: :class:`str`
         """
-        self._dummy_responses.insert(
-            self._callbacks.log,
-            logging.DEBUG,
-            'Printing gcode: ' + line)
+        # TODO: implement
 
     def _get_message_from_printer(self):
         """
@@ -115,8 +111,8 @@ class Marlin(IPrinter):
                     try:
                         self._connect()
                     except ConnectionError as e:
-                        self._callbacks.log, (logging.ERROR, 'unable to connect '
-                                          'to serial port: ' + e)
+                        self._callbacks.log, (logging.ERROR, 'unable to '
+                                          'connect to serial port: ' + e)
                     finally:
                         return None
         except IOError:
