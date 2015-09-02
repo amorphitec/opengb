@@ -132,7 +132,8 @@ def main():
     # Initialize printer using queue callbacks.
     printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
     printer_type = getattr(opengb.printer, options.printer)
-    printer = printer_type(to_printer, printer_callbacks)
+    printer = printer_type(to_printer, printer_callbacks,
+                           baud_rate=options.baud_rate, port=options.serial_port)
     printer.daemon = True
     printer.start()
 
@@ -150,7 +151,7 @@ def main():
     ]
     app = Application(handlers=handlers, debug=options.debug)
     httpServer = tornado.httpserver.HTTPServer(app)
-    httpServer.listen(options.port)
+    httpServer.listen(options.http_port)
 
     # Rock and roll.
     main_loop = tornado.ioloop.IOLoop.instance()
