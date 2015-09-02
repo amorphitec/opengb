@@ -1,0 +1,4 @@
+recursive-include opengb/static *.html *.js *.css *.svg *.ico
+recursive-include etc *
+include README.md
+include LICENSE.txt
