@@ -226,7 +226,6 @@ class IPrinter(multiprocessing.Process):
         self._metric_interval_print_sec = 5 
         self._metric_interval_idle_sec = 1  
         self._metric_update_time = time.time() - self._metric_interval_idle_sec
-
         # State.
         self._temp_bed = 0
         self._temp_nozzle1 = 0
@@ -239,12 +238,12 @@ class IPrinter(multiprocessing.Process):
         self._gcode_position = 0
         self._state = State.DISCONNECTED
         self._to_printer = to_printer
-
         # Callbacks.
         if printer_callbacks == None:
             self._callbacks = PrinterCallbacks()
         else:
             self._callbacks = printer_callbacks
+        # Connect.
         try:
             self._callbacks.log(logging.INFO, 'Connecting to printer.')
             self._connect()
