@@ -44,6 +44,14 @@ PRINTER = {
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    """
+    Handles all websocket communication with clients.
+
+    It would be nice if this could use
+    `tornadorpc https://pypi.python.org/pypi/tornadorpc`_ but alas that
+    module is not yet Python 3 compatible as per
+    `https://github.com/joshmarshall/tornadorpc/issues/15`_.
+    """
     def open(self):
         LOGGER.info('New connection from {0}'.format(self.request.remote_ip))
         CLIENTS.append(self)
