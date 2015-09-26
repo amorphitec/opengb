@@ -27,8 +27,14 @@ import opengb.database
 
 # TODO: use rotated file logging.
 LOGGER = tornado.log.app_log
+
 # Websocket clients.
 CLIENTS = []
+
+# To/from printer queues.
+TO_PRINTER = multiprocessing.Queue()
+FROM_PRINTER = multiprocessing.Queue()
+
 # Local cache of printer state.
 PRINTER = {
     'state':    opengb.printer.State.DISCONNECTED,
@@ -113,45 +119,40 @@ def broadcast_message(message):
         each.write_message(message)
 
 
-def process_message(message):
+def process_event(event):
     """
-    Process a message from the printer.
+    Process an event from the printer.
     """
-    broadcast_message(message)
     global PRINTER
     try:
-        cmd = message.pop('cmd')
-        if cmd == 'STATE':
+        if event['method'] == 'state':
             # TODO: if state changes from printing to ready, reset progress.
-            PRINTER['state'] = opengb.printer.State(message['new'])
-        elif cmd == 'TEMP':
-            PRINTER['temp'] = message
-        elif cmd  == 'PROGRESS':
-            PRINTER['progress'] = message
-        elif cmd == 'ZCHANGE':
+            PRINTER['state'] = opengb.printer.State(event['params']['new'])
+        elif event['method'] == 'temp':
+            PRINTER['temp'] = event['params'] 
+        elif event['method'] == 'progress':
+            PRINTER['progress'] = event['params']
+        elif event['method'] == 'zchange':
             # TODO: trigger update camera image. 
             pass
     except KeyError as e:
-        LOGGER.error('Malformed message from printer: {0}'.format(message))
+        LOGGER.error('Malformed event from printer: {0}'.format(event))
 
 
-def process_printer_messages(from_printer):
+def process_printer_events():
     """
-    Process messages from printer.
+    Process events from printer.
 
     Runs via a :class:`tornado.ioloop.PeriodicCallback`.
-
-    :param from_printer: Queue containing messages from the printer.
-    :type from_printer: :class:`multiprocessing.Queue`
     """
-    if not from_printer.empty():
+    if not FROM_PRINTER.empty():
         try:
-            message = json.loads(from_printer.get())
-            if message['cmd'] == 'LOG':
-                LOGGER.log(message['level'], message['msg'])
+            event = json.loads(FROM_PRINTER.get())
+            if event['method'] == 'log':
+                LOGGER.log(event['params']['level'], event['params']['msg'])
             else:
-                broadcast_message(message)
-                process_message(message)
+                broadcast_message(event)
+                process_event(event)
         except TypeError as e:
             LOGGER.exception(e)
 
@@ -163,14 +164,10 @@ def main():
     # Initialise database.
     opengb.database.initialize(options.db_file)
 
-    # Initialise queues.
-    to_printer = multiprocessing.Queue()
-    from_printer = multiprocessing.Queue()
-
     # Initialize printer using queue callbacks.
-    printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
+    printer_callbacks = opengb.printer.QueuedPrinterCallbacks(FROM_PRINTER)
     printer_type = getattr(opengb.printer, options.printer)
-    printer = printer_type(to_printer, printer_callbacks,
+    printer = printer_type(TO_PRINTER, printer_callbacks,
                            baud_rate=options.baud_rate, port=options.serial_port)
     printer.daemon = True
     printer.start()
@@ -193,11 +190,11 @@ def main():
 
     # Rock and roll.
     main_loop = tornado.ioloop.IOLoop.instance()
-    printer_msg_processor = tornado.ioloop.PeriodicCallback(
-        lambda: process_printer_messages(from_printer), 10, io_loop=main_loop)
+    printer_event_processor = tornado.ioloop.PeriodicCallback(
+        lambda: process_printer_events(), 10, io_loop=main_loop)
     # TODO: ioloop for watchdog
     # TODO: ioloop for camera
-    printer_msg_processor.start()
+    printer_event_processor.start()
     main_loop.start()
 
     return(os.EX_OK)

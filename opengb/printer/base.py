@@ -12,6 +12,7 @@ import time
 import logging
 import enum
 
+from jsonrpc import JSONRPCResponseManager, dispatcher 
 
 
 class State(enum.Enum):
@@ -38,8 +39,11 @@ class StateEncoder(json.JSONEncoder):
 class PrinterCallbacks(object):
     """
     Callbacks to be fired by :class:`IPrinter` when particular printer events
-    occur. This base class implements placeholder callbacks that don't
-    actually do anything.
+    occur.
+    
+    This base class implements placeholder callbacks that don't
+    actually do anything. You probably want to sub-class this to send events
+    to some kind of message queue.
 
     Inspired by _MachineComPrintCallback_ in Cura's `MachineCom
     <https://github.com/daid/Cura/blob/master/Cura/util/machineCom.py>`_
@@ -51,57 +55,80 @@ class PrinterCallbacks(object):
 
     def log(self, level, message):
         """
-        Publish a log message. 
-        
-        This is a placeholder which does nothing.
-        """
-        pass
+        Publish a log event. 
 
-    def temp_update(self, bed, nozzle1, nozzle2):
-        """
-        Publish a temperate update message.
-        
-        This is a placeholder which does nothing.
-        """
+        :param level: Enumerated :mod:`logging` log level.
+        :type level: :class:`int`
+        :param message: Log message.
+        :type message: :class:`str`
+         """
         pass
 
     def state_change(self, old, new):
         """
-        Publish a state change message.
-        
-        This is a placeholder which does nothing.
+        Publish a state change event.
+
+        :param old: Old state.
+        :type old: :class:`opengb.printer.State`
+        :param new: New state.
+        :type new: :class:`opengb.printer.State`
         """
         pass
 
-    def print_progress(self, current_line, total_lines):
+    def temp_update(self, bed_current, bed_target, nozzle1_current,
+                    nozzle1_target, nozzle2_current, nozzle2_target):
         """
-        Publish a print progress message.
-        
-        This is a placeholder which does nothing.
+        Publish a temperate update event.
+
+        :param bed_current: Current bed temperature.
+        :type bed_current: :class:`float`
+        :param bed_target: Target bed temperature.
+        :type bed_target: :class:`float`
+        :param nozzle1_current: Current nozzle #1 temperature.
+        :type nozzle1_current: :class:`float`
+        :param nozzle1_target: Target nozzle #1 temperature.
+        :type nozzle1_target: :class:`float`
+        :param nozzle2_current: Current nozzle #2 temperature.
+        :type nozzle2_current: :class:`float`
+        :param nozzle2_target: Target nozzle #2 temperature.
+        :type nozzle2_target: :class:`float`
+        """
+        pass
+
+    def print_progress(self, current_file, current_line, total_lines):
+        """
+        Publish a print progress event.
+
+        :param current_file: File currently being printed.
+        :type current_file: :class:`str`
+        :param current_line: Line number currently being printed.
+        :type current_line: :class:`int`
+        :param total_lines: Total number of lines to be printed.
+        :type total_lines: :class:`int`
         """
         pass
 
     def z_change(self, new_z):
         """
-        Publish a Z axis change message.
-        
-        This is a placeholder which does nothing.
+        Publish a Z axis change event.
+
+        :param position: Current Z axis position.
+        :type position: :class:`float`
         """ 
         pass
 
 
 class QueuedPrinterCallbacks(PrinterCallbacks):
     """
-    Printer callbacks that place messages on a :class:`multiprocessing.Queue`.
-
-    Messages are serialized to JSON and are generally a :class:`dict` in the
-    format:
+    Printer callbacks that place `JSON-RPC 2.0 <http://www.jsonrpc.org/specification>`_ notfication objects on a :class:`multiprocessing.Queue`. E.g.
         
         {
-            'cmd':      '<COMMAND_NAME>',
-            'param1':   'value1',
-            'param2':   'value2',
-            ...
+            'jsonrpc':  '2.0',
+            'method':   '<method_nanme>',
+            'params':   {
+                'param1':   '<value_1>',
+                'param2':   '<value_2>',
+            }
         }
 
     :param from_printer: A queue upon which to place callback messages.
@@ -111,92 +138,64 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
     def __init__(self, from_printer):
         self._from_printer = from_printer
 
-    def _publish(self, message):
+    def _publish(self, event):
         """
-        Publish a message from the printer to the `_from_printer` queue.
+        Publish an event from the printer to the `_from_printer` queue.
 
-        :param message: Message to be placed on the queue. 
-        :type message: :class:`dict`
+        Adds the `'jsonrpc': '2.0'` key/value to maintain compatibility with
+        the JSON-RPC 2.0 spec.
+
+        :param event: Event to be placed on the queue. 
+        :type event: :class:`dict`
         """
-        self._from_printer.put(json.dumps(message))           
+        event['jsonrpc'] = '2.0'
+        self._from_printer.put(json.dumps(event))           
 
     def log(self, level, message):
-        """
-        Publish a log message.
-
-        :param level: Enumerated :mod:`logging` log level.
-        :type level: :class:`int`
-        :param message: Log message.
-        :type message: :class:`str`
-        """
         self._publish({
-            'cmd':      'LOG',
-            'level':    level,
-            'msg':      message,
+            'method':   'log',
+            'params':   {
+                'level':    level,
+                'msg':      message,
+            }
         })
 
     def state_change(self, old, new):
-        """
-        Publish a change of state message.
-
-        :param old: Old state.
-        :type old: :class:`opengb.printer.State`
-        :param new: New state.
-        :type new: :class:`opengb.printer.State`
-        """
         self._publish({
-            'cmd':      'STATE',
-            'old':      old.value,
-            'new':      new.value,
+            'method':   'state',
+            'params':   {
+                'old':      old.value,
+                'new':      new.value,
+            }
         })
 
-    def temp_update(self, bed, nozzle1, nozzle2):
-        """
-        Publish a temperature update message.
-
-        TODO: deal with units (do we set this in the fw?).
-
-        :param bed: Bed temperature.
-        :type bed: :class:`float`
-        :param nozzle1: Nozzle #1 temperature.
-        :type nozzle1: :class:`float`
-        :param nozzle2: Nozzle #2 temperature.
-        :type nozzle2: :class:`float`
-        """
-
+    def temp_update(self, bed_current, bed_target, nozzle1_current,
+                    nozzle1_target, nozzle2_current, nozzle2_target):
         self._publish({
-            'cmd':      'TEMP',
-            'bed':      bed,
-            'nozzle1':  nozzle1,
-            'nozzle2':  nozzle2,
+            'method':   'temp',
+            'params':   {
+                'bed_current':      bed_current,
+                'bed_target':       bed_target,
+                'nozzle1_current':  nozzle1_current,
+                'nozzle1_target':   nozzle1_target,
+                'nozzle2_current':  nozzle2_current,
+                'nozzle2_target':   nozzle2_target,
+            }
         })
 
     def print_progress(self, current_file, current_line, total_lines):
-        """
-        Publish a print progress message.
-
-        :param current_file: File currently being printed.
-        :type current_file: :class:`str`
-        :param current_line: Line number currently being printed.
-        :type current_line: :class:`int`
-        :param total_lines: Total number of lines to be printed.
-        :type total_lines: :class:`int`
-        """
         self._publish({
-            'cmd':      'PROGRESS',
-            'current':  current_lines,
-            'total':    total_lines,
+            'method':   'progress',
+            'params':   {
+                'current_file': current_file,
+                'current_line': current_line,
+                'total_lines':  total_lines,
+            }
         })
 
     def z_change(self, position):
-        """
-        Publish a Z axis change message.
-
-        :param position: Current Z axis position.
-        :type position: :class:`float`
-        """
         self._publish({
-            'cmd':  'ZCHANGE',
+            'event':  'ZCHANGE',
             'position':  new_z,
         })
 
@@ -305,6 +304,28 @@ class IPrinter(multiprocessing.Process):
         """
         pass
 
+    @abc.abstractmethod
+    def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
+        """
+        Set printer target temperatures.
+
+        :param bed: Bed target temperature
+        :type bed: :class:`float`
+        :param bed: Nozzle 1 target temperature
+        :type bed: :class:`float`
+        :param bed: Nozzle 2 target temperature
+        :type bed: :class:`float`
+        """
+        pass
+
+    def _print_file():
+        # TODO: implement
+        #    thread_printer = threading.Thread(target=self._print_file)
+        #    thread_printer.setDaemon(True)
+        #    thread_printer.setName('print_file')
+        #    thread_printer.start()
+        pass 
+
     def _update_state(self, new_state):
         """
         Update printer state.
@@ -324,23 +345,7 @@ class IPrinter(multiprocessing.Process):
         self._gcode = [] 
         self._gcode_file = None
         self._gcode_position = 0
-
-    def _process_message_to_printer(self, message):
-        """
-        Process a message that was sent to the printer via the
-        :obj:`self._to_printer` queue.
-
-        TODO: implement abstract handlers for all valid incoming messages.
-        TODO: enumerate valid incoming message commands + map to abstract functions?
-        """
-        print('Got message: ' + message)
         
-        #if message['cmd'] = 'PRINTFILE':
-        #    thread_printer = threading.Thread(target=self._print_file)
-        #    thread_printer.setDaemon(True)
-        #    thread_printer.setName('print_file')
-        #    thread_printer.start()
-
     def _load_gcode_file(self, path):
         """
         Load a gcode file into memory, ready to be sent to the printer.
@@ -355,6 +360,33 @@ class IPrinter(multiprocessing.Process):
         with open(path) as gcode:
             self.gcode = list(gcode)
 
+    def _process_message_to_printer(self, message):
+        """
+        Process a message that was sent to the printer via the
+        :obj:`self._to_printer` queue by calling the specified `method` with
+        the specified `params`.
+
+        A message should be a dictionary containing values for `method` and
+        `params`. E.g.
+
+            {
+                'method':   'set_temp',
+                'params':   {
+                    'base':     110
+                    'nozzle1':  210
+                    'nozzle2':  210
+                }
+            }
+            
+        :param message: Message to be sent to the printer.
+        :type message: :class:`dict`
+        """
+        self._callbacks.log(logging.DEBUG,
+                            'Processing printer message: ' + str(message))
+        #TODO: Use decorator to designate allowed methods.
+        if 'method' and 'params' in message.keys():
+            getattr(self, message['method'])(**message['params'])
+       
     def _reader(self):
         """
         Loop forever collecting messages from the printer and converting
@@ -391,12 +423,12 @@ class IPrinter(multiprocessing.Process):
                    self._metric_update_time = time.time()
             # Process a message from the to_printer queue.
             if self._state == State.READY and not self._to_printer.empty():
-                msg_to_printer = to_printer.get()
+                message = self._to_printer.get()
                 try:
-                    self._process_message_to_printer(json.loads(msg_to_printer))
+                    self._process_message_to_printer(json.loads(message))
                 except KeyError as e:
                     self._callbacks.log(logging.ERROR,
-                        'Malformed message to printer: {0}'.format(message))
+                        'Malformed message sent to printer: ' + message)
             time.sleep(self._run_loop_delay_sec)
             
     def _print_file(self, gcode_file_path):
@@ -427,7 +459,6 @@ class IPrinter(multiprocessing.Process):
         """
         Printer run loop.
         """
-
         # TODO: move this check to read/write serial method
         if self._state == State.DISCONNECTED:
             try:
