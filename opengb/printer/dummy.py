@@ -17,6 +17,9 @@ class Dummy(IPrinter):
 
     def __init__(self, *args, **kwargs):
         self._dummy_responses = []
+        self._temp_bed = 0
+        self._temp_nozzle1 = 0
+        self._temp_nozzle2 = 0
         super().__init__(*args, **kwargs)
 
     def _connect(self):
@@ -33,8 +36,11 @@ class Dummy(IPrinter):
             self._callbacks.temp_update,
             [
                 random.randrange(200, 210),
+                self._temp_bed,
                 random.randrange(100, 110),
+                self._temp_nozzle1,
                 random.randrange(100, 110),
+                self._temp_nozzle2,
             ]))
 
     def _print_line(self, line):
@@ -63,3 +69,11 @@ class Dummy(IPrinter):
         arguments.
         """
         message[0](*message[1])
+
+    def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
+        if bed:
+            self._temp_bed = bed
+        if nozzle1:
+            self._temp_nozzle1 = nozzle1
+        if nozzle2:
+            self._temp_nozzle2 = nozzle2
