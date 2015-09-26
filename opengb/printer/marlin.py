@@ -81,13 +81,8 @@ class Marlin(IPrinter):
         self._send_command(b'M105')
 
     def _print_line(self, line):
-        """
-        Generates a log response containing the gode that would be printed.
-
-        :param line: Line of gcode.
-        :type line: :class:`str`
-        """
         # TODO: implement
+        pass
 
     def _get_message_from_printer(self):
         """
@@ -121,8 +116,17 @@ class Marlin(IPrinter):
         for each in MSG_PATTERNS:
             m = each[0].match(message)
             if m:
+                self._callbacks.log(logging.DEBUG, 'Parsed: ' + message)
                 each[1](m.groupdict(), self._callbacks)
                 break
             time.sleep(1)
         else:
             self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
+
+    def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
+        if bed:
+            self._send_command(b'M140 S' + str(bed).encode())
+        if nozzle1:
+            self._send_command(b'M104 T0 S' + str(nozzle1).encode())
+        if nozzle2:
+            self._send_command(b'M104 T1 S' + str(nozzle2).encode())
