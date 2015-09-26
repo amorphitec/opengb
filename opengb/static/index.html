@@ -50,15 +50,19 @@
               <h4><strong>State: </strong><span id="state">Initializing</span></h4>
             </div>
             <div class="col-sm-2">
-              <h4><strong>Bed: </strong><span id="bed-temp">0</span>&deg;</h4>
+              <h4><strong>Bed: </strong><span id="bed-temp-current">0</span>&deg;/<span id="bed-temp-target">0</span>&deg;</h4>
             </div>
             <div class="col-sm-2">
-              <h4><strong>Nozzle1: </strong><span id="nozzle1-temp">0</span>&deg;</h4>
+              <h4><strong>Nozzle1: </strong><span id="nozzle1-temp-current">0</span>&deg;/<span id="nozzle1-temp-target">0</span>&deg;</h4>
             </div>
             <div class="col-sm-2">
-              <h4><strong>Nozzle2: </strong><span id="nozzle2-temp">0</span>&deg;</h4>
+              <h4><strong>Nozzle2: </strong><span id="nozzle2-temp-current">0</span>&deg;/<span id="nozzle2-temp-target">0</span>&deg;</h4>
             </div>
             <div class="col-sm-2"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm" onclick="sendMessage()">Send</button></div>
           </div>
           <div id="page-splash" class="content" style="display:none">
             <img src="img/re3d.png" class="re3d-logo">
