@@ -15,11 +15,12 @@ MSG_PATTERNS = [
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
      lambda g, c: (getattr(c, 'log')(logging.INFO, g['msg']))),
     # Temperature update.
-    (re.compile(r'ok T:(?P<n1temp>.*)\s/(?P<n1target>.*)\s'
-                'B:(?P<btemp>.*)\s/(?P<btarget>.*)\s'
-                'T0:(?P<n2temp>.*)\s/(?P<n2target>.*).*$'),
-     lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['n1temp'],
-                                             g['gtn2temp']))),
+    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
+                'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
+                'T0:(?P<n2temp>\d*\.?\d+)\s/(?P<n2target>\d*\.?\d+)\s.*$'),
+     lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
+                                             g['n1temp'], g['n1target'],
+                                             g['n2temp'], g['n2target']))),
 ]
 
 
