@@ -18,6 +18,7 @@ import tornado.log
 import tornado.websocket
 from tornado.options import options
 from tornado.web import Application, RequestHandler, StaticFileHandler
+from jsonrpc import JSONRPCResponseManager, Dispatcher 
 
 import opengb.config
 import opengb.printer
@@ -43,30 +44,59 @@ PRINTER = {
 }
 
 
+class MessageHandler(object):
+    """
+    Handles JSON-RPC calls received via websocket.
+    """
+
+    def __init__(self):
+        pass
+
+    def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
+        TO_PRINTER.put(json.dumps({
+            'method':   'set_temp',
+            'params': {
+                'bed':      bed,
+                'nozzle1':  nozzle1,
+                'nozzle2':  nozzle2
+            }
+        }))
+        return True
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     """
     Handles all websocket communication with clients.
 
-    It would be nice if this could use
-    `tornadorpc https://pypi.python.org/pypi/tornadorpc`_ but alas that
-    module is not yet Python 3 compatible as per
-    `https://github.com/joshmarshall/tornadorpc/issues/15`_.
+    Uses `json-rpc <https://pypi.python.org/pypi/json-rpc/>`_ to map messages
+    to methods and generate valid JSON-RPC 2.0 responses.
     """
+
+    def __init__(self, *args, **kwargs):
+        message_handler = MessageHandler()
+        self.dispatcher = Dispatcher(message_handler)
+        super().__init__(*args, **kwargs)
+
     def open(self):
         LOGGER.info('New connection from {0}'.format(self.request.remote_ip))
         CLIENTS.append(self)
         self.write_message(json.dumps(
             {'cmd': 'STATE', 'new': PRINTER['state']},
             cls=opengb.printer.StateEncoder))
- 
-    def on_message(self, message):
-        LOGGER.debug('Message received from {0}: {1)'.format(
-            message ,self.request.remote_ip))
-        # TODO: Parse incoming control/print messages and send to Printer
- 
+
     def on_close(self):
         LOGGER.info('Connection closed to {0}'.format(self.request.remote_ip))
         CLIENTS.remove(self)
+
+    def on_message(self, message):
+        """
+        Passes an incoming JSON-RPC message to the dispatcher for processing.
+        """
+        LOGGER.debug('Message received from {0}: {1}'.format(
+            self.request.remote_ip, message))
+        response = JSONRPCResponseManager.handle(message, self.dispatcher)
+        LOGGER.debug('Sending response to {0}: {1}'.format(
+                self.request.remote_ip, response._data))
+        return response.json
 
 
 class StatusHandler(RequestHandler):
