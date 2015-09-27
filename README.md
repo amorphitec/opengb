@@ -29,7 +29,7 @@ Switch to the new virtualenv:
 
 ###Install from github
 
-    
+    pip install -e git+git://github.com/re-3D/openGB@master#egg=openG
 
 ###Create database directory
 
@@ -61,4 +61,4 @@ Switch to the virtualenv and start opengb:
     source ~/virtualenvs/opengb/bin/activate
     opengb
 
-Navigate to [http://localhost:8080](http://localhost:8080) and the OpenGB interface should appear.
+Navigate to [http://localhost:8000](http://localhost:8000) and the OpenGB interface should appear.
