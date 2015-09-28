@@ -59,6 +59,18 @@ class MessageHandler(object):
         pass
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
+        """
+        Set printer target temperatures.
+
+        Unspecified target temperatures will remain unchanged.
+
+        :param bed: Bed target temperature. 
+        :type bed: :class:`float`
+        :param nozzle1: Nozzle1 target temperature. 
+        :type nozze1: :class:`float`
+        :param nozzle1: Nozzle2 target temperature. 
+        :type nozze1: :class:`float`
+        """
         TO_PRINTER.put(json.dumps({
             'method':   'set_temp',
             'params': {
