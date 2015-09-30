@@ -7,7 +7,7 @@ function switchContent(content) {
 function parseMessage(message) {
   console.log(message.data)
   data = JSON.parse(message.data)
-  switch(data.method) {
+  switch(data.event) {
     case 'temp':
       $("#bed-temp-current").text(data.params.bed_current);
       $("#bed-temp-target").text(data.params.bed_target);
