@@ -38,8 +38,7 @@ class StateEncoder(json.JSONEncoder):
 
 class PrinterCallbacks(object):
     """
-    Callbacks to be fired by :class:`IPrinter` when particular printer events
-    occur.
+    Callbacks to be fired by :class:`IPrinter` when particular pr    occur.
     
     This base class implements placeholder callbacks that don't
     actually do anything. You probably want to sub-class this to send events
@@ -120,11 +119,11 @@ class PrinterCallbacks(object):
 
 class QueuedPrinterCallbacks(PrinterCallbacks):
     """
-    Printer callbacks that place `JSON-RPC 2.0 <http://www.jsonrpc.org/specification>`_ notfication objects on a :class:`multiprocessing.Queue`. E.g.
+    Printer callbacks that place `JSON-RPC 2.0 <http://www.jsonrpc.org/specification>`_ event objects on a :class:`multiprocessing.Queue`. E.g.
         
         {
             'jsonrpc':  '2.0',
-            'method':   '<method_nanme>',
+            'event':   '<event_nanme>',
             'params':   {
                 'param1':   '<value_1>',
                 'param2':   '<value_2>',
@@ -153,7 +152,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def log(self, level, message):
         self._publish({
-            'method':   'log',
+            'event':   'log',
             'params':   {
                 'level':    level,
                 'msg':      message,
@@ -162,7 +161,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def state_change(self, old, new):
         self._publish({
-            'method':   'state',
+            'event':   'state',
             'params':   {
                 'old':      old.value,
                 'new':      new.value,
@@ -172,7 +171,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
     def temp_update(self, bed_current, bed_target, nozzle1_current,
                     nozzle1_target, nozzle2_current, nozzle2_target):
         self._publish({
-            'method':   'temp',
+            'event':   'temp',
             'params':   {
                 'bed_current':      bed_current,
                 'bed_target':       bed_target,
@@ -185,7 +184,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def print_progress(self, current_file, current_line, total_lines):
         self._publish({
-            'method':   'progress',
+            'event':   'progress',
             'params':   {
                 'current_file': current_file,
                 'current_line': current_line,
