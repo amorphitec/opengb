@@ -67,9 +67,9 @@ class MessageHandler(object):
         :param bed: Bed target temperature. 
         :type bed: :class:`float`
         :param nozzle1: Nozzle1 target temperature. 
-        :type nozze1: :class:`float`
-        :param nozzle1: Nozzle2 target temperature. 
-        :type nozze1: :class:`float`
+        :type nozzle1: :class:`float`
+        :param nozzle2: Nozzle2 target temperature. 
+        :type nozzle2: :class:`float`
         """
         TO_PRINTER.put(json.dumps({
             'method':   'set_temp',
@@ -137,14 +137,14 @@ def process_event(event):
     """
     global PRINTER
     try:
-        if event['method'] == 'state':
+        if event['event'] == 'state':
             # TODO: if state changes from printing to ready, reset progress.
             PRINTER['state'] = opengb.printer.State(event['params']['new'])
-        elif event['method'] == 'temp':
+        elif event['event'] == 'temp':
             PRINTER['temp'] = event['params'] 
-        elif event['method'] == 'progress':
+        elif event['event'] == 'progress':
             PRINTER['progress'] = event['params']
-        elif event['method'] == 'zchange':
+        elif event['event'] == 'zchange':
             # TODO: trigger update camera image. 
             pass
     except KeyError as e:
@@ -160,7 +160,7 @@ def process_printer_events():
     if not FROM_PRINTER.empty():
         try:
             event = json.loads(FROM_PRINTER.get())
-            if event['method'] == 'log':
+            if event['event'] == 'log':
                 LOGGER.log(event['params']['level'], event['params']['msg'])
             else:
                 broadcast_message(event)
