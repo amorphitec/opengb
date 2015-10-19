@@ -176,7 +176,7 @@ def main():
     # Load config.
     options.parse_config_file(opengb.config.CONFIG_FILE)
 
-    # Initialise database.
+    # Initialize database.
     opengb.database.initialize(options.db_file)
 
     # Initialize printer queues.
