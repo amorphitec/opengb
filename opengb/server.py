@@ -31,10 +31,6 @@ LOGGER = tornado.log.app_log
 # Websocket clients.
 CLIENTS = []
 
-# To/from printer queues.
-TO_PRINTER = multiprocessing.Queue()
-FROM_PRINTER = multiprocessing.Queue()
-
 # Local cache of printer state.
 PRINTER = {
     'state':    opengb.printer.State.DISCONNECTED,
@@ -53,10 +49,13 @@ PRINTER = {
 class MessageHandler(object):
     """
     Handles JSON-RPC calls received via websocket.
+
+    :param to_printer: A queue whose messages will be sent to the printer.
+    :type to_printer: :class:`multiuprocessing.Queue`
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, to_printer):
+        self._to_printer = to_printer
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         """
@@ -71,7 +70,7 @@ class MessageHandler(object):
         :param nozzle2: Nozzle2 target temperature. 
         :type nozzle2: :class:`float`
         """
-        TO_PRINTER.put(json.dumps({
+        self._to_printer.put(json.dumps({
             'method':   'set_temp',
             'params': {
                 'bed':      bed,
@@ -90,7 +89,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     """
 
     def __init__(self, *args, **kwargs):
-        message_handler = MessageHandler()
+        message_handler = MessageHandler(kwargs.pop('to_printer'))
         self.dispatcher = Dispatcher(message_handler)
         super().__init__(*args, **kwargs)
 
@@ -151,15 +150,19 @@ def process_event(event):
         LOGGER.error('Malformed event from printer: {0}'.format(event))
 
 
-def process_printer_events():
+def process_printer_events(from_printer):
     """
     Process events from printer.
 
     Runs via a :class:`tornado.ioloop.PeriodicCallback`.
+
+    :param from_printer: A queue which will be populated with messages sent
+        from the printer.
+    :type from_printer: :class:`multiuprocessing.Queue`
     """
-    if not FROM_PRINTER.empty():
+    if not from_printer.empty():
         try:
-            event = json.loads(FROM_PRINTER.get())
+            event = json.loads(from_printer.get())
             if event['event'] == 'log':
                 LOGGER.log(event['params']['level'], event['params']['msg'])
             else:
@@ -176,10 +179,14 @@ def main():
     # Initialise database.
     opengb.database.initialize(options.db_file)
 
+    # Initialize printer queues.
+    to_printer = multiprocessing.Queue()
+    from_printer = multiprocessing.Queue()
+
     # Initialize printer using queue callbacks.
-    printer_callbacks = opengb.printer.QueuedPrinterCallbacks(FROM_PRINTER)
+    printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
     printer_type = getattr(opengb.printer, options.printer)
-    printer = printer_type(TO_PRINTER, printer_callbacks,
+    printer = printer_type(to_printer, printer_callbacks,
                            baud_rate=options.baud_rate, port=options.serial_port)
     printer.daemon = True
     printer.start()
@@ -188,7 +195,7 @@ def main():
     install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
     static_dir = os.path.join(install_dir, 'static')
     handlers = [
-        (r"/ws", WebSocketHandler),
+        (r"/ws", WebSocketHandler, {"to_printer": to_printer}),
         (r"/api/status", StatusHandler),
         (r"/fonts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "fonts")}),
         (r"/img/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "img")}),
@@ -203,7 +210,7 @@ def main():
     # Rock and roll.
     main_loop = tornado.ioloop.IOLoop.instance()
     printer_event_processor = tornado.ioloop.PeriodicCallback(
-        lambda: process_printer_events(), 10, io_loop=main_loop)
+        lambda: process_printer_events(from_printer), 10, io_loop=main_loop)
     # TODO: ioloop for watchdog
     # TODO: ioloop for camera
     printer_event_processor.start()
