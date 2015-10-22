@@ -6,7 +6,9 @@ Installation
 Python 3.4
 ^^^^^^^^^^
 
-OpenGB requires Python 3.x or greater. 
+OpenGB requires Python 3.4 or greater. 
+
+_Note: Debian Wheezy only supports Python 3.2. If you are using a Beaglebone Black you should upgrade to Debian Jessie before installing OpenGB._
 
 Install Python3.4:
 
@@ -43,7 +45,7 @@ Install package
 
 ::
 
-    pip install -e git+git://github.com/re-3D/openGB@master#egg=openG
+    pip install -e git+git://github.com/re-3D/opengb@master#egg=opengb
 
 Create database directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -64,7 +66,7 @@ Deploy config file
 
     sudo mkdir /etc/opengb
     sudo chown <your_user>:<your_group> /etc/opengb
-    sudo cp ~/virtualenvs/opengb/lib/python3.4/site-packages/opengb/etc/opengb.conf /etc/opengb
+    sudo cp ~/virtualenvs/opengb/src/opengb/opengb/etc/opengb.conf /etc/opengb/
 
 Once deployed, edit this file to set the appropriate parameters for your system.
 
