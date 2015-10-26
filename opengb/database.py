@@ -6,6 +6,22 @@ import opengb.config
 
 DB = SqliteDatabase(None)
 
+COUNTERS = [
+    'printer_up_mins_session',
+    'printer_up_mins',
+    'printer_print_mins',
+    'bed_up_mins',
+    'nozzle_1_up_mins',
+    'nozzle_2_up_mins',
+    'motor_x1_up_mins',
+    'motor_x2_up_mins',
+    'motor_y1_up_mins',
+    'motor_y2_up_mins',
+    'motor_z1_up_mins',
+    'motor_z2_up_mins',
+    'filament_up_mins',
+]
+
 
 class BaseModel(Model):
     class Meta:
@@ -15,6 +31,11 @@ class BaseModel(Model):
 class PrintJob(BaseModel):
     start = DateTimeField()
     end = DateTimeField()
+
+
+class Counter(BaseModel):
+    name = CharField()
+    count = IntegerField()
 
 
 def initialize(path):
@@ -38,4 +59,15 @@ def initialize(path):
     # Create database tables if not already present.
     DB.create_tables([
         PrintJob,
+        Counter,
     ], safe=True)
+
+    # Create counters if not already present.
+    existing_counters = [c.name for c in Counter.select()]
+    for counter in COUNTERS:
+        if counter not in existing_counters:
+            Counter.create(name=counter, count=0)
+
+    # Reset session counters.
+    query = Counter.update(count=0).where(Counter.name.endswith('_session'))
+    query.execute()
