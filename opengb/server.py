@@ -79,6 +79,15 @@ class MessageHandler(object):
         }))
         return True
 
+    def get_counters(self):
+        """
+        Get printer counter values.
+
+        Counters are listed in :data:`database.COUNTERS`.
+        """
+        return {'counters': {c.name: c.count for c in ODB.Counter.select()}}
+
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     """
     Handles all websocket communication with clients.
