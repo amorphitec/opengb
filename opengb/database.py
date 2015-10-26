@@ -19,7 +19,6 @@ COUNTERS = [
     'motor_y2_up_mins',
     'motor_z1_up_mins',
     'motor_z2_up_mins',
-    'filament_up_mins',
 ]
 
 
