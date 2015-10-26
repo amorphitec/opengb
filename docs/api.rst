@@ -35,7 +35,7 @@ Example request (setting temperatures): ::
 
 Example response: ::
 
-    {'result': True, 'id': 1}
+    {"jsonrpc":"2.0","id":1 "result":true}
 
 Event
 =====
@@ -44,7 +44,7 @@ The server sends a message to the client to notify the client of an event which 
 
 Example event (status update): ::
 
-    {"event": "temp", "jsonrpc": "2.0", "params": {"bed_current": 203, "bed_target": 105, "nozzle2_target": 203, "nozzle1_current": 104, "nozzle2_current": 108, "nozzle1_target": 206}}
+    {"event":"temp","jsonrpc":"2.0","params":{"bed_current":203,"bed_target":105,"nozzle2_target":203,"nozzle1_current":104,"nozzle2_current":108,"nozzle1_target":206}}
 
 Methods
 ^^^^^^^
@@ -59,7 +59,17 @@ Example request: ::
 
 Example response: ::
 
-    {'result': True, 'id': 1}
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+.. automethod:: opengb.server.MessageHandler.get_counters
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":2,"method":"get_counters","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128 "motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
 
 .. _`JSON-RPC 2.0`: http://www.jsonrpc.org
 .. _`JSON-RPC 2.0 spec`: http://www.jsonrpc.org/specification
