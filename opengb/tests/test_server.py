@@ -5,10 +5,15 @@ Opengb server unit tests.
 from multiprocessing import Queue
 import json
 
+from peewee import *
+from playhouse.test_utils import test_database
+
 from opengb.tests import OpengbTestCase
 from opengb import server
+from opengb.database import Counter
 
-class TestMessageHandler(OpengbTestCase): 
+
+class TestSetTemp(OpengbTestCase): 
 
     def setUp(self):
         self.to_printer = Queue()
@@ -43,3 +48,33 @@ class TestMessageHandler(OpengbTestCase):
         mh = self.message_handler.set_temp(bed=100, nozzle1=200)
         self.assertEqual(
             json.loads(self.to_printer.get())["params"]["nozzle2"], None)
+
+class TestGetCounters(OpengbTestCase):
+
+    def setUp(self):
+        self.db = SqliteDatabase(':memory:')
+        self.test_counters = {
+            'printer_up_mins_session':  15,
+            'printer_up_mins':          777,
+            'printer_print_mins':       101,
+            'bed_up_mins':              777,
+            'nozzle_1_up_mins':         777,
+            'nozzle_2_up_mins':         777,
+            'motor_x1_up_mins':         777,
+            'motor_x2_up_mins':         777,
+            'motor_y1_up_mins':         777,
+            'motor_y2_up_mins':         93,
+            'motor_z1_up_mins':         777,
+            'motor_z2_up_mins':         777,
+            'filament_up_mins':         777,
+        }
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(to_printer=self.to_printer)
+
+    def test_get_counters_returns_correct_values(self):
+        """Correct counter values are returned from the database."""
+        with test_database(self.db, [Counter], create_tables=True):
+            for k, v in self.test_counters.items():
+                Counter.create(name=k, count=v)
+            mh = self.message_handler.get_counters()
+            self.assertDictEqual(mh['counters'], self.test_counters)
