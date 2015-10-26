@@ -83,7 +83,7 @@ class MessageHandler(object):
         """
         Get printer counter values.
 
-        Counters are listed in :data:`database.COUNTERS`.
+        Counters are listed in :data:`opengb.database.COUNTERS`.
         """
         return {'counters': {c.name: c.count for c in ODB.Counter.select()}}
 
