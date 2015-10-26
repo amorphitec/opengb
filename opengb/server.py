@@ -22,8 +22,7 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 
 import opengb.config
 import opengb.printer
-import opengb.database
-
+import opengb.database as ODB
 
 # TODO: use rotated file logging.
 LOGGER = tornado.log.app_log
@@ -177,7 +176,7 @@ def main():
     options.parse_config_file(opengb.config.CONFIG_FILE)
 
     # Initialize database.
-    opengb.database.initialize(options.db_file)
+    ODB.initialize(options.db_file)
 
     # Initialize printer queues.
     to_printer = multiprocessing.Queue()
