@@ -121,7 +121,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         response = JSONRPCResponseManager.handle(message, self.dispatcher)
         LOGGER.debug('Sending response to {0}: {1}'.format(
                 self.request.remote_ip, response._data))
-        return response.json
+        self.write_message(response.json)
 
 
 class StatusHandler(RequestHandler):
