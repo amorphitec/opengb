@@ -171,6 +171,21 @@ def process_printer_events(from_printer):
             LOGGER.exception(e)
 
 
+def update_counters(count=1):
+    """
+    Increment all printer counters.
+
+    Runs via a :class:`tornado.ioloop.PeriodicCallback`.
+
+    :param count: Value by which to increment counters.
+    :type count: :class:`int`
+    """
+
+    LOGGER.debug('Incrementing printer counters')
+    query = ODB.Counter.update(count=ODB.Counter.count+1).where(
+        ODB.Counter.name.contains('uptime'))
+    query.execute()
+
 def main():
     # Load config.
     options.parse_config_file(opengb.config.CONFIG_FILE)
@@ -206,13 +221,18 @@ def main():
     httpServer = tornado.httpserver.HTTPServer(app)
     httpServer.listen(options.http_port)
 
-    # Rock and roll.
+    # Create event loop and periodic callbacks
     main_loop = tornado.ioloop.IOLoop.instance()
     printer_event_processor = tornado.ioloop.PeriodicCallback(
         lambda: process_printer_events(from_printer), 10, io_loop=main_loop)
+    counter_updater = tornado.ioloop.PeriodicCallback(
+        lambda: update_counters(), 60000)
     # TODO: ioloop for watchdog
     # TODO: ioloop for camera
+
+    # Rock and roll.
     printer_event_processor.start()
+    counter_updater.start()
     main_loop.start()
 
     return(os.EX_OK)
