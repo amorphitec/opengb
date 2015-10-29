@@ -317,6 +317,20 @@ class IPrinter(multiprocessing.Process):
         """
         pass
 
+    @abc.abstractmethod
+    def move_head(self, x=0, y=0, z=0):
+        """
+        Move the print head along one or more axes.
+
+        :param x: Millimeters to move along the X axis.
+        :type x: :class:`float`
+        :param y: Millimeters to move along the Y axis.
+        :type y: :class:`float`
+        :param z: Millimeters to move along the Z axis.
+        :type z: :class:`float`
+        """
+        pass
+
     def _print_file():
         # TODO: implement
         #    thread_printer = threading.Thread(target=self._print_file)

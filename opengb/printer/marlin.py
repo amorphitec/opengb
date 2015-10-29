@@ -86,7 +86,7 @@ class Marlin(IPrinter):
 
     def _get_message_from_printer(self):
         """
-        Read a message from the serial port, atttempting to re-connect if
+        Read a message from the serial port, attempting to re-connect if
         neccessary.
         """
         try:
@@ -130,3 +130,10 @@ class Marlin(IPrinter):
             self._send_command(b'M104 T0 S' + str(nozzle1).encode())
         if nozzle2:
             self._send_command(b'M104 T1 S' + str(nozzle2).encode())
+
+    def move_head(self, x=0, y=0, z=0):
+        # Switch to relative coordinates before sending.
+        # TODO: does it matter to send G91 every time?
+        self._send_command(b'G91')
+        # TODO: confirm that it's ok to send 0 for no movement.
+        self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())

@@ -77,3 +77,7 @@ class Dummy(IPrinter):
             self._temp_nozzle1 = nozzle1
         if nozzle2:
             self._temp_nozzle2 = nozzle2
+
+    def move_head(self, x=0, y=0, z=0):
+        self._callbacks.log(logging.DEBUG, 'Moving print head: x|{0}, '
+                                           'y|{1}, z|{2}'.format(x, y, z))
