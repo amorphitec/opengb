@@ -45,25 +45,23 @@
       </div>
       <div id="page-content-wrapper">
           <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-2">
-              <h4><strong>State: </strong><span id="state">Initializing</span></h4>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <h4><strong>B: </strong><span id="bed-temp-current">0</span>&deg;/<span id="bed-temp-target">0</span>&deg;</h4>
             </div>
-            <div class="col-sm-2">
-              <h4><strong>Bed: </strong><span id="bed-temp-current">0</span>&deg;/<span id="bed-temp-target">0</span>&deg;</h4>
+            <div class="col-sm-4">
+              <h4><strong>N1: </strong><span id="nozzle1-temp-current">0</span>&deg;/<span id="nozzle1-temp-target">0</span>&deg;</h4>
             </div>
-            <div class="col-sm-2">
-              <h4><strong>Nozzle1: </strong><span id="nozzle1-temp-current">0</span>&deg;/<span id="nozzle1-temp-target">0</span>&deg;</h4>
+            <div class="col-sm-4">
+              <h4><strong>N2: </strong><span id="nozzle2-temp-current">0</span>&deg;/<span id="nozzle2-temp-target">0</span>&deg;</h4>
             </div>
-            <div class="col-sm-2">
-              <h4><strong>Nozzle2: </strong><span id="nozzle2-temp-current">0</span>&deg;/<span id="nozzle2-temp-target">0</span>&deg;</h4>
-            </div>
-            <div class="col-sm-2"></div>
           </div>
-          <div class="row">
+          <!--<div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm" onclick="sendMessage()">Send</button></div>
-          </div>
+            <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm" onclick="setTemp()">Set Temp</button></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm" onclick="moveHead()">Move Head</button></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm" onclick="getCounter()">Get Counter</button></div>
+          </div>-->
           <div id="page-splash" class="content" style="display:none">
             <img src="img/re3d.png" class="re3d-logo">
           </div>
@@ -144,29 +142,35 @@
               <div class="col-sm-10">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title centered">Lighting</h3>
+                    <h3 class="panel-title centered">Head movement</h3>
                   </div>
                   <div class="panel-body">
-                    <label class="radio-inline">
-                      <input type="radio" name="lighting-options" id="lighting-solid" value="solid" checked>
-                      Solid 
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="lighting-options" id="lighting-ambience" value="ambience">
-                      Ambience
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="lighting-options" id="lighting-strobe" value="strobe">
-                      Strobe
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="lighting-options" id="lighting-temperature" value="temperature">
-                      Temperature
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="lighting-options" id="lighting-none" value="none">
-                      None
-                    </label>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <button type="button" class="btn btn-default" onclick="moveHead(10,0,0)">
+                          <b>X</b> <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="moveHead(-10,0,0)">
+                          <b>X</b> <span class="glyphicon glyphicon-minus-sign"></span>
+                        </button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button type="button" class="btn btn-default" onclick="moveHead(0,10,0)">
+                          <b>Y</b> <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="moveHead(0,-10,0)">
+                          <b>Y</b> <span class="glyphicon glyphicon-minus-sign"></span>
+                        </button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button type="button" class="btn btn-default" onclick="moveHead(0,0,10)">
+                          <b>Z</b> <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="moveHead(0,0,-10)">
+                          <b>Z</b> <span class="glyphicon glyphicon-minus-sign"></span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
