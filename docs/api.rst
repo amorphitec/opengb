@@ -61,6 +61,16 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+.. automethod:: opengb.server.MessageHandler.move_head
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"move_head","params":{"x":13.2,"y":-2,"z":0.03}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 .. automethod:: opengb.server.MessageHandler.get_counters
 
 Example request: ::

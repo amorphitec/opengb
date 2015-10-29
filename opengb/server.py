@@ -74,7 +74,28 @@ class MessageHandler(object):
             'params': {
                 'bed':      bed,
                 'nozzle1':  nozzle1,
-                'nozzle2':  nozzle2
+                'nozzle2':  nozzle2,
+            }
+        }))
+        return True
+
+    def move_head(self, x=0, y=0, z=0):
+        """
+        Move the print head along one or more axes.
+
+        :param x: Millimeters to move along the X axis.
+        :type x: :class:`float`
+        :param y: Millimeters to move along the Y axis.
+        :type y: :class:`float`
+        :param z: Millimeters to move along the Z axis.
+        :type z: :class:`float`
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'move_head',
+            'params': {
+                'x':    x,
+                'y':    y,
+                'z':    z,
             }
         }))
         return True

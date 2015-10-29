@@ -49,6 +49,30 @@ class TestSetTemp(OpengbTestCase):
         self.assertEqual(
             json.loads(self.to_printer.get())["params"]["nozzle2"], None)
 
+class TestMoveHead(OpengbTestCase): 
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(to_printer=self.to_printer)
+
+    def test_pass_move_head_method_to_printer(self):
+        """Valid x,y,z values result in a 'move_head' message on the to_printer queue."""
+        mh = self.message_handler.move_head(x=0.02, y=-4, z=2)
+        self.assertEqual(json.loads(self.to_printer.get())["method"], "move_head")
+
+    def test_valid_xyz_passed_to_printer(self):
+        """Valid x,y,z values are added as a message on the to_printer queue."""
+        mh = self.message_handler.move_head(x=0.02, y=-4, z=2)
+        self.assertDictEqual(json.loads(self.to_printer.get()), {
+            "method": "move_head",
+            "params": {"x": 0.02, "y": -4, "z": 2}})
+
+    def test_set_bed_temp_defaults_to_zero(self):
+        """Unspecified x is passed to_the printer as 0."""
+        mh = self.message_handler.move_head(y=-4, z=2)
+        self.assertEqual(
+            json.loads(self.to_printer.get())["params"]["x"], 0)
+    
 class TestGetCounters(OpengbTestCase):
 
     def setUp(self):
