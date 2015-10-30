@@ -1,0 +1,31 @@
+<div>
+
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/directives/top-toolbar.css">
+  <!-- endbuild -->
+
+    <div id="top-toolbar">
+      <md-toolbar class="md-whiteframe-glow-z1 site-content-toolbar">
+
+        <div class="md-toolbar-tools docs-toolbar-tools"
+             layout="row"
+             layout-align="center center"
+             tabIndex="-1">
+            
+          <md-button class="md-icon-button duck" 
+                     ng-click="toggleSidenav()"
+                     aria-label="menu">
+            <md-icon class="material-icons" >menu</md-icon>
+          </md-button>
+
+          <div layout="row" flex class="fill-height" layout-align="center center">
+            <h2 class="md-toolbar-item md-breadcrumb md-headline">
+                <span>{{currentPageName}}</span>
+            </h2>
+          </div>
+
+        </div>
+
+      </md-toolbar>
+    </div>
+</div>

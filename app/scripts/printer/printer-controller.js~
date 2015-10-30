@@ -1,0 +1,20 @@
+(function(angular) {
+
+    'use strict';
+
+    function controller($scope, $http, printerFactory){
+
+
+    	var vm = this;
+
+	vm.printer = printerFactory;
+
+	vm.printer.tempUpdate();
+
+    }
+
+    angular
+        .module('openGbApp')
+        .controller('printerController', ['$scope', '$http', 'printerFactory', controller ]);
+
+})(angular);    

@@ -1,0 +1,36 @@
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/directives/controls-cube.css">
+<!-- endbuild -->
+
+    <div flex layout="column">
+
+      <md-tabs md-dynamic-height md-stretch-tabs="always" >
+        <md-tab>
+            <md-tab-label>
+              position
+            </md-tab-label>
+            <md-tab-body>
+				<controls-cube cc-x-pos="0"  
+							   cc-y-pos="0"  
+							   cc-z-pos="0"  
+							   cc-resolution="10">
+				</controls-cube>
+            </md-tab-body>
+        </md-tab>
+        <md-tab>
+            <md-tab-label>
+              temperature
+            </md-tab-label>
+            <md-tab-body>
+            </md-tab-body>
+        </md-tab>
+        <md-tab>
+            <md-tab-label>
+              g code
+            </md-tab-label>
+            <md-tab-body>
+            </md-tab-body>
+        </md-tab>
+      </md-tabs>
+
+    </div>

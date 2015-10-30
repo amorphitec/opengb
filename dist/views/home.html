@@ -1,0 +1,78 @@
+<style>
+
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 60%;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 0px auto;
+}
+.drop-box.drag-over{
+  background: #eee;
+  border-color: #cfc;
+} 
+#files-page{
+  position:relative;
+  min-height: 100%;
+}
+     #renderArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width:100vw;
+        height:calc(100vh - 100px);
+        z-index: 0;
+      }
+
+      #renderArea md-progress-circular {
+        position: fixed;
+        z-index: -1;
+        left: 50%;
+        top: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+      }
+
+</style>
+
+<section id="files-page" layout="row" layout-wrap ng-controller="fileController as fc">
+
+  <div  flex="100" layout-padding>
+
+    <og-gcode-viewer og-gcode-file="fc.selectedFile" ng-show="fc.fileRenderer"></og-gcode-viewer>
+
+    <div style="position:absolute;top:20px;right:20px;" ng-click="fc.deselectFile()">X</div>
+    <h2 style="text-align:center;width:100%;">{{fc.selectedFile.name}}</h2>
+    <ul>
+      <li ng-repeat="(key,value) in fc.selectedFile.meta">{{key}}: {{value}}</li>
+    </ul>
+
+    <og-file-image og-fi-file="fc.selectedFile" 
+                   ng-show="{{false}}" 
+                   og-fi-height="300" 
+                   og-fi-width="300" 
+                   og-fi-circle="true">
+    </og-file-image>
+
+    <og-file-dropbox ng-show="fc.fileSelector" og-fd-upload-file="fc.uploadFile"></og-file-dropbox>
+    <og-file-search-list og-fsl-files="fc.fileList"
+                         og-fsl-view="block" 
+                         og-fsl-hide-empty="true" 
+                         og-fsl-selected-file="fc.selectedFile" 
+                         ng-show="fc.fileSelector">
+    </og-file-search-list>
+
+    <div layout="row" layout-align="center center" style="position:absolute;bottom:20px;width:100%;">
+      <md-button flex="30" 
+                 ng-show="fc.printReady != null" 
+                 ng-disabled="!fc.printReady" 
+                 class="md-raised md-primary">
+        Print Selected File
+      </md-button>
+    </div>
+
+  </div>
+
+</section>
