@@ -10,11 +10,12 @@
               position
             </md-tab-label>
             <md-tab-body>
-				<controls-cube cc-x-pos="0"  
-							   cc-y-pos="0"  
-							   cc-z-pos="0"  
-							   cc-resolution="10">
-				</controls-cube>
+		<controls-cube cc-pos-x="pc.position.x"  
+			       cc-pos-y="pc.position.y"  
+			       cc-pos-z="pc.position.z"  
+			       cc-resolution="10">
+		</controls-cube>
+		{{pc.position}}
             </md-tab-body>
         </md-tab>
         <md-tab>

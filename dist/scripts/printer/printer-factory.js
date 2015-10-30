@@ -25,7 +25,6 @@
 			};
 
             ws.$$send(data);
-
           });
 
 	ws.$$ws.onmessage = function(message){
@@ -52,6 +51,11 @@
         printerFactory.printProgress = function (file) {
             return null
         };
+
+	printerFactory.movePrintHead = function (position){
+            var data = {"jsonrpc":"2.0","id":1,"method":"move_head","params":{"x":position.x,"y":position.y,"z":position.z}};
+            ws.$$send(data);
+	};
 
         printerFactory.zChange = function (file) {
             return null
