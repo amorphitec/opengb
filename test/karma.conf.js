@@ -36,6 +36,12 @@ module.exports = function(config) {
       'app/bower_components/ng-file-upload-shim/ng-file-upload-shim.js',
       'app/bower_components/ng-lodash/build/ng-lodash.js',
       'app/bower_components/ng-websocket/ng-websocket.js',
+      'app/bower_components/ace-builds/src-min-noconflict/ace.js',
+      'app/bower_components/ace-builds/src-min-noconflict/mode-json.js',
+      'app/bower_components/ace-builds/src-min-noconflict/mode-yaml.js',
+      'app/bower_components/ace-builds/src-min-noconflict/theme-idle_fingers.js',
+      'app/bower_components/ace-builds/src-min-noconflict/worker-json.js',
+      'app/bower_components/angular-ui-ace/ui-ace.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

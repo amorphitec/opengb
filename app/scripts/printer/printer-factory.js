@@ -7,6 +7,7 @@
 
         var baseUrl = 'ws://localhost:8000/ws';
         var printerFactory = {};
+	var printer = {};
         var ws = $websocket.$new(baseUrl);
 
 	ws.$on('$open', function () {
@@ -32,11 +33,11 @@
 	}
 
         printerFactory.loadFile = function (file) {
-            return null
+            return null;
         };
 
         printerFactory.startPrint = function (file) {
-            return null
+            return null;
         };
 
         printerFactory.pausePrint = function (file) {
@@ -44,12 +45,11 @@
         };
 
         printerFactory.tempUpdate = function (file) {
-
-        	return null
+	    return null;
         };
 
         printerFactory.printProgress = function (file) {
-            return null
+            return null;
         };
 
 	printerFactory.movePrintHead = function (position){
@@ -58,11 +58,30 @@
 	};
 
         printerFactory.zChange = function (file) {
-            return null
+            return null;
         };
+ 
 
+	// SETUP PARAMETERS TO BE USED ACROSS DIFFERENT CONTROLLERS
 
-	printerFactory.ws = ws;
+	printerFactory.setGcode = function(gcode){
+		printer.gcode = gcode;
+		console.log("new gcode has be loaded");
+	};
+	printerFactory.getGcode = function(){
+		return printer.gcode;
+	};
+
+	printerFactory.setPosition = function(position){
+		printer.position = position;
+		printerFactory.movePrintHead(position);
+		console.log("printer Head has been moved to:", position );
+	};
+	printerFactory.getPosition = function(){
+		return printer.position;
+	};
+
+//	printerFactory.ws = ws;
         return printerFactory;
 
     }

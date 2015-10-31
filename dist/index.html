@@ -24,8 +24,7 @@
 
   <body layout="row" 
         ng-cloak 
-        ng-app="openGbApp"
-	ng-controller="printerController as pc">
+        ng-app="openGbApp">
 
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -59,13 +58,18 @@
     <script src="bower_components/ng-file-upload-shim/ng-file-upload-shim.js"></script>
     <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
     <script src="bower_components/ng-websocket/ng-websocket.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-json.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-yaml.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/theme-idle_fingers.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/worker-json.js"></script>
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js(.) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/printer/printer-factory.js"></script>
-    <script src="scripts/printer/printer-controller.js"></script>
     <script src="scripts/modules/files/file-factory.js"></script>
     <script src="scripts/modules/files/file-controller.js"></script>
     <script src="scripts/modules/template/app.js"></script>
@@ -75,6 +79,7 @@
     <script src="scripts/modules/files/directives/file-image/file-image-directive.js"></script>
     <script src="scripts/modules/files/directives/file-dropbox/file-dropbox-directive.js"></script>
     <script src="scripts/modules/files/directives/file-search-list/file-search-list-directive.js"></script>
+    <script src="scripts/modules/controls/controls-controller.js"></script>
     <script src="scripts/modules/controls/directives/controls-cube/controls-cube-directive.js"></script>
 
     <script src="scripts/lib/d3/d3Service.js"></script>

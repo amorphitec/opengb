@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function controller($scope, $http, fileFactory, lodash, gcodeService){
+    function controller($scope, $http, fileFactory, printerFactory, lodash, gcodeService){
 
     	function getAllFiles(){
 
@@ -13,7 +13,7 @@
 
 	            })
 	            .error(function (error) {
-	                console.log( 'Unable to load files data: ' + error );
+	                console.log( 'Unable to load files data: ', error );
 	            });
 
     	}
@@ -36,8 +36,11 @@
         }
 
         function preflightCheck(){
-            setTimeout(function(){vm.printReady = true;$scope.$apply()}, 5000);
-        };
+            setTimeout(function(){
+		vm.printReady = true;
+		$scope.$apply();
+	    }, 5000);
+        }
 
         // In order to watch a 'vm.' vs '$scope.' object, you must use .$watch(function(){},function(){}) format
         $scope.$watch(
@@ -66,6 +69,8 @@
                     vm.fileRenderer = true;
                     vm.printReady = false;
 
+		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
+		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
                     if(!vm.selectedFile.contents && vm.selectedFile.url){
 
                         var file = {};
@@ -83,7 +88,8 @@
                     }
 
                     if(vm.selectedFile){
-                        preflightCheck();
+			printerFactory.setGcode(vm.selectedFile.contents);
+			preflightCheck();
                     }
 
                 }
@@ -120,6 +126,6 @@
 
     angular
         .module('openGbApp')
-        .controller('fileController', ['$scope', '$http', 'fileFactory', 'lodash', 'gcodeService', controller ]);
+        .controller('fileController', ['$scope', '$http', 'fileFactory', 'printerFactory', 'lodash', 'gcodeService', controller ]);
 
 })(angular);    

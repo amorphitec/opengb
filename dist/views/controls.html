@@ -2,7 +2,8 @@
 <link rel="stylesheet" href="styles/directives/controls-cube.css">
 <!-- endbuild -->
 
-    <div flex layout="column">
+    <div flex layout="column" 
+	ng-controller="controlsController as cc">
 
       <md-tabs md-dynamic-height md-stretch-tabs="always" >
         <md-tab>
@@ -10,9 +11,9 @@
               position
             </md-tab-label>
             <md-tab-body>
-		<controls-cube cc-pos-x="pc.position.x"  
-			       cc-pos-y="pc.position.y"  
-			       cc-pos-z="pc.position.z"  
+		<controls-cube cc-pos-x="cc.position.x"  
+			       cc-pos-y="cc.position.y"  
+			       cc-pos-z="cc.position.z"  
 			       cc-resolution="10">
 		</controls-cube>
 		{{pc.position}}
@@ -30,6 +31,7 @@
               g code
             </md-tab-label>
             <md-tab-body>
+		<div ui-ace="" style="width:80%;margin:0 auto;height:50vh;margin-top:10vh;" ng-model="cc.gcode"></div>
             </md-tab-body>
         </md-tab>
       </md-tabs>
