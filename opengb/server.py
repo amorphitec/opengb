@@ -122,6 +122,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.dispatcher = Dispatcher(message_handler)
         super().__init__(*args, **kwargs)
 
+    def check_origin(self, origin):
+        return True
+
     def open(self):
         LOGGER.info('New connection from {0}'.format(self.request.remote_ip))
         CLIENTS.append(self)
@@ -242,9 +245,10 @@ def main():
         (r"/ws", WebSocketHandler, {"to_printer": to_printer}),
         (r"/api/status", StatusHandler),
         (r"/fonts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "fonts")}),
-        (r"/img/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "img")}),
-        (r"/js/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "js")}),
-        (r"/css/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "css")}),
+        (r"/views/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "views")}),
+        (r"/images/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "images")}),
+        (r"/scripts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "scripts")}),
+        (r"/styles/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "styles")}),
         (r"/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "index.html")}),
     ]
     app = Application(handlers=handlers, debug=options.debug)
