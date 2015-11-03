@@ -81,3 +81,7 @@ class Dummy(IPrinter):
     def move_head(self, x=0, y=0, z=0):
         self._callbacks.log(logging.DEBUG, 'Moving print head: x|{0}, '
                                            'y|{1}, z|{2}'.format(x, y, z))
+
+    def home_head(self, x=True, y=True, z=True):
+        self._callbacks.log(logging.DEBUG, 'Homing print head: x|{0}, '
+                                           'y|{1}, z|{2}'.format(x, y, z))

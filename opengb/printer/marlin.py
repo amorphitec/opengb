@@ -134,6 +134,21 @@ class Marlin(IPrinter):
     def move_head(self, x=0, y=0, z=0):
         # Switch to relative coordinates before sending.
         # TODO: does it matter to send G91 every time?
+        # TODO: send this all on one line?
         self._send_command(b'G91')
-        # TODO: confirm that it's ok to send 0 for no movement.
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+
+    def home_head(self, x=True, y=True, z=True):
+        if not x and not y and not z:
+            # Not homing any axes so don't bother sending a command.
+            return
+        # Switch to relative coordinates before sending.
+        self._send_command(b'G90')
+        command = 'G28'
+        if x:
+            command += ' X'
+        if y:
+            command += ' Y'
+        if z:
+            command += ' Z'
+        self._send_command(command.encode())

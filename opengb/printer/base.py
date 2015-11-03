@@ -331,6 +331,20 @@ class IPrinter(multiprocessing.Process):
         """
         pass
 
+    @abc.abstractmethod
+    def home_head(self, x=True, y=True, z=True):
+        """
+        Home the print head along one or more axes.
+
+        :param x: Whether or not to home the X axis.
+        :type x: :class:`bool`
+        :param y: Whether or not to home the Y axis.
+        :type y: :class:`bool`
+        :param z: Whether or not to home the Z axis.
+        :type z: :class:`bool`
+        """
+        pass
+
     def _print_file():
         # TODO: implement
         #    thread_printer = threading.Thread(target=self._print_file)
