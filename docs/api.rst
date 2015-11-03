@@ -49,7 +49,10 @@ Example event (status update): ::
 Methods
 ^^^^^^^
 
-The :class:`opengb.server.MessageHandler` class contains the methods exposed to JSON-RPC 2.0 clients:
+The :class:`opengb.server.MessageHandler` class contains the methods exposed to JSON-RPC 2.0 clients.
+
+set_temp
+========
 
 .. automethod:: opengb.server.MessageHandler.set_temp
 
@@ -61,6 +64,9 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+move_head
+=========
+
 .. automethod:: opengb.server.MessageHandler.move_head
 
 Example request: ::
@@ -70,6 +76,9 @@ Example request: ::
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
+
+get_counters
+============
 
 .. automethod:: opengb.server.MessageHandler.get_counters
 
