@@ -3,7 +3,7 @@
 API
 ---
 
-OpenGB functionality is exposed via a `JSON-RPC 2.0` API over HTTP using WebSockets.
+OpenGB functionality is exposed via a `JSON-RPC 2.0`_ API over HTTP using WebSockets.
 
 
 Connecting
@@ -22,7 +22,7 @@ To connect using Javascript::
 Message Types
 ^^^^^^^^^^^^^
 
-In accordance with the `JSON-RPC 2.0 spec` there are two distinct message types used by the API. The payloads of both are encoded as JSON objects.
+In accordance with the `JSON-RPC 2.0 spec`_ there are two distinct message types used by the API. The payloads of both are encoded as JSON objects.
 
 Method
 ======
