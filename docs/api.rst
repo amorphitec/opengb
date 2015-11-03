@@ -40,7 +40,7 @@ Example response: ::
 Event
 =====
 
-The server sends a JSON-RPC 2.0 message to the client defining an event which has occured.
+The server sends an unsolicited JSON-RPC 2.0 message to the client defining an event which has occured.
 
 Example event (temperature update): ::
 
