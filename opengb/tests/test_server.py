@@ -67,11 +67,35 @@ class TestMoveHead(OpengbTestCase):
             "method": "move_head",
             "params": {"x": 0.02, "y": -4, "z": 2}})
 
-    def test_set_bed_temp_defaults_to_zero(self):
+    def test_move_head_x_defaults_to_zero(self):
         """Unspecified x is passed to_the printer as 0."""
         mh = self.message_handler.move_head(y=-4, z=2)
         self.assertEqual(
             json.loads(self.to_printer.get())["params"]["x"], 0)
+    
+class TestHomeHead(OpengbTestCase): 
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(to_printer=self.to_printer)
+
+    def test_pass_home_head_method_to_printer(self):
+        """Valid x,y,z values result in a 'home_head' message on the to_printer queue."""
+        mh = self.message_handler.home_head(x=True, y=True, z=False)
+        self.assertEqual(json.loads(self.to_printer.get())["method"], "home_head")
+
+    def test_valid_xyz_passed_to_printer(self):
+        """Valid x,y,z values are added as a message on the to_printer queue."""
+        mh = self.message_handler.home_head(x=True, y=True, z=False)
+        self.assertDictEqual(json.loads(self.to_printer.get()), {
+            "method": "home_head",
+            "params": {"x": True, "y": True, "z": False}})
+
+    def test_home_head_x_defaults_to_True(self):
+        """Unspecified x is passed to_the printer as True."""
+        mh = self.message_handler.home_head(y=True, z=False)
+        self.assertEqual(
+            json.loads(self.to_printer.get())["params"]["x"], True)
     
 class TestGetCounters(OpengbTestCase):
 

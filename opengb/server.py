@@ -100,6 +100,27 @@ class MessageHandler(object):
         }))
         return True
 
+    def home_head(self, x=True, y=True, z=True):
+        """
+        Home the print head along one or more axes.
+
+        :param x: Whether or not to home the X axis.
+        :type x: :class:`bool`
+        :param y: Whether or not to home the Y axis.
+        :type y: :class:`bool`
+        :param z: Whether or not to home the Z axis.
+        :type z: :class:`bool`
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'home_head',
+            'params': {
+                'x':    x,
+                'y':    y,
+                'z':    z,
+            }
+        }))
+        return True
+
     def get_counters(self):
         """
         Get printer counter values.

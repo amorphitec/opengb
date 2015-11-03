@@ -77,6 +77,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+home_head
+=========
+
+.. automethod:: opengb.server.MessageHandler.home_head
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"home_head","params":{"x":true,"y":true,"z":false}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 get_counters
 ============
 
