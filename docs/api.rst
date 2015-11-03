@@ -81,5 +81,18 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128 "motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
 
+Events
+^^^^^^
+
+temp_update
+===========
+
+Sent periodically to provide current and target temperatures of printer components.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "temp_update", "params": { "bed_current": 205, "bed_target": 0, " "nozzle1_current": 106, nozzle1_target": 0, "nozzle2_current": 101, "nozzle2_target": 0}}
+
+
 .. _`JSON-RPC 2.0`: http://www.jsonrpc.org
 .. _`JSON-RPC 2.0 spec`: http://www.jsonrpc.org/specification
