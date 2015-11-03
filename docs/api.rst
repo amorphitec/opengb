@@ -24,12 +24,12 @@ Message Types
 
 In accordance with the `JSON-RPC 2.0 spec` there are two distinct message types used by the API. The payloads of both are encoded as JSON objects.
 
-Request/Response
-================
+Method
+======
 
-The client sends a JSON-RPC 2.0 request and the server responds with a JSON-RPC 2.0 response.
+The client sends a JSON-RPC 2.0 request to the server defining a method call and the server replies with a JSON-RPC 2.0 response.
 
-Example request (setting temperatures): ::
+Example request (setting target temperatures): ::
 
     {"jsonrpc":"2.0","id":1,"method":"set_temp","params":{"bed":105,"nozzle1":206,"nozzle2":203}}
 
@@ -40,9 +40,9 @@ Example response: ::
 Event
 =====
 
-The server sends a message to the client to notify the client of an event which has occured.
+The server sends a JSON-RPC 2.0 message to the client defining an event which has occured.
 
-Example event (status update): ::
+Example event (temperature update): ::
 
     {"event":"temp","jsonrpc":"2.0","params":{"bed_current":203,"bed_target":105,"nozzle2_target":203,"nozzle1_current":104,"nozzle2_current":108,"nozzle1_target":206}}
 
