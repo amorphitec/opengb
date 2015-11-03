@@ -165,14 +165,14 @@ def process_event(event):
     """
     global PRINTER
     try:
-        if event['event'] == 'state':
+        if event['event'] == 'state_change':
             # TODO: if state changes from printing to ready, reset progress.
             PRINTER['state'] = opengb.printer.State(event['params']['new'])
-        elif event['event'] == 'temp':
+        elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params'] 
-        elif event['event'] == 'progress':
+        elif event['event'] == 'print_progress':
             PRINTER['progress'] = event['params']
-        elif event['event'] == 'zchange':
+        elif event['event'] == 'z_change':
             # TODO: trigger update camera image. 
             pass
     except KeyError as e:

@@ -161,7 +161,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def state_change(self, old, new):
         self._publish({
-            'event':   'state',
+            'event':   'state_change',
             'params':   {
                 'old':      old.value,
                 'new':      new.value,
@@ -171,7 +171,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
     def temp_update(self, bed_current, bed_target, nozzle1_current,
                     nozzle1_target, nozzle2_current, nozzle2_target):
         self._publish({
-            'event':   'temp',
+            'event':   'temp_update',
             'params':   {
                 'bed_current':      bed_current,
                 'bed_target':       bed_target,
@@ -184,7 +184,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def print_progress(self, current_file, current_line, total_lines):
         self._publish({
-            'event':   'progress',
+            'event':   'print_progress',
             'params':   {
                 'current_file': current_file,
                 'current_line': current_line,
@@ -194,7 +194,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
 
     def z_change(self, position):
         self._publish({
-            'event':  'ZCHANGE',
+            'event':  'z_change',
             'position':  new_z,
         })
 
