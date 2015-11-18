@@ -7,8 +7,9 @@ function switchContent(content) {
 function parseMessage(message) {
   data = JSON.parse(message.data)
   if ("event" in data) {
+    console.log(data.params)
     switch(data.event) {
-      case 'temp':
+      case 'temp_update':
         $("#bed-temp-current").text(data.params.bed_current);
         $("#bed-temp-target").text(data.params.bed_target);
         $("#nozzle1-temp-current").text(data.params.nozzle1_current);
