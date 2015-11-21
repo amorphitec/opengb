@@ -90,6 +90,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+upload_gcode_file
+=================
+
+.. automethod:: opengb.server.MessageHandler.upload_gcode_file
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"upload_gcode_file","params":{"name":"test_cube.gco","payload":<gcode>}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":{"id":3,"name":"test_cube.gco"}}
+
 get_counters
 ============
 

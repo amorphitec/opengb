@@ -19,6 +19,7 @@ import tornado.websocket
 from tornado.options import options
 from tornado.web import Application, RequestHandler, StaticFileHandler
 from jsonrpc import JSONRPCResponseManager, Dispatcher 
+from jsonrpc.exceptions import JSONRPCServerError
 
 import opengb.config
 import opengb.printer
@@ -120,6 +121,28 @@ class MessageHandler(object):
             }
         }))
         return True
+
+    def upload_gcode_file(self, payload, name):
+        """
+        Upload a gcode file.
+
+        :param payload: Gcode file as ASCII text.
+        :type payload: :class:`str`
+        :param name: Gcode file name.
+        :type name: :class:`str`
+        """
+        # TODO: Validate gcode. Could use gctools for this if it is 
+        # ever uploaded to PyPI https://github.com/thegaragelab/gctools
+        gcode_file = ODB.GCodeFile.create(name=name)
+        destination = os.path.join(options.gcode_dir, str(gcode_file.id))
+        with open(destination, "wb") as gcode_file_out:
+            try:
+                gcode_file_out.write(payload.encode())
+            except IOError as e:
+                LOGGER.error('Error writing gcode file {0}: '
+                             '{1}'.format(destination, e))
+                raise JSONRPCServerError('Unable to save gcode file.')
+        return {'id': gcode_file.id, 'name': name}
 
     def get_counters(self):
         """
