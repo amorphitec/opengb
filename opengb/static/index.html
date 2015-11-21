@@ -278,6 +278,11 @@
               <div class="col-sm-2"><button type="button" class="btn btn-default btn-sm">Print</button></div>
               <div class="col-sm-1"></div>
             </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-5"><input type="file" id="gcode_upload" name="gcode_file"/></div>
+              <div class="col-sm-1"></div>
+              <div class="col-sm-5"><output id="gcode_details"></output></div>
           </div>
           <div id="page-statistics" class="content" style="display: none">
             <div class="row">
@@ -306,6 +311,7 @@
     socket.onmessage = function (message) {
       parseMessage(message)
     };
+    $("#gcode_upload").on("change", {file: $("#gcode_upload").prop("files")}, handleGcodeFileSelect);
     $(document).ready(function() {
       $("#page-splash").fadeIn(3000);
     });

@@ -7,7 +7,7 @@ function switchContent(content) {
 function parseMessage(message) {
   data = JSON.parse(message.data)
   if ("event" in data) {
-    console.log(data.params)
+    //console.log(data.params)
     switch(data.event) {
       case 'temp_update':
         $("#bed-temp-current").text(data.params.bed_current);
@@ -64,4 +64,26 @@ function getCounter() {
     'params': {}
   };
   socket.send(JSON.stringify(message)); 
+}
+
+function handleGcodeFileSelect(event) {
+  var file = event.data.file[0];
+  $("#gcode_details").text(file.name + ': ' + file.size + 'bytes');
+  // now upload
+  var reader = new FileReader();
+  reader.onload = (function(event) {
+    var payload = event.target.result;
+    var message = {
+      'jsonrpc': '2.0',
+      'id':       3,
+      'method':  'upload_gcode_file',
+      'params': {
+        'payload': payload,
+        'name': file.name,
+      }
+    };
+    console.log('uploading ' + file.name);
+    socket.send(JSON.stringify(message)); 
+  });
+  reader.readAsText(file);
 }
