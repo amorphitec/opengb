@@ -32,6 +32,10 @@ class PrintJob(BaseModel):
     end = DateTimeField()
 
 
+class GCodeFile(BaseModel):
+    name = CharField()
+
+
 class Counter(BaseModel):
     name = CharField()
     count = IntegerField()
@@ -58,6 +62,7 @@ def initialize(path):
     # Create database tables if not already present.
     DB.create_tables([
         PrintJob,
+        GCodeFile,
         Counter,
     ], safe=True)
 
