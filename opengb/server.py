@@ -141,8 +141,56 @@ class MessageHandler(object):
             except IOError as e:
                 LOGGER.error('Error writing gcode file {0}: '
                              '{1}'.format(destination, e))
-                raise JSONRPCServerError('Unable to save gcode file.')
-        return {'id': gcode_file.id, 'name': name}
+                raise IOError('Unable to save gcode file.')
+        return {'id': gcode_file.id, 'name': name, 'size': payload_size}
+
+    def get_gcode_file(self, id, content=False):
+        """
+        Get details of a single gcode file with the given id.
+
+        Optionally include the gcode file content.
+
+        TODO: testing and docs
+
+        :param content: Include the gcode file content in the results.
+        :type content: :class:`bool` (default False)
+        """
+        try:
+            result = ODB.GCodeFile.get(ODB.GCodeFile.id == id)
+            gcode_file = {
+                'id':   result.id,
+                'name': result.name,
+                'size': result.size,
+            }
+        except ODB.GCodeFile.DoesNotExist:
+            raise IndexError('No gcode file found with id {0}'.format(id))
+        if content:
+            destination = os.path.join(options.gcode_dir, str(id))
+            if not os.path.isfile(destination):
+                LOGGER.error('Error reading gcode file '
+                             '{0}'.format(destination))
+                raise IndexError('No gcode file found with id {0}'.format(id))
+            with open(destination, "r") as gcode_file_in:
+                try:
+                    gcode = gcode_file_in.read()
+                except IOError:
+                    LOGGER.error('Error reading gcode file '
+                                 '{0}'.format(destination))
+                    raise IndexError('Error reading gcode file')
+            gcode_file['content'] = gcode
+        return gcode_file
+
+    def get_gcode_files(self):
+        """
+        Get details of all gcode files.
+        """
+        return {'gcode_files': [
+            {
+                'id': g.id,
+                'name': g.name,
+                'size': g.size,
+            }
+            for g in ODB.GCodeFile.select()]}
 
     def get_counters(self):
         """
