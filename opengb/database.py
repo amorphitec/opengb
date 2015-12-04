@@ -34,6 +34,7 @@ class PrintJob(BaseModel):
 
 class GCodeFile(BaseModel):
     name = CharField()
+    size = IntegerField()
 
 
 class Counter(BaseModel):
