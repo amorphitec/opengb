@@ -8,7 +8,6 @@ process and communicates with it via queues.
 import os
 import sys
 import json
-import logging
 import multiprocessing
 from pkg_resources import Requirement, resource_filename
 
@@ -18,8 +17,7 @@ import tornado.log
 import tornado.websocket
 from tornado.options import options
 from tornado.web import Application, RequestHandler, StaticFileHandler
-from jsonrpc import JSONRPCResponseManager, Dispatcher 
-from jsonrpc.exceptions import JSONRPCServerError
+from jsonrpc import JSONRPCResponseManager, Dispatcher
 
 import opengb.config
 import opengb.printer
@@ -63,11 +61,11 @@ class MessageHandler(object):
 
         Unspecified target temperatures will remain unchanged.
 
-        :param bed: Bed target temperature. 
+        :param bed: Bed target temperature.
         :type bed: :class:`float`
-        :param nozzle1: Nozzle1 target temperature. 
+        :param nozzle1: Nozzle1 target temperature.
         :type nozzle1: :class:`float`
-        :param nozzle2: Nozzle2 target temperature. 
+        :param nozzle2: Nozzle2 target temperature.
         :type nozzle2: :class:`float`
         """
         self._to_printer.put(json.dumps({
@@ -131,13 +129,15 @@ class MessageHandler(object):
         :param name: Gcode file name.
         :type name: :class:`str`
         """
-        # TODO: Validate gcode. Could use gctools for this if it is 
+        # TODO: Validate gcode. Could use gctools for this if it is
         # ever uploaded to PyPI https://github.com/thegaragelab/gctools
-        gcode_file = ODB.GCodeFile.create(name=name)
+        payload_bytes = payload.encode()
+        payload_size = len(payload_bytes)
+        gcode_file = ODB.GCodeFile.create(name=name, size=payload_size)
         destination = os.path.join(options.gcode_dir, str(gcode_file.id))
         with open(destination, "wb") as gcode_file_out:
             try:
-                gcode_file_out.write(payload.encode())
+                gcode_file_out.write(payload_bytes)
             except IOError as e:
                 LOGGER.error('Error writing gcode file {0}: '
                              '{1}'.format(destination, e))
@@ -236,14 +236,14 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.request.remote_ip, message))
         response = JSONRPCResponseManager.handle(message, self.dispatcher)
         LOGGER.debug('Sending response to {0}: {1}'.format(
-                self.request.remote_ip, response._data))
+            self.request.remote_ip, response._data))
         self.write_message(response.json)
 
 
 class StatusHandler(RequestHandler):
     def get(self):
         self.write(json.dumps(PRINTER, cls=opengb.printer.StateEncoder))
-        self.set_header("Content-Type", "application/json") 
+        self.set_header("Content-Type", "application/json")
 
 
 def broadcast_message(message):
@@ -264,13 +264,13 @@ def process_event(event):
             # TODO: if state changes from printing to ready, reset progress.
             PRINTER['state'] = opengb.printer.State(event['params']['new'])
         elif event['event'] == 'temp_update':
-            PRINTER['temp'] = event['params'] 
+            PRINTER['temp'] = event['params']
         elif event['event'] == 'print_progress':
             PRINTER['progress'] = event['params']
         elif event['event'] == 'z_change':
-            # TODO: trigger update camera image. 
+            # TODO: trigger update camera image.
             pass
-    except KeyError as e:
+    except KeyError:
         LOGGER.error('Malformed event from printer: {0}'.format(event))
 
 
@@ -311,6 +311,7 @@ def update_counters(count=1):
         ODB.Counter.name.contains('uptime'))
     query.execute()
 
+
 def main():
     # Load config.
     options.parse_config_file(opengb.config.CONFIG_FILE)
@@ -326,7 +327,8 @@ def main():
     printer_callbacks = opengb.printer.QueuedPrinterCallbacks(from_printer)
     printer_type = getattr(opengb.printer, options.printer)
     printer = printer_type(to_printer, printer_callbacks,
-                           baud_rate=options.baud_rate, port=options.serial_port)
+                           baud_rate=options.baud_rate,
+                           port=options.serial_port)
     printer.daemon = True
     printer.start()
 
@@ -334,14 +336,22 @@ def main():
     install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
     static_dir = os.path.join(install_dir, 'static')
     handlers = [
-        (r"/ws", WebSocketHandler, {"to_printer": to_printer}),
+        (r"/ws", WebSocketHandler,
+            {"to_printer": to_printer}),
+        # TODO: get rid of this?
         (r"/api/status", StatusHandler),
-        (r"/fonts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "fonts")}),
-        (r"/views/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "views")}),
-        (r"/images/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "images")}),
-        (r"/scripts/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "scripts")}),
-        (r"/styles/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "styles")}),
-        (r"/(.*)", StaticFileHandler, {"path": os.path.join(static_dir, "index.html")}),
+        (r"/fonts/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "fonts")}),
+        (r"/views/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "views")}),
+        (r"/images/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "images")}),
+        (r"/scripts/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "scripts")}),
+        (r"/styles/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "styles")}),
+        (r"/(.*)", StaticFileHandler,
+            {"path": os.path.join(static_dir, "index.html")}),
     ]
     app = Application(handlers=handlers, debug=options.debug)
     httpServer = tornado.httpserver.HTTPServer(app)

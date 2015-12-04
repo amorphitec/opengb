@@ -261,7 +261,8 @@ class TestGetCounters(OpengbTestCase):
             'filament_up_mins':         777,
         }
         self.to_printer = Queue()
-        self.message_handler = server.MessageHandler(to_printer=self.to_printer)
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
 
     def test_get_counters_returns_correct_values(self):
         """Correct counter values are returned from the database."""
