@@ -22,6 +22,9 @@ setup(
         'peewee>=2.6.3,<3',
         'json-rpc>=1.10.2,<2',
     ],
+    tests_require=[
+        'mock>-1.8.1,<2',
+    ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: End Users/Desktop',
