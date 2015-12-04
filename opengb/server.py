@@ -150,8 +150,6 @@ class MessageHandler(object):
 
         Optionally include the gcode file content.
 
-        TODO: testing and docs
-
         :param content: Include the gcode file content in the results.
         :type content: :class:`bool` (default False)
         """
