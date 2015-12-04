@@ -103,6 +103,32 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":{"id":3,"name":"test_cube.gco"}}
 
+get_gcode_file
+==============
+
+.. automethod:: opengb.server.MessageHandler.get_gcode_file
+
+Example request: ::
+ 
+    {"jsonrpc":"2.0","id":1,"method":"get_gcode_file","params":{"id": 1}}
+ 
+Example response: ::
+ 
+    {"id": 1, "jsonrpc": "2.0", "result": {"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode"}}
+
+get_gcode_files
+===============
+
+.. automethod:: opengb.server.MessageHandler.get_gcode_files
+
+Example request: ::
+ 
+    {"jsonrpc":"2.0","id":1,"method":"get_gcode_files","params":{}
+ 
+Example response: ::
+
+    {"jsonrpc": "2.0", "id": 1, "result": {"gcode_files": [{"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode"}, {"size": 24356, "id": 2, "name": "10mm_Test_Cube.gcode"}]}} 
+ 
 get_counters
 ============
 
