@@ -6,31 +6,29 @@
 	<!-- endbuild -->
 
 
-	<div id="cube-wrapper" class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-0">
-		<div id="cube" class="edge-top" ng-class="controlsController.side">
-			<div class="face one">
-				<span class="position-status" style="width:20px;position:absolute;background:rgba(0,0,0,.4);height:100%;left:{{posX}}px"></span>
-				<span class="position-status" style="width:100%;position:absolute;background:rgba(0,0,0,.4);height:20px;bottom:{{posY}}px"></span>
-				<div class="ctrl" id="x-down" ng-click="jogDownX()"></div>
-				<div class="ctrl" id="y-up" ng-click="jogUpY()"></div>
-				<div class="ctrl" id="y-down" ng-click="jogDownY()"></div>
-				<div class="ctrl" id="x-up" ng-click="jogUpX()"></div>
+	<div id="cube-wrapper">
+		<div id="cube" class="edge-top" ng-class="side">
+			<div class="face one" layout="row" layout-align="center">
+				<div flex="30" style="position:relative;">
+					<div id="x-down" class="ctrl" ng-click="jogDownX()"></div>
+				</div>
+				<div layout="column" flex="40" layout-align="center center" style="position:relative;">
+					<div class="ctrl" flex="50" id="y-up" ng-click="jogUpY()"></div>
+					<div class="ctrl" flex="50" id="y-down" ng-click="jogDownY()"></div>
+				</div>
+				<div flex="30" style="position:relative;">
+					<div class="ctrl" id="x-up" ng-click="jogUpX()"></div>
+				</div>
 			</div>
 			<div class="face two">
-				<span class="position-status" style="width:100%;position:absolute;background:rgba(0,0,0,.4);height:20px;top:{{posZ}}px"></span>
 				<div class="ctrl" id="z-up" ng-click="jogUpZ()"></div>
 				<div class="ctrl" id="z-down" ng-click="jogDownZ()"></div>
 			</div>
 		</div>
-		<div id="cube-info">
-			<p class="centered" data-ng-click="toggleSide()">
+		<div id="cube-info" layout="row">
+			<div>
 				click to change view
-			</p>
-			<p class="centered">
-				{{posX}}, 
-				{{posY}}, 
-				{{posZ}}
-			</p>
+			</div>
 		</div>
 	</div>	
 

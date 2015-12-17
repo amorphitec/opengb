@@ -36,3 +36,5 @@
         flex-shrink: 0;
         z-index: 2;
       }
+
+      md-sidenav{min-height: 100vh;}
