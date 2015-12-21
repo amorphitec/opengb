@@ -15,6 +15,6 @@
 
     angular
         .module('openGbApp')
-        .controller('controlsController', ['$scope', '$http', 'printerFactory', controller ]);
+        .controller('printerController', ['$scope', '$http', 'printerFactory', controller ]);
 
 })(angular);    

@@ -51,7 +51,7 @@
 				posZ:'=ccPosZ',
 				resolution:'=ccResolution'
             },
-            'templateUrl': '/scripts/modules/controls/directives/controls-cube/controls-cube-template.html',
+            'templateUrl': 'scripts/modules/controls/directives/controls-cube/controls-cube-template.html',
             'link': link
         };
 

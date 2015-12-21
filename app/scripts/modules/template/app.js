@@ -19,4 +19,9 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngMaterial',
-  ]);
+  ]).config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('yellow')
+      .accentPalette('grey');
+    }
+  );

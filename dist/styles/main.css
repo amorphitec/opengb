@@ -8,12 +8,12 @@
   padding: 0.2em 0;
 }
 
-md-icon{font-size:24px;}
 md-list{padding:0;}
 md-item{position:relative;}
 md-item-content.active{background:#eee;}
 .md-button.duck{margin-right:-48px;}
 md-content{z-index: 0;}
+.md-ink-ripple{position:relative;}
 
 [ng-panel] {
   transition: 0.45s cubic-bezier(0.35, 0, 0.25, 1);
@@ -52,6 +52,9 @@ html {
   font-size: 62.5%;
   line-height: 1.4;
 }
+html, body {
+  min-height : 100%;
+}
 body {
   font-size: 1.6rem;
 }
@@ -63,7 +66,7 @@ body {
 }
 
 a {
-  color: #106CC8;
+  color: #333333;
   text-decoration: none;
   font-weight: 400;
   border-bottom: 1px solid rgba(64, 84, 178, 0.25);
@@ -73,6 +76,7 @@ a {
   -o-transition: border-bottom 0.35s;
   transition: border-bottom 0.35s;
 }
+
 a:hover, a:focus {
   border-bottom: 1px solid #4054B2;
 }

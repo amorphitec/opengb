@@ -7,6 +7,7 @@
     <title>My Open Gigabot</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <meta name="theme-color" content="#fecc09">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -15,6 +16,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
+    <link rel="stylesheet" href="styles/fonts/Proxima Nova/stylesheet.css">
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
@@ -24,7 +26,8 @@
 
   <body layout="row" 
         ng-cloak 
-        ng-app="openGbApp">
+        ng-app="openGbApp"
+	ng-controller="printerController as pc">
 
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -32,11 +35,11 @@
 
     <!-- Add your site or application content here -->
 
-    <mdt-top-toolbar></mdt-top-toolbar>
+    <mdt-top-toolbar hide-gt-sm></mdt-top-toolbar>
     <mdt-navigation-menu></mdt-navigation-menu>
 
     <div layout="column" tabIndex="-1" role="main" flex style="min-height:100vh;">
-      <div ng-view style="margin-top:65px;height:calc(100vh - 65px);"></div>
+      <div ng-view style="height:100vh;"></div>
     </div>
 
     <!-- End of your site or application content -->
@@ -70,6 +73,7 @@
     <!-- build:js(.) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/printer/printer-factory.js"></script>
+    <script src="scripts/printer/printer-controller.js"></script>
     <script src="scripts/modules/files/file-factory.js"></script>
     <script src="scripts/modules/files/file-controller.js"></script>
     <script src="scripts/modules/template/app.js"></script>
@@ -79,8 +83,10 @@
     <script src="scripts/modules/files/directives/file-image/file-image-directive.js"></script>
     <script src="scripts/modules/files/directives/file-dropbox/file-dropbox-directive.js"></script>
     <script src="scripts/modules/files/directives/file-search-list/file-search-list-directive.js"></script>
-    <script src="scripts/modules/controls/controls-controller.js"></script>
+    <script src="scripts/modules/files/directives/file-data-table/file-data-table-directive.js"></script>
     <script src="scripts/modules/controls/directives/controls-cube/controls-cube-directive.js"></script>
+    <script src="scripts/modules/controls/directives/temperature-status/temperature-status-directive.js"></script>
+    <script src="scripts/modules/statistics/directives/temperature-graph/temperature-graph-directive.js"></script>
 
     <script src="scripts/lib/d3/d3Service.js"></script>
     <script src="scripts/lib/gcode/gcodeService.js"></script>
