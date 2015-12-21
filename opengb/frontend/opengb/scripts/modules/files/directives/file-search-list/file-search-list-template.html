@@ -1,0 +1,28 @@
+    <div>
+
+      <md-input-container>
+        <label>search</label>
+        <input ng-model="filterString" type="text" ng-change="filterFiles()">
+      </md-input-container>
+
+      <div ng-hide="hide()" ng-switch on="view">
+
+        <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="10px" ng-switch-when="block">
+          <md-grid-tile ng-repeat="file in filteredFileList" ng-click="selectFile(file)">
+            <og-file-image og-fi-file="file"></og-file-image>
+            <md-grid-tile-footer><h3>{{file.name}}</h3></md-grid-tile-footer>
+          </md-grid-tile>
+        </md-grid-list>
+
+        <md-list-item class="md-3-line" ng-repeat="file in filteredFileList" ng-switch-default>
+          <img ng-src="{{file.image}}" class="md-avatar" alt="" />
+          <div class="md-list-item-text" layout="column">
+            <h3>{{ file.name }}</h3>
+            <h4>{{ file.url }}</h4>
+            <p>tags: {{ file.meta.tags.toString() }}</p>
+          </div>
+
+        </md-list-item>
+      </div>
+
+    </div>

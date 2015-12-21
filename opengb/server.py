@@ -318,13 +318,12 @@ def get_frontend_handlers(frontend_name):
     NOTE: Currently each frontend dir must conform to a specific layout:
     
         frontend_name
-            /dist
-                /bower_components
-                /fonts
-                /images
-                /scripts
-                /styles
-                /views
+            /bower_components
+            /fonts
+            /images
+            /scripts
+            /styles
+            /views
             
         This may change in the future if different frontends have different
         directory structures. But for now we use the same directory structure
@@ -339,7 +338,7 @@ def get_frontend_handlers(frontend_name):
     if frontend_name == 'None':
         return []
     install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
-    frontend_dir = os.path.join(install_dir, 'frontend', frontend_name, 'dist')
+    frontend_dir = os.path.join(install_dir, 'frontend', frontend_name)
     if not os.path.isdir(frontend_dir):
         raise IOError('Frontend dir not found: {0}.'.format(frontend_dir))
     return [
