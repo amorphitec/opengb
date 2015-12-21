@@ -47,25 +47,27 @@ Install package
 
     pip install -e git+git://github.com/re-3D/opengb@master#egg=opengb
 
-Create database directory
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Create data directories
+^^^^^^^^^^^^^^^^^^^^^^^
 
 *Note: this will happen automatically when OpenGB is distributed as a package.*
 
 ::
 
     sudo mkdir /var/opengb
-    sudo chown <your_user>:<your_group> /var/opengb
+    sudo mkdir /var/opengb/db
+    sudo mkdir /var/opengb/gcode
+    sudo chown -R <your_user>:<your_group> /var/opengb
 
-Create gcode directory
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Create log directory
+^^^^^^^^^^^^^^^^^^^^
 
 *Note: this will happen automatically when OpenGB is distributed as a package.*
 
 ::
 
-    sudo mkdir /var/opengb/gcode
-    sudo chown <your_user>:<your_group> /var/opengb/gcode
+    sudo mkdir /var/log/opengb
+    sudo chown <your_user>:<your_group> /var/log/opengb
 
 Deploy config file
 ^^^^^^^^^^^^^^^^^^
