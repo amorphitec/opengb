@@ -120,7 +120,7 @@ class MessageHandler(object):
         }))
         return True
 
-    def upload_gcode_file(self, payload, name):
+    def put_gcode_file(self, payload, name):
         """
         Upload a gcode file.
 
