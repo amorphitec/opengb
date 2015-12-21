@@ -303,11 +303,58 @@ def update_counters(count=1):
     :param count: Value by which to increment counters.
     :type count: :class:`int`
     """
-
     LOGGER.debug('Incrementing printer counters')
     query = ODB.Counter.update(count=ODB.Counter.count+1).where(
         ODB.Counter.name.contains('uptime'))
     query.execute()
+
+
+def get_frontend_handlers(frontend_name):
+    """
+    Return handlers for frontend with the given name. 
+
+    Returns an empty list if running backend-only and no frontend is defined.
+
+    NOTE: Currently each frontend dir must conform to a specific layout:
+    
+        frontend_name
+            /dist
+                /fonts
+                /views
+                /images
+                /scripts
+                /styles
+            
+        This may change in the future if different frontends have different
+        directory structures. But for now we use the same directory structure
+        for all frontends so this does the job.
+
+    :param frontend_name: Name of frontend whose handlers to return.
+    :type frontend_name: :class:`str`
+    :returns: A list of handlers for the frontend with the given name.
+    :rtype: :class:`iterable` of :class:`tornado.web.RequestHandler`
+    :raises `IOError` if no frontend exists with `frontend_name`.
+    """
+    if frontend_name == 'None':
+        return []
+    install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
+    frontend_dir = os.path.join(install_dir, 'frontend', frontend_name, 'dist')
+    if not os.path.isdir(frontend_dir):
+        raise IOError('Frontend dir not found: {0}.'.format(frontend_dir))
+    return [
+        (r"/fonts/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "fonts")}),
+        (r"/views/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "views")}),
+        (r"/images/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "images")}),
+        (r"/scripts/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "scripts")}),
+        (r"/styles/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "styles")}),
+        (r"/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "index.html")}),
+    ]
 
 
 def main():
@@ -331,26 +378,14 @@ def main():
     printer.start()
 
     # Initialize web server.
-    install_dir = resource_filename(Requirement.parse('openGB'), 'opengb')
-    static_dir = os.path.join(install_dir, 'static')
-    handlers = [
-        (r"/ws", WebSocketHandler,
-            {"to_printer": to_printer}),
-        # TODO: get rid of this?
-        (r"/api/status", StatusHandler),
-        (r"/fonts/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "fonts")}),
-        (r"/views/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "views")}),
-        (r"/images/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "images")}),
-        (r"/scripts/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "scripts")}),
-        (r"/styles/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "styles")}),
-        (r"/(.*)", StaticFileHandler,
-            {"path": os.path.join(static_dir, "index.html")}),
-    ]
+    # Backend handler is always required.
+    handlers = [(r"/ws", WebSocketHandler, {"to_printer": to_printer})]
+    # Frontend-specfic handlers added if required.
+    try:
+        handlers += get_frontend_handlers(options.frontend)
+    except IOError as e: 
+        LOGGER.exception(e)
+        LOGGER.warn('No frontend will be served.')
     app = Application(handlers=handlers, debug=options.debug)
     httpServer = tornado.httpserver.HTTPServer(app)
     httpServer.listen(options.http_port)
