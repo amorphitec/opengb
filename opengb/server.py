@@ -319,11 +319,12 @@ def get_frontend_handlers(frontend_name):
     
         frontend_name
             /dist
+                /bower_components
                 /fonts
-                /views
                 /images
                 /scripts
                 /styles
+                /views
             
         This may change in the future if different frontends have different
         directory structures. But for now we use the same directory structure
@@ -342,16 +343,18 @@ def get_frontend_handlers(frontend_name):
     if not os.path.isdir(frontend_dir):
         raise IOError('Frontend dir not found: {0}.'.format(frontend_dir))
     return [
+        (r"/bower_components/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "bower_components")}),
         (r"/fonts/(.*)", StaticFileHandler,
             {"path": os.path.join(frontend_dir, "fonts")}),
-        (r"/views/(.*)", StaticFileHandler,
-            {"path": os.path.join(frontend_dir, "views")}),
         (r"/images/(.*)", StaticFileHandler,
             {"path": os.path.join(frontend_dir, "images")}),
         (r"/scripts/(.*)", StaticFileHandler,
             {"path": os.path.join(frontend_dir, "scripts")}),
         (r"/styles/(.*)", StaticFileHandler,
             {"path": os.path.join(frontend_dir, "styles")}),
+        (r"/views/(.*)", StaticFileHandler,
+            {"path": os.path.join(frontend_dir, "views")}),
         (r"/(.*)", StaticFileHandler,
             {"path": os.path.join(frontend_dir, "index.html")}),
     ]
