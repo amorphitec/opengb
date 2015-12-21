@@ -1,0 +1,65 @@
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/directives/controls-cube.css">
+<!-- endbuild -->
+
+    <div flex layout="column">
+
+        <md-content style="height:100vh;">
+
+        <md-tabs md-dynamic-height md-stretch-tabs="always" >
+            <md-tab>
+                <md-tab-label>
+                  controls
+                </md-tab-label>
+                <md-tab-body>
+                    <div layout="row">
+                        <div flex="50" flex-sm="100" layout-padding>
+                            <controls-cube cc-x-pos="0"  
+                                           cc-y-pos="0"  
+                                           cc-z-pos="0"  
+                                           cc-resolution="10">
+                            </controls-cube>
+                        </div>
+                        <div flex-sm="100" flex="50" layout-padding>
+                            <div layout="row" layout-align="center" layout-wrap>
+                              <div flex="33" flex-sm="100" layout-padding>
+                                <og-temperature-status ts-name="'Extruder 1'" 
+                                                       ts-current-temp="215" 
+                                                       ts-target-temp="215">
+                                </og-temperature-status>
+                              </div>
+                              <div flex="33" flex-sm="100" layout-padding>
+                                <og-temperature-status ts-name="'Extruder 2'" 
+                                                       ts-current-temp="215" 
+                                                       ts-target-temp="215">
+                                </og-temperature-status>
+                              </div>
+                              <div flex="33" flex-sm="100" layout-padding>
+                                <og-temperature-status ts-name="'Heated Bed'" 
+                                                       ts-current-temp="215" 
+                                                       ts-target-temp="215">
+                                </og-temperature-status>
+                              </div>
+                            </div>
+                            <div layout="row" layout-align="center">
+                              <div flex layout-padding style="height:300px;">
+                                <og-temperature-graph tg-data-set="{cyan:[{x:0,y:0},{x:1,y:10},{x:4,y:5}],magenta:[{x:0,y:0},{x:2,y:5},{x:4,y:1}],purple:[{x:0,y:0},{x:3,y:10},{x:4,y:2}]}">
+                                </og-temperature-graph>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </md-tab-body>
+            </md-tab>
+            <md-tab>
+                <md-tab-label>
+                  terminal
+                </md-tab-label>
+                <md-tab-body>
+                </md-tab-body>
+            </md-tab>
+        </md-tabs>
+
+        </md-content>
+
+    </div>

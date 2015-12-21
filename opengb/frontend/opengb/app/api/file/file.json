@@ -1,0 +1,47 @@
+{
+	"1":{
+		"id":"1",
+		"name":"Octocat",
+		"url":"api/file/1/octocat-fast.gcode",
+		"image":"api/file/1/image.png",
+		"meta":{
+			"buildTime":"1.5",
+			"count":"3",
+			"extruderName":"Primary Extruder",
+			"printQuality":"Medium",
+			"Primary Extruder":"210",
+			"Heated Bed":"60"
+		},
+		"tags":["project 1"]
+	},
+	"2":{
+		"id":"2",
+		"name":"Octocat",
+		"url":"api/file/2/octocat-detailed.gcode",
+		"image":"api/file/2/image.png",
+		"meta":{
+			"buildTime":"1.5",
+			"count":"3",
+			"extruderName":"Primary Extruder",
+			"printQuality":"Medium",
+			"Primary Extruder":"210",
+			"Heated Bed":"60"
+		},
+		"tags":["project 1","detailed"]
+	},
+	"3":{
+		"id":"3",
+		"name":"Test Box",
+		"url":"api/file/3/octocat-detailed.gcode",
+		"image":null,
+		"meta":{
+			"buildTime":"1.5",
+			"count":"3",
+			"extruderName":"Primary Extruder",
+			"printQuality":"Medium",
+			"Primary Extruder":"210",
+			"Heated Bed":"60"
+		},
+		"tags":["calibration"]
+	}
+}

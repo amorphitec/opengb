@@ -1,0 +1,35 @@
+
+<div>
+	
+	<!-- build:css(.tmp) styles/main.css -->
+	<link rel="stylesheet" href="styles/directives/controls-cube.css">
+	<!-- endbuild -->
+
+
+	<div id="cube-wrapper">
+		<div id="cube" class="edge-top" ng-class="side">
+			<div class="face one" layout="row" layout-align="center">
+				<div flex="30" style="position:relative;">
+					<div id="x-down" class="ctrl" ng-click="jogDownX()"></div>
+				</div>
+				<div layout="column" flex="40" layout-align="center center" style="position:relative;">
+					<div class="ctrl" flex="50" id="y-up" ng-click="jogUpY()"></div>
+					<div class="ctrl" flex="50" id="y-down" ng-click="jogDownY()"></div>
+				</div>
+				<div flex="30" style="position:relative;">
+					<div class="ctrl" id="x-up" ng-click="jogUpX()"></div>
+				</div>
+			</div>
+			<div class="face two">
+				<div class="ctrl" id="z-up" ng-click="jogUpZ()"></div>
+				<div class="ctrl" id="z-down" ng-click="jogDownZ()"></div>
+			</div>
+		</div>
+		<div id="cube-info" layout="row">
+			<div>
+				click to change view
+			</div>
+		</div>
+	</div>	
+
+</div>
