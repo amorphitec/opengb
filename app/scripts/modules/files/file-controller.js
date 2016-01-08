@@ -37,9 +37,10 @@
 
         function preflightCheck(){
             setTimeout(function(){
-		vm.printReady = true;
-		$scope.$apply();
-	    }, 5000);
+    		  vm.printReady = true;
+    		  $scope.$apply();
+    	    }, 
+            5000);
         }
 
         // In order to watch a 'vm.' vs '$scope.' object, you must use .$watch(function(){},function(){}) format
@@ -106,7 +107,7 @@
     	getAllFiles();
 
         vm.fileSelector = true;
-        vm.fileRenderer = false;
+        vm.fileRenderer = true;
         vm.printReady = null;
         vm.gcode = null;
 
@@ -117,7 +118,7 @@
         vm.deselectFile = function(){
             vm.selectedFile = null;
             vm.fileSelector = true;
-            vm.fileRenderer=false;
+            vm.fileRenderer=true;
             vm.printReady=null;
         };
 

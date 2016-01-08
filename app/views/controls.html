@@ -1,8 +1,10 @@
 <!-- build:css(.tmp) styles/main.css -->
-<link rel="stylesheet" href="styles/directives/controls-cube.css">
+<style>
+  md-tabs-wrapper{background:#555 !important;}
+</style>
 <!-- endbuild -->
 
-    <div flex layout="column">
+    <div flex layout="column" ng-controller="controlsController as cc">
 
         <md-content style="height:100vh;">
 
@@ -14,11 +16,19 @@
                 <md-tab-body>
                     <div layout="row" layout-wrap>
                         <div flex="50" flex-sm="100" layout-padding>
-                            <controls-cube cc-x-pos="0"  
-                                           cc-y-pos="0"  
-                                           cc-z-pos="0"  
-                                           cc-resolution="10">
+                            <controls-cube cc-pos-x="cc.position.x"  
+                                           cc-pos-y="cc.position.y"  
+                                           cc-pos-z="cc.position.z"  
+                                           cc-resolution="10"
+                                           cc-apply="cc.setPosition()">
                             </controls-cube>
+                            <div ng-click="cc.homeX()">X: {{cc.position.x}}</div>
+                            <div ng-click="cc.homeY()">Y: {{cc.position.y}}</div>
+                            <div ng-click="cc.homeZ()">Z: {{cc.position.z}}</div>
+                            <div ng-click="cc.homeX()">home X</div>
+                            <div ng-click="cc.homeY()">home Y</div>
+                            <div ng-click="cc.homeZ()">home Z</div>
+                            <div ng-click="cc.homeAll()">home All</div>
                         </div>
                         <div flex-sm="100" flex="50" layout-padding>
                             <div layout="row" layout-align="center" layout-wrap>
@@ -43,7 +53,7 @@
                             </div>
                             <div layout="row" layout-align="center">
                               <div flex layout-padding style="height:300px;">
-                                <og-temperature-graph tg-data-set="{cyan:[{x:0,y:0},{x:1,y:10},{x:4,y:5}],magenta:[{x:0,y:0},{x:2,y:5},{x:4,y:1}],purple:[{x:0,y:0},{x:3,y:10},{x:4,y:2}]}">
+                                <og-temperature-graph tg-data-set="cc.temperatureData">
                                 </og-temperature-graph>
                               </div>
                             </div>

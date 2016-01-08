@@ -35,11 +35,12 @@
 
     <!-- Add your site or application content here -->
 
-    <mdt-top-toolbar hide-gt-sm></mdt-top-toolbar>
+    <mdt-top-toolbar hide-gt-md></mdt-top-toolbar>
     <mdt-navigation-menu></mdt-navigation-menu>
 
-    <div layout="column" tabIndex="-1" role="main" flex style="min-height:100vh;">
-      <div ng-view style="height:100vh;"></div>
+    <div layout="column" tabIndex="-1" role="main" style="min-height:100vh;width:100%;">
+      <div layout="row" hide-gt-md><div flex style="height:60px;"></div></div>
+      <div ng-view flex></div>
     </div>
 
     <!-- End of your site or application content -->
@@ -76,6 +77,7 @@
     <script src="scripts/printer/printer-controller.js"></script>
     <script src="scripts/modules/files/file-factory.js"></script>
     <script src="scripts/modules/files/file-controller.js"></script>
+    <script src="scripts/modules/controls/controls-controller.js"></script>
     <script src="scripts/modules/template/app.js"></script>
     <script src="scripts/modules/template/directives/navigation-menu/navigation-menu-directive.js"></script>
     <script src="scripts/modules/template/directives/top-toolbar/top-toolbar-directive.js"></script>

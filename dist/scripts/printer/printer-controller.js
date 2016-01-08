@@ -5,11 +5,12 @@
     function controller($scope, $http, printerFactory){
 
 
-    	var vm = this;
+	    var vm = this;
 
-	vm.printer = printerFactory;
+		vm.printer = printerFactory;
+		vm.printer.setPosition({x:0,y:0,z:0});
 
-	vm.printer.setPosition({x:0,y:0,z:0});
+		vm.position = vm.printer.position;
 
     }
 

@@ -5,90 +5,201 @@
     /* ----- BEGIN FUNCTION FOR FACTORY ----- */
     function factory($websocket) {
 
-        var baseUrl = 'ws://localhost:8000/ws';
         var printerFactory = {};
-	var printer = {};
+        var printer = {
+                        position:{x:null,y:null,z:null},
+                        temperatures:{
+                            bed:{target:null,current:null},
+                            nozzle1:{target:null,current:null},
+                            nozzle2:{target:null,current:null},
+                        }
+                      };
+        var files = {};
+        var statistics = {};
+
+        //Setup url location of webservice
+        //can be manually updated using setBaseUrl function
+        var baseUrl = 'ws://localhost:8000/ws';
+        printerFactory.setBaseUrl = function(url){
+            baseUrl = url;
+        };
         var ws = $websocket.$new(baseUrl);
 
-	ws.$on('$open', function () {
+        /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
+        ws.$$ws.onmessage = function(message){
+          console.log(message);
+        };
 
-            console.log('Oh my gosh, websocket is really open! Fukken awesome!');
+        ws.$on('temp', function (message) {
+            var params = message.data.params;
+            printer.temperatures.bed.current = params.bed_current;
+            printer.temperatures.bed.target = params.bed_target;
+            printer.temperatures.nozzle1.current = params.nozzle1_current;
+            printer.temperatures.nozzle1.target = params.nozzle1_target;
+            printer.temperatures.nozzle2.current = params.nozzle2_current;
+            printer.temperatures.nozzle2.target = params.nozzle2_target;
+            console.log('temp event:', message);
+        });
+        ws.$on('pos', function (message) {
+            var params = message.data.params;
+            printer.position.x = params.x;
+            printer.position.y = params.y;
+            printer.position.z = params.z;
+            console.log('position event:', message);
+        });
+        /* ------------- END WEBSOCKET EVENTS ------------------ */
+
+
+        /* -------- BEGIN PRIVATE WEBSOCKET FUNCTIONS ---------- */
+        //file should be in form of: 
+        //{'name':<name>,'contents':<gcode>}
+        function getFiles() {
+            var data = {
+                'jsonrpc': '2.0',
+                'id':       1,
+                'method':   'get_gcode_files',
+                'params': {
+                }
+            };
+            ws.$$send(data);
+        }
+
+        function getFile(id) {
+            var data = {
+                'jsonrpc': '2.0',
+                'id':       1,
+                'method':   'get_gcode_file',
+                'params': {
+                    'id':id
+                }
+            };
+            ws.$$send(data);
+        }
+
+        function loadFile(file) {
+            var data = {
+                'jsonrpc': '2.0',
+                'id':       1,
+                'method':   'put_gcode_file',
+                'params': {
+                    'name':file.name,
+                    'payload':file.contents
+                }
+            };
+            ws.$$send(data);
+        }
+
+        function startPrint() {
+            return null;
+        }
+
+        function pausePrint() {
+            return null;
+        }
+
+        //temps should be in form of: 
+        //{'bed':<temp>,'nozzle1':<temp>,'nozzle2':<temp>}
+        function setTemp(temps) {
+            var data = {
+                'jsonrpc': '2.0',
+                'id':       1,
+                'method':   'set_temp',
+                'params': {
+                    "bed":temps.bed,
+                    "nozzle1":temps.nozzle1,
+                    "nozzle2":temps.nozzle2
+                }
+            };
+            ws.$$send(data);
+        }
+
+        function getPrintProgress() {
+            return null;
+        }
+
+        //position should be in form of: 
+        //{'x':<val>,'y':<val>,'z':<val>}
+        function movePrintHead(position){
+            var data = {
+                "jsonrpc":"2.0",
+                "id":1,
+                "method":"move_head",
+                "params":{
+                    "x":position.x,
+                    "y":position.y,
+                    "z":position.z
+                }
+            };
+            ws.$$send(data);
+        }
+
+        //home should be in form of: 
+        //{'x':<bool>,'y':<bool>,'z':<bool>}
+        function homePrintHead(home){
+            //TODO: Remove next 3 lines once testing is done;
+            printer.position.x = home.x ? 0 : printer.position.x;
+            printer.position.y = home.y ? 0 : printer.position.y;
+            printer.position.z = home.z ? 0 : printer.position.z;
 
             var data = {
-			    'jsonrpc': '2.0',
-			    'id':       1,
-			    'method':   'set_temp',
-			    'params': {
-			      'bed':      105,
-			      'nozzle1':  206,
-			      'nozzle2':  203
-			    }
-			};
-
+                "jsonrpc":"2.0",
+                "id":1,
+                "method":"home_head",
+                "params":{
+                    "x":home.x,
+                    "y":home.y,
+                    "z":home.z
+                }
+            };
             ws.$$send(data);
-          });
+        }
+        /* --------- END PRIVATE WEBSOCKET FUNCTIONS ---------- */
 
-	ws.$$ws.onmessage = function(message){
-		console.log(message);
-	}
 
-        printerFactory.loadFile = function (file) {
-            return null;
+        /* -------- BEGIN PUBLIC WEBSOCKET FUNCTIONS ---------- */
+
+        printerFactory.setGcode = function(gcode){
+            printer.gcode = gcode;
+            console.log("new gcode has be loaded");
+        };
+        printerFactory.getGcode = function(){
+            return printer.gcode;
         };
 
-        printerFactory.startPrint = function (file) {
-            return null;
+        printerFactory.setTemperatures = function(temps){
+            //TODO: remove temperatures=temps line after testing is done
+            printer.temperatures = temps;
+
+            setTemp(temps);
+            console.log("temps to:", temps );
+        };
+        printerFactory.setPosition = function(position){
+            //TODO: remove postition=position line after testing is done
+            printer.position = position;
+
+            movePrintHead(position);
+            console.log("move to:", position );
+        };
+        //home should be in format of {x:bool,y:bool,z:bool}
+        printerFactory.homePrintHead = function(home){
+            homePrintHead(home);
         };
 
-        printerFactory.pausePrint = function (file) {
-            return null
-        };
+        /* -------- END PUBLIC WEBSOCKET FUNCTIONS ---------- */
 
-        printerFactory.tempUpdate = function (file) {
-	    return null;
-        };
 
-        printerFactory.printProgress = function (file) {
-            return null;
-        };
+        // This is the printer object
+        printerFactory.printer = printer;
 
-	printerFactory.movePrintHead = function (position){
-            var data = {"jsonrpc":"2.0","id":1,"method":"move_head","params":{"x":position.x,"y":position.y,"z":position.z}};
-            ws.$$send(data);
-	};
-
-        printerFactory.zChange = function (file) {
-            return null;
-        };
- 
-
-	// SETUP PARAMETERS TO BE USED ACROSS DIFFERENT CONTROLLERS
-
-	printerFactory.setGcode = function(gcode){
-		printer.gcode = gcode;
-		console.log("new gcode has be loaded");
-	};
-	printerFactory.getGcode = function(){
-		return printer.gcode;
-	};
-
-	printerFactory.setPosition = function(position){
-		printer.position = position;
-		printerFactory.movePrintHead(position);
-		console.log("printer Head has been moved to:", position );
-	};
-	printerFactory.getPosition = function(){
-		return printer.position;
-	};
-
-//	printerFactory.ws = ws;
         return printerFactory;
 
     }
+        
     /* ----- END FUNCTION FOR FACTORY ----- */
 
     angular
         .module('openGbApp')
         .factory('printerFactory', ['$websocket', factory]);
-
+    
 })(angular);        
+    
