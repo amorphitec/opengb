@@ -3,8 +3,9 @@
     'use strict';
 
     /* ----- BEGIN FUNCTION FOR FACTORY ----- */
-    function factory($websocket) {
+    function factory($websocket,$rootScope) {
 
+        var startTime = new Date();
         var printerFactory = {};
         var printer = {
                         position:{x:null,y:null,z:null},
@@ -12,10 +13,17 @@
                             bed:{target:null,current:null},
                             nozzle1:{target:null,current:null},
                             nozzle2:{target:null,current:null},
+                        },
+                        statistics:{
+                            temperatures:{
+                                bed:{target:[],current:[]},
+                                nozzle1:{target:[],current:[]},
+                                nozzle2:{target:[],current:[]},                                    
+                            }
                         }
                       };
         var files = {};
-        var statistics = {};
+
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
@@ -24,24 +32,41 @@
             baseUrl = url;
         };
         var ws = $websocket.$new(baseUrl);
-
-        /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
-        ws.$$ws.onmessage = function(message){
-          console.log(message);
+        //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
+        ws.$$ws.onmessage = function (message) {
+            try {
+                var decoded = JSON.parse(message.data);
+                ws.$$fireEvent(decoded.event, decoded.params);
+                ws.$$fireEvent('$message', decoded);
+            }
+            catch (err) {
+                ws.$$fireEvent('$message', message.params);
+            }
+            $rootScope.$apply();
         };
 
-        ws.$on('temp', function (message) {
-            var params = message.data.params;
+        /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
+//        ws.$$ws.onmessage = function(message){
+//          console.log(message);
+//        };
+
+        ws.$on('temp_update', function (message) {
+            var params = message;
+            var time = (new Date() - startTime)/1000;
             printer.temperatures.bed.current = params.bed_current;
             printer.temperatures.bed.target = params.bed_target;
             printer.temperatures.nozzle1.current = params.nozzle1_current;
             printer.temperatures.nozzle1.target = params.nozzle1_target;
             printer.temperatures.nozzle2.current = params.nozzle2_current;
             printer.temperatures.nozzle2.target = params.nozzle2_target;
-            console.log('temp event:', message);
+
+            printer.statistics.temperatures.bed.current.push({x:time,y:params.bed_current});
+            printer.statistics.temperatures.nozzle1.current.push({x:time,y:params.nozzle1_current});
+            printer.statistics.temperatures.nozzle2.current.push({x:time,y:params.nozzle2_current});
+
         });
         ws.$on('pos', function (message) {
-            var params = message.data.params;
+            var params = message;
             printer.position.x = params.x;
             printer.position.y = params.y;
             printer.position.z = params.z;
@@ -146,9 +171,9 @@
                 "id":1,
                 "method":"home_head",
                 "params":{
-                    "x":home.x,
-                    "y":home.y,
-                    "z":home.z
+                    "x":!!home.x,
+                    "y":!!home.y,
+                    "z":!!home.z
                 }
             };
             ws.$$send(data);
@@ -167,9 +192,6 @@
         };
 
         printerFactory.setTemperatures = function(temps){
-            //TODO: remove temperatures=temps line after testing is done
-            printer.temperatures = temps;
-
             setTemp(temps);
             console.log("temps to:", temps );
         };
@@ -199,7 +221,7 @@
 
     angular
         .module('openGbApp')
-        .factory('printerFactory', ['$websocket', factory]);
+        .factory('printerFactory', ['$websocket','$rootScope', factory]);
     
 })(angular);        
     

@@ -20,7 +20,7 @@
                                            cc-pos-y="cc.position.y"  
                                            cc-pos-z="cc.position.z"  
                                            cc-resolution="10"
-                                           cc-apply="cc.setPosition()">
+                                           cc-apply="cc.applyPosition()">
                             </controls-cube>
                             <div ng-click="cc.homeX()">X: {{cc.position.x}}</div>
                             <div ng-click="cc.homeY()">Y: {{cc.position.y}}</div>
@@ -33,21 +33,24 @@
                         <div flex-sm="100" flex="50" layout-padding>
                             <div layout="row" layout-align="center" layout-wrap>
                               <div flex="33" flex-sm="100" layout-padding>
-                                <og-temperature-status ts-name="'Extruder 1'" 
-                                                       ts-current-temp="215" 
-                                                       ts-target-temp="215">
+                                <og-temperature-status ts-name="nozzle1" 
+                                                       ts-slug="Extruder 1" 
+                                                       ts-current-temp="{{cc.temperatures.nozzle1.current}}" 
+                                                       ts-target-temp="{{cc.temperatures.nozzle1.target}}">
                                 </og-temperature-status>
                               </div>
                               <div flex="33" flex-sm="100" layout-padding>
-                                <og-temperature-status ts-name="'Extruder 2'" 
-                                                       ts-current-temp="215" 
-                                                       ts-target-temp="215">
+                                <og-temperature-status ts-name="nozzle2" 
+                                                       ts-slug="Extruder 2" 
+                                                       ts-current-temp="{{cc.temperatures.nozzle2.current}}" 
+                                                       ts-target-temp="{{cc.temperatures.nozzle2.target}}">
                                 </og-temperature-status>
                               </div>
                               <div flex="33" flex-sm="100" layout-padding>
-                                <og-temperature-status ts-name="'Heated Bed'" 
-                                                       ts-current-temp="215" 
-                                                       ts-target-temp="215">
+                                <og-temperature-status ts-name="bed"
+                                                       ts-slug="Heated Bed" 
+                                                       ts-current-temp="{{cc.temperatures.bed.current}}" 
+                                                       ts-target-temp="{{cc.temperatures.bed.target}}">
                                 </og-temperature-status>
                               </div>
                             </div>

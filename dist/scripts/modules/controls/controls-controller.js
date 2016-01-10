@@ -5,7 +5,7 @@
     function controller($scope, printerFactory){
 
 
-    	var vm = this;
+        var vm = this;
 
         vm.printer = printerFactory;
         vm.position = vm.printer.printer.position;
@@ -30,9 +30,9 @@
         };
 
         vm.temperatureData = {
-                                cyan:vm.statistics.bed.current,
-                                purple:vm.statistics.nozzle1.current,
-                                magenta:vm.statistics.nozzle2.current
+                                purple:vm.statistics.temperatures.bed.current,
+                                cyan:vm.statistics.temperatures.nozzle1.current,
+                                magenta:vm.statistics.temperatures.nozzle2.current
                              };
 
 
