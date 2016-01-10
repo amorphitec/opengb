@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="styles/directives/colored-temperature-status.css">
 
 	<div class="name bold" ng-class="{cyan:(name=='Extruder 1'),magenta:(name=='Extruder 2'),purple:(name=='Heated Bed')}" layout="row" layout-align="left">
-		<div>{{name}}</div>
+		<div>{{slug}}</div>
 	</div>
 
 	<div layout="row" class="top-row" layout-align="center center" layout-wrap>
@@ -12,10 +12,10 @@
 		</div>
 		<div class="target-temp" layout="column" flex="33">
 			<label flex>Target:</label>
-			<div flex class="bold">{{currentTemp}}°</div>
+			<div flex class="bold">{{targetTemp}}°</div>
 		</div>
 		<div class="temp-button bold" flex="34">
-			<div>Heat</div>
+			<div ng-click="applyTarget()">Heat</div>
 		</div>
 	</div>
 
@@ -23,7 +23,7 @@
 		<div class="" flex="66">
 			<div layout="row" class="temp-info" layout-align="center center">
 				<label flex="50" class="bold">Set Temp</label>
-				<span flex><input /></span>
+				<span flex><input ng-model="tempTargetTemp" /></span>
 				<span flex>°C</span>
 			</div>
 		</div>

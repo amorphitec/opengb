@@ -22,21 +22,27 @@
 
 			scope.jogUpX = function(){
 				scope.posX = addPositions(scope.posX, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 			scope.jogDownX = function(){
 				scope.posX = subtractPositions(scope.posX, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 			scope.jogUpY = function(){
 				scope.posY = addPositions(scope.posY, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 			scope.jogDownY = function(){
 				scope.posY = subtractPositions(scope.posY, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 			scope.jogUpZ = function(){
 				scope.posZ = addPositions(scope.posZ, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 			scope.jogDownZ = function(){
 				scope.posZ = subtractPositions(scope.posZ, scope.resolution);
+				setTimeout(scope.apply,100);
 			};
 
         }
