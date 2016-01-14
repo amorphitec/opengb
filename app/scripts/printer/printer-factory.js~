@@ -27,8 +27,7 @@
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
-//        var baseUrl = 'ws://localhost:8000/ws';
-        var baseUrl = 'ws://192.168.1.243:8000/ws';
+        var baseUrl = 'ws://localhost:8000/ws';
         printerFactory.setBaseUrl = function(url){
             baseUrl = url;
         };
@@ -164,7 +163,7 @@
         function homePrintHead(home){
             //TODO: Remove next 3 lines once testing is done;
             printer.position.x = home.x ? 0 : printer.position.x;
-            printer.position.y = home.y ? 0 : printer.position.y;
+            printer.position.y = home.y ? 600 : printer.position.y;
             printer.position.z = home.z ? 0 : printer.position.z;
 
             var data = {

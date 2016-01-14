@@ -8,19 +8,18 @@
         function link(scope, element, attrs) {
 
 			scope.side = "edge-top";
+			scope.mode = "absolute";
 
 			var addPositions = function(a,b){
 				var result = parseFloat( parseFloat(a) + parseFloat(b)).toFixed(2);
-				result = result > 0 ? result : 0 ;
 				return result;
 			};
 			var subtractPositions = function(a,b){
 				var result = parseFloat( parseFloat(a) - parseFloat(b)).toFixed(2);
-				result = result > 0 ? result : 0 ;
 				return result;
 			};
 
-			scope.jogUpX = function(){
+			scope.jogUpX = function(){				
 				scope.posX = addPositions(scope.posX, scope.resolution);
 				setTimeout(scope.apply,100);
 			};
