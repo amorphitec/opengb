@@ -3,11 +3,12 @@
     'use strict';
 
     /* ----- BEGIN FUNCTION FOR FACTORY ----- */
-    function factory($websocket,$rootScope) {
+    function factory($websocket,$rootScope,$location) {
 
         var startTime = new Date();
         var printerFactory = {};
         var printer = {
+                        connection:{baseUrl:null,connected:false},
                         position:{x:null,y:null,z:null},
                         temperatures:{
                             bed:{target:null,current:null},
@@ -27,52 +28,73 @@
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
-        var baseUrl = 'ws://localhost:8000/ws';
-        printerFactory.setBaseUrl = function(url){
-            baseUrl = url;
-        };
-        var ws = $websocket.$new(baseUrl);
-        //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
-        ws.$$ws.onmessage = function (message) {
-            try {
-                var decoded = JSON.parse(message.data);
-                ws.$$fireEvent(decoded.event, decoded.params);
-                ws.$$fireEvent('$message', decoded);
-            }
-            catch (err) {
-                ws.$$fireEvent('$message', message.params);
-            }
-            $rootScope.$apply();
-        };
+//        var baseUrl = 'ws://localhost:8000/ws';
+        var ws;
+        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+//        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
-        /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
-//        ws.$$ws.onmessage = function(message){
-//          console.log(message);
-//        };
+        printerFactory.connect = function(){
+            console.log('attempting to connect to: ' + printer.connection.baseUrl );
+            ws = $websocket.$new({
+                                    url: printer.connection.baseUrl,
+                                    reconnect: false
+                                });
 
-        ws.$on('temp_update', function (message) {
-            var params = message;
-            var time = (new Date() - startTime)/1000;
-            printer.temperatures.bed.current = params.bed_current;
-            printer.temperatures.bed.target = params.bed_target;
-            printer.temperatures.nozzle1.current = params.nozzle1_current;
-            printer.temperatures.nozzle1.target = params.nozzle1_target;
-            printer.temperatures.nozzle2.current = params.nozzle2_current;
-            printer.temperatures.nozzle2.target = params.nozzle2_target;
+            ws.$on('$open',function(){
+                console.log('ws connected to: ' + printer.connection.baseUrl );
+                printer.connected = true;
+            });
+            ws.$on('$close',function(){
+                console.log('ws failed connection to: ' + printer.connection.baseUrl );
+                printer.connected = false;
+            });
+            ws.$on('$error',function(){
+                console.log('error: ',ws.$status());
+            });
 
-            printer.statistics.temperatures.bed.current.push({x:time,y:params.bed_current});
-            printer.statistics.temperatures.nozzle1.current.push({x:time,y:params.nozzle1_current});
-            printer.statistics.temperatures.nozzle2.current.push({x:time,y:params.nozzle2_current});
+            //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
+            ws.$$ws.onmessage = function (message) {
+                try {
+                    var decoded = JSON.parse(message.data);
+                    ws.$$fireEvent(decoded.event, decoded.params);
+                    ws.$$fireEvent('$message', decoded);
+                }
+                catch (err) {
+                    ws.$$fireEvent('$message', message.params);
+                }
+                $rootScope.$apply();
+            };
 
-        });
-        ws.$on('pos', function (message) {
-            var params = message;
-            printer.position.x = params.x;
-            printer.position.y = params.y;
-            printer.position.z = params.z;
-            console.log('position event:', message);
-        });
-        /* ------------- END WEBSOCKET EVENTS ------------------ */
+            /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
+
+            ws.$on('temp_update', function (message) {
+                var params = message;
+                var time = (new Date() - startTime)/1000;
+                printer.temperatures.bed.current = params.bed_current;
+                printer.temperatures.bed.target = params.bed_target;
+                printer.temperatures.nozzle1.current = params.nozzle1_current;
+                printer.temperatures.nozzle1.target = params.nozzle1_target;
+                printer.temperatures.nozzle2.current = params.nozzle2_current;
+                printer.temperatures.nozzle2.target = params.nozzle2_target;
+
+                printer.statistics.temperatures.bed.current.push({x:time,y:params.bed_current});
+                printer.statistics.temperatures.nozzle1.current.push({x:time,y:params.nozzle1_current});
+                printer.statistics.temperatures.nozzle2.current.push({x:time,y:params.nozzle2_current});
+
+            });
+            ws.$on('pos', function (message) {
+                var params = message;
+                printer.position.x = params.x;
+                printer.position.y = params.y;
+                printer.position.z = params.z;
+                console.log('position event:', message);
+            });
+            /* ------------- END WEBSOCKET EVENTS ------------------ */
+
+
+        }
+        printerFactory.connect();
+
 
 
         /* -------- BEGIN PRIVATE WEBSOCKET FUNCTIONS ---------- */
@@ -163,7 +185,7 @@
         function homePrintHead(home){
             //TODO: Remove next 3 lines once testing is done;
             printer.position.x = home.x ? 0 : printer.position.x;
-            printer.position.y = home.y ? 0 : printer.position.y;
+            printer.position.y = home.y ? 600 : printer.position.y;
             printer.position.z = home.z ? 0 : printer.position.z;
 
             var data = {
@@ -221,7 +243,7 @@
 
     angular
         .module('openGbApp')
-        .factory('printerFactory', ['$websocket','$rootScope', factory]);
+        .factory('printerFactory', ['$websocket','$rootScope','$location', factory]);
     
 })(angular);        
     

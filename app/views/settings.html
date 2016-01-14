@@ -1,0 +1,28 @@
+<!-- build:css(.tmp) styles/main.css -->
+<style>
+  md-tabs-wrapper{background:#555 !important;}
+</style>
+<!-- endbuild -->
+
+    <div flex layout="column" ng-controller="settingsController as sc">
+
+        <md-content style="height:100vh;">
+
+          <div flex-sm="100" flex="100" layout-padding>
+            <h2>connection address</h2>
+            <div layout="row">
+              <input ng-model="sc.connection.baseUrl" flex />
+            </div>
+            <div layout="row">
+              <md-button ng-click="sc.connect()">connect</md-button>
+            </div>
+          </div>
+ 
+          <div flex-sm="100" flex="50" layout-padding>
+ 
+          </div>
+    
+
+        </md-content>
+
+    </div>
