@@ -223,7 +223,7 @@ class IPrinter(multiprocessing.Process):
         self._run_loop_delay_sec = 0.1
         self._print_loop_delay_sec = 0.001
         self._metric_interval_print_sec = 5 
-        self._metric_interval_idle_sec = 1  
+        self._metric_interval_idle_sec = 2  
         self._metric_update_time = time.time() - self._metric_interval_idle_sec
         # State.
         self._temp_bed = 0
