@@ -2,32 +2,30 @@
 	
 	<link rel="stylesheet" href="styles/directives/colored-temperature-status.css">
 
-	<div class="name bold" ng-class="{cyan:(name=='Extruder 1'),magenta:(name=='Extruder 2'),purple:(name=='Heated Bed')}" layout="row" layout-align="left">
+	<div class="name bold" ng-class="{cyan:(slug=='Extruder 1'),magenta:(slug=='Extruder 2'),purple:(slug=='Heated Bed')}" layout="row" layout-align="left">
 		<div>{{slug}}</div>
 	</div>
 
 	<div layout="row" class="top-row" layout-align="center center" layout-wrap>
-		<div class="current-temp bold" flex="33">
-			<div>{{currentTemp}}°</div>
+		<div class="current-temp bold" flex="50">
+			<div>{{currentTemp}}°C</div>
 		</div>
-		<div class="target-temp" layout="column" flex="33">
-			<label flex>Target:</label>
-			<div flex class="bold">{{targetTemp}}°</div>
-		</div>
-		<div class="temp-button bold" flex="34">
-			<div ng-click="applyTarget()">Heat</div>
+		<div class="temp-button bold" ng-class="{active:(status()=='on')}" ng-click="applyTarget()" flex>
+			<div>{{onButton}}</div>
 		</div>
 	</div>
 
 	<div layout="row" class="bottom-row" layout-align="center center" layout-wrap>
-		<div class="" flex="66">
-			<div layout="row" class="temp-info" layout-align="center center">
-				<label flex="50" class="bold">Set Temp</label>
-				<span flex><input ng-model="tempTargetTemp" /></span>
-				<span flex>°C</span>
+		<div class="" flex="50">
+			<div layout="row" class="temp-info" style="position:relative;" layout-align="center center" layout-wrap>
+				<label style="position:absolute;bottom:-2px;" class="bold">Target</label>
+				<div flex="100">
+					<span ><input flex="66" ng-model="tempTargetTemp" /></span>
+					<span flex="34">°C</span>
+				</div>
 			</div>
 		</div>
-		<div class="temp-button bold" flex>
+		<div class="temp-button bold"  ng-class="{active:(status()=='off')}" ng-click="off()" flex>
 			<div>Off</div>
 		</div>
 	</div>

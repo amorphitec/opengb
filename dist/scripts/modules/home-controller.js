@@ -35,15 +35,8 @@
 
         }
 
-        function preflightCheck(){
-            setTimeout(function(){
-    		  vm.printReady = true;
-    		  $scope.$apply();
-    	    }, 
-            5000);
-        }
-
-        // In order to watch a 'vm.' vs '$scope.' object, you must use .$watch(function(){},function(){}) format
+        // In order to watch a 'vm.' vs '$scope.' object, you must use 
+        // $watch(function(){},function(){}) format
         $scope.$watch(
             function watchUploadFile( scope ) {
                 return( vm.uploadFile );
@@ -70,8 +63,8 @@
                     vm.fileRenderer = true;
                     vm.printReady = false;
 
-		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
-		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
+        		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
+        		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
                     if(!vm.selectedFile.contents && vm.selectedFile.url){
 
                         var file = {};
@@ -79,18 +72,17 @@
                         vm.selectedFile = null;
 
                         $http.get(file.url).success(
-                                                    function (data) {
-                                                        file.contents = data;
-                                                        vm.selectedFile = file;
-                                                    }).error(function () {
-                                                        console.error( 'Unable to load file: ' , error );
-                                                    });
-
+                            function (data) {
+                                file.contents = data;
+                                vm.selectedFile = file;
+                            }).error(function () {
+                                console.error( 'Unable to load file: ' , error );
+                            }
+                        );
                     }
 
                     if(vm.selectedFile){
-			printerFactory.setGcode(vm.selectedFile.contents);
-			preflightCheck();
+            			printerFactory.setFile(vm.selectedFile);
                     }
 
                 }
@@ -101,8 +93,9 @@
 
     	var vm = this;
         
-        vm.printer = printerFactory;
-        vm.temperatures = vm.printer.printer.temperatures;
+        vm.printer = printerFactory.printer;
+        vm.temperatures = vm.printer.temperatures;
+        vm.connection = vm.printer.connection;
     	vm.fileList = {};
         vm.selectedFile = null;
 
@@ -110,7 +103,6 @@
 
         vm.fileSelector = true;
         vm.fileRenderer = true;
-        vm.printReady = null;
         vm.gcode = null;
 
         vm.selectFile = function(file){
@@ -124,6 +116,12 @@
             vm.printReady=null;
         };
 
+        vm.printSelectedFile = function(){
+            if(vm.selectedFile && vm.selectedFile.contents){
+                printerFactory.printFile(vm.selectedFile);
+            }
+        }
+
 
     }
 
@@ -131,4 +129,4 @@
         .module('openGbApp')
         .controller('homeController', ['$scope', '$http', 'fileFactory', 'printerFactory', 'lodash', 'gcodeService', controller ]);
 
-})(angular);    
+})(angular);

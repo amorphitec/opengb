@@ -107,18 +107,19 @@ h2{
                          ng-show="hc.fileRenderer">
         </og-gcode-viewer>
 
-        <div layout="row" layout-align="center center" style="position:absolute;bottom:20px;width:100%;">
+        <div layout="row" layout-align="center center" style="position:absolute;top:350px;left:0;width:100%;z-index:1000;">
           <md-button flex="30" 
                      ng-show="hc.printReady != null" 
-                     ng-disabled="!hc.printReady" 
+                     ng-disabled="!hc.connection.printReady" 
+                     ng-click="hc.printSelectedFile()"
                      class="md-raised md-primary">
-            Print Selected File
+            Print File
           </md-button>
         </div>
 
-        <og-file-dropbox 
-                       ng-show="hc.fileSelector" 
-                       og-fd-upload-file="hc.uploadFile">
+        <og-file-dropbox style="position:absolute;top:150px;left:0;width:100%;"
+                         ng-show="hc.fileSelector" 
+                         og-fd-upload-file="hc.uploadFile">
         </og-file-dropbox>
 
       </div>

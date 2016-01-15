@@ -8,7 +8,7 @@
         var startTime = new Date();
         var printerFactory = {};
         var printer = {
-                        connection:{baseUrl:null,connected:false},
+                        connection:{baseUrl:null,connected:false,printReady:false},
                         position:{x:null,y:null,z:null},
                         temperatures:{
                             bed:{target:null,current:null},
@@ -24,6 +24,7 @@
                         }
                       };
         var files = {};
+        var id = 0;
 
 
         //Setup url location of webservice
@@ -103,12 +104,13 @@
         function getFiles() {
             var data = {
                 'jsonrpc': '2.0',
-                'id':       1,
+                'id':       id,
                 'method':   'get_gcode_files',
                 'params': {
                 }
             };
             ws.$$send(data);
+            id++;
         }
 
         function getFile(id) {
@@ -121,12 +123,13 @@
                 }
             };
             ws.$$send(data);
+            id++;
         }
 
-        function loadFile(file) {
+        function putFile(file) {
             var data = {
                 'jsonrpc': '2.0',
-                'id':       1,
+                'id':       id,
                 'method':   'put_gcode_file',
                 'params': {
                     'name':file.name,
@@ -134,13 +137,31 @@
                 }
             };
             ws.$$send(data);
+            var thisId = id;
+            ws.$on('$message',function(message){
+                if(thisId == message.id){
+                    printer.connection.printReady = true;
+                    $rootScope.$apply();
+                }
+            });
+            id++;
         }
 
-        function startPrint() {
-            return null;
+        function printFile(){
+            var data = {
+                'jsonrpc': '2.0',
+                'id': id,
+                'method': 'print_file',
+            };
+            ws.$$send(data);
+            id++;
         }
 
         function pausePrint() {
+            return null;
+        }
+
+        function getPrintProgress() {
             return null;
         }
 
@@ -149,7 +170,7 @@
         function setTemp(temps) {
             var data = {
                 'jsonrpc': '2.0',
-                'id':       1,
+                'id':       id,
                 'method':   'set_temp',
                 'params': {
                     "bed":temps.bed,
@@ -160,16 +181,12 @@
             ws.$$send(data);
         }
 
-        function getPrintProgress() {
-            return null;
-        }
-
         //position should be in form of: 
         //{'x':<val>,'y':<val>,'z':<val>}
         function movePrintHead(position){
             var data = {
                 "jsonrpc":"2.0",
-                "id":1,
+                "id":id,
                 "method":"move_head",
                 "params":{
                     "x":position.x,
@@ -190,7 +207,7 @@
 
             var data = {
                 "jsonrpc":"2.0",
-                "id":1,
+                "id":id,
                 "method":"home_head",
                 "params":{
                     "x":!!home.x,
@@ -205,12 +222,22 @@
 
         /* -------- BEGIN PUBLIC WEBSOCKET FUNCTIONS ---------- */
 
-        printerFactory.setGcode = function(gcode){
-            printer.gcode = gcode;
+        printerFactory.setFile = function(file){
             console.log("new gcode has be loaded");
+            putFile(file);
         };
-        printerFactory.getGcode = function(){
-            return printer.gcode;
+        printerFactory.getFile = function(){
+            getFile(id);
+        };
+        printerFactory.listFiles = function(){
+            getFiles();
+        };
+        printerFactory.printFile = function(){
+            if(printer.connection.printReady){
+                printFile();
+            }else{
+                console.log('cannot print because print file not ready')
+            }
         };
 
         printerFactory.setTemperatures = function(temps){
