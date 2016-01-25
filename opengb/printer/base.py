@@ -94,7 +94,20 @@ class PrinterCallbacks(object):
         """
         pass
 
-    def print_progress(self, current_file, current_line, total_lines):
+    def position_update(self, x, y, z)
+        """
+        Publish a position update event.
+
+        :param x: Print head absolute X position.
+        :type x: :class:`float`
+        :param y: Print head absolute Y position.
+        :type y: :class:`float`
+        :param z: Print head absolute Z position.
+        :type z: :class:`float`
+        """
+        pass
+
+     def print_progress(self, current_file, current_line, total_lines):
         """
         Publish a print progress event.
 
@@ -179,6 +192,16 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
                 'nozzle1_target':   nozzle1_target,
                 'nozzle2_current':  nozzle2_current,
                 'nozzle2_target':   nozzle2_target,
+            }
+        })
+
+    def position_update(self, x, y, z)
+        self._publish({
+            'event':   'position_update',
+            'params':   {
+                'x':      x,
+                'y':      y,
+                'z':      z,
             }
         })
 
@@ -268,6 +291,13 @@ class IPrinter(multiprocessing.Process):
     def _request_printer_metrics(self):
         """
         Request a temperature update from the printer.
+        """
+        pass
+
+    @abc.abstractmethod
+    def _request_printer_position(self):
+        """
+        Request a position update from the printer.
         """
         pass
 

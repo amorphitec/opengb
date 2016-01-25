@@ -37,6 +37,11 @@ PRINTER = {
         'nozzle1':  0,
         'nozzle2':  0,
     },
+    'position':
+        'x':        0,
+        'y':        0,
+        'z':        0,
+    },
     'progress': {
         'current':  0,
         'total':    0,
@@ -285,6 +290,8 @@ def process_event(event):
             PRINTER['state'] = opengb.printer.State(event['params']['new'])
         elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params']
+        elif event['event'] == 'position_update':
+            PRINTER['position'] = event['params']
         elif event['event'] == 'print_progress':
             PRINTER['progress'] = event['params']
         elif event['event'] == 'z_change':

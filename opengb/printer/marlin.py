@@ -21,6 +21,11 @@ MSG_PATTERNS = [
      lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
                                              g['n1temp'], g['n1target'],
                                              g['n2temp'], g['n2target']))),
+    # Position update.
+    (re.compile(r'ok C:\sX:(?P<xpos>\d*\.?\d+)\sY:/(?P<ypos>\d*\.?\d+)\s'
+                'Z:/(?P<zpos>\d*\.?\d+)'),
+     lambda g, c: (getattr(c, 'position_update')(g['xpos'], g['ypos'],
+                                                 g['zpos']))),
 ]
 
 
@@ -80,6 +85,10 @@ class Marlin(IPrinter):
         self._callbacks.log(logging.DEBUG, 'Requesting printer metrics')
         self._send_command(b'M105')
 
+    def _request_printer_position(self):
+        self._callbacks.log(logging.DEBUG, 'Requesting printer position')
+        self._send_command(b'M114')
+
     def _print_line(self, line):
         # TODO: implement
         pass
@@ -135,11 +144,13 @@ class Marlin(IPrinter):
         # Switch to relative coordinates before sending.
         self._send_command(b'G91')
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._request_printer_position()
 
     def move_head_absolute(self, x=0, y=0, z=0):
         # Switch to absolute coordinates before sending.
         self._send_command(b'G90')
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._request_printer_position()
 
     def home_head(self, x=True, y=True, z=True):
         if not x and not y and not z:
@@ -153,3 +164,4 @@ class Marlin(IPrinter):
         if z:
             command += ' Z'
         self._send_command(command.encode())
+        self._request_printer_position()

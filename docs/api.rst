@@ -168,5 +168,14 @@ Example event: ::
     {"jsonrpc": "2.0", "event": "temp_update", "params": { "bed_current": 205, "bed_target": 0, " "nozzle1_current": 106, nozzle1_target": 0, "nozzle2_current": 101, "nozzle2_target": 0}}
 
 
+position_update
+===============
+
+Sent on print head movement to provide current print head position.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "position_update", "params": { "x": 100, "y": 80, "z": 20}}
+
 .. _`JSON-RPC 2.0`: http://www.jsonrpc.org
 .. _`JSON-RPC 2.0 spec`: http://www.jsonrpc.org/specification

@@ -188,7 +188,7 @@ class TestHomeHead(OpengbTestCase):
             json.loads(self.to_printer.get())["params"]["x"], True)
 
 
-class TestUploadGCodeFile(OpengbTestCase):
+class TestPutGCodeFile(OpengbTestCase):
 
     def setUp(self):
         self.db = SqliteDatabase(':memory:')
