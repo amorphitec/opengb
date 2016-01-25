@@ -77,6 +77,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+move_head_absolute
+==================
+
+.. automethod:: opengb.server.MessageHandler.move_head_absolute
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"move_head_absolute","params":{"x":105,"y":80,"z":20}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 home_head
 =========
 

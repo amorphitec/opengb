@@ -136,12 +136,15 @@ class Marlin(IPrinter):
         self._send_command(b'G91')
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
 
+    def move_head_absolute(self, x=0, y=0, z=0):
+        # Switch to absolute coordinates before sending.
+        self._send_command(b'G90')
+        self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+
     def home_head(self, x=True, y=True, z=True):
         if not x and not y and not z:
             # Not homing any axes so don't bother sending a command.
             return
-        # Switch to relative coordinates before sending.
-        self._send_command(b'G90')
         command = 'G28'
         if x:
             command += ' X'

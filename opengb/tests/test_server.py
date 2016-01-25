@@ -121,6 +121,46 @@ class TestMoveHeadRelative(OpengbTestCase):
             json.loads(self.to_printer.get())["params"]["z"], 0)
 
 
+class TestMoveHeadAbsolute(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+
+    def test_pass_move_head_absolute_method_to_printer(self):
+        """Valid x,y,z vals result in 'move_head_absolute' msg on to_printer
+        queue."""
+        self.message_handler.move_head_absolute(x=105, y=80, z=20)
+        self.assertEqual(json.loads(self.to_printer.get())["method"],
+                         "move_head_absolute")
+
+    def test_valid_xyz_passed_to_printer(self):
+        """Valid x,y,z vals are added as msg on to_printer queue."""
+        self.message_handler.move_head_absolute(x=105, y=80, z=20)
+        self.assertDictEqual(json.loads(self.to_printer.get()), {
+            "method": "move_head_absolute",
+            "params": {"x": 105, "y": 80, "z": 20}})
+
+    def test_move_head_absolute_x_defaults_to_zero(self):
+        """Unspecified x is passed to_the printer as 0."""
+        self.message_handler.move_head_absolute(y=80, z=20)
+        self.assertEqual(
+            json.loads(self.to_printer.get())["params"]["x"], 0)
+
+    def test_move_head_absolute_y_defaults_to_zero(self):
+        """Unspecified y is passed to_the printer as 0."""
+        self.message_handler.move_head_absolute(x=105, z=20)
+        self.assertEqual(
+            json.loads(self.to_printer.get())["params"]["y"], 0)
+
+    def test_move_head_absolute_z_defaults_to_zero(self):
+        """Unspecified z is passed to_the printer as 0."""
+        self.message_handler.move_head_absolute(x=105, y=80)
+        self.assertEqual(
+            json.loads(self.to_printer.get())["params"]["z"], 0)
+
+
 class TestHomeHead(OpengbTestCase):
 
     def setUp(self):

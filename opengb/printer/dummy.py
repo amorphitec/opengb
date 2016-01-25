@@ -79,8 +79,14 @@ class Dummy(IPrinter):
             self._temp_nozzle2 = nozzle2
 
     def move_head_relative(self, x=0, y=0, z=0):
-        self._callbacks.log(logging.DEBUG, 'Moving print head: x|{0}, '
-                                           'y|{1}, z|{2}'.format(x, y, z))
+        self._callbacks.log(logging.DEBUG, 'Moving print head to relative '
+                                           'coordinates: x|{0}, y|{1}, '
+                                           'z|{2}'.format(x, y, z))
+
+    def move_head_absolute(self, x=0, y=0, z=0):
+        self._callbacks.log(logging.DEBUG, 'Moving print head to absolute '
+                                           'coordinates: x|{0}, y|{1}, '
+                                           'z|{2}'.format(x, y, z))
 
     def home_head(self, x=True, y=True, z=True):
         self._callbacks.log(logging.DEBUG, 'Homing print head: x|{0}, '

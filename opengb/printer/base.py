@@ -333,6 +333,20 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
+    def move_head_absolute(self, x=0, y=0, z=0):
+        """
+        Move the print head along one or more axes to an absolute position.
+
+        :param x: Position to move to along the X axis.
+        :type x: :class:`float`
+        :param y: Position to move to along the Y axis.
+        :type y: :class:`float`
+        :param z: Position to move to along the Z axis.
+        :type z: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
     def home_head(self, x=True, y=True, z=True):
         """
         Home the print head along one or more axes.
