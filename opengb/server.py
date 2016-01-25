@@ -78,9 +78,10 @@ class MessageHandler(object):
         }))
         return True
 
-    def move_head(self, x=0, y=0, z=0):
+    def move_head_relative(self, x=0, y=0, z=0):
         """
-        Move the print head along one or more axes.
+        Move the print head along one or more axes relative to the current
+        position.
 
         :param x: Millimeters to move along the X axis.
         :type x: :class:`float`
@@ -90,7 +91,7 @@ class MessageHandler(object):
         :type z: :class:`float`
         """
         self._to_printer.put(json.dumps({
-            'method':   'move_head',
+            'method':   'move_head_relative',
             'params': {
                 'x':    x,
                 'y':    y,

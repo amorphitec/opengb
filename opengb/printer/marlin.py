@@ -131,10 +131,8 @@ class Marlin(IPrinter):
         if nozzle2:
             self._send_command(b'M104 T1 S' + str(nozzle2).encode())
 
-    def move_head(self, x=0, y=0, z=0):
+    def move_head_relative(self, x=0, y=0, z=0):
         # Switch to relative coordinates before sending.
-        # TODO: does it matter to send G91 every time?
-        # TODO: send this all on one line?
         self._send_command(b'G91')
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
 

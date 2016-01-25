@@ -64,14 +64,14 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-move_head
-=========
+move_head_relative
+==================
 
-.. automethod:: opengb.server.MessageHandler.move_head
+.. automethod:: opengb.server.MessageHandler.move_head_relative
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"move_head","params":{"x":13.2,"y":-2,"z":0.03}}
+    {"jsonrpc":"2.0","id":1,"method":"move_head_relative","params":{"x":13.2,"y":-2,"z":0.03}}
 
 Example response: ::
 
