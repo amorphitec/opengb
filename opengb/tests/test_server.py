@@ -150,7 +150,7 @@ class TestUploadGCodeFile(OpengbTestCase):
             gcode_dir = tempfile.mkdtemp()
             with patch.object(server.options.mockable(), 'gcode_dir',
                               gcode_dir):
-                r = self.message_handler.upload_gcode_file(self.gcode,
+                r = self.message_handler.put_gcode_file(self.gcode,
                                                            'test_name')
             with open(os.path.join(gcode_dir, str(r['id'])), 'r') as g:
                 self.assertEqual(self.gcode, g.read())
@@ -162,7 +162,7 @@ class TestUploadGCodeFile(OpengbTestCase):
             gcode_dir = tempfile.mkdtemp()
             with patch.object(server.options.mockable(), 'gcode_dir',
                               gcode_dir):
-                r = self.message_handler.upload_gcode_file(self.gcode,
+                r = self.message_handler.put_gcode_file(self.gcode,
                                                            'test_name')
         self.assertEqual(r['size'], len(self.gcode))
 
@@ -172,7 +172,7 @@ class TestUploadGCodeFile(OpengbTestCase):
             gcode_dir = tempfile.mkdtemp()
             with patch.object(server.options.mockable(), 'gcode_dir',
                               gcode_dir):
-                r = self.message_handler.upload_gcode_file(self.gcode,
+                r = self.message_handler.put_gcode_file(self.gcode,
                                                            'test_name')
         self.assertEqual(r['name'], 'test_name')
 
