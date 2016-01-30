@@ -94,7 +94,7 @@ class PrinterCallbacks(object):
         """
         pass
 
-    def position_update(self, x, y, z)
+    def position_update(self, x, y, z):
         """
         Publish a position update event.
 
@@ -107,7 +107,7 @@ class PrinterCallbacks(object):
         """
         pass
 
-     def print_progress(self, current_file, current_line, total_lines):
+    def print_progress(self, current_file, current_line, total_lines):
         """
         Publish a print progress event.
 
@@ -195,7 +195,7 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             }
         })
 
-    def position_update(self, x, y, z)
+    def position_update(self, x, y, z):
         self._publish({
             'event':   'position_update',
             'params':   {

@@ -37,7 +37,7 @@ PRINTER = {
         'nozzle1':  0,
         'nozzle2':  0,
     },
-    'position':
+    'position': {
         'x':        0,
         'y':        0,
         'z':        0,
