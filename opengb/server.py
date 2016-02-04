@@ -22,6 +22,7 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 import opengb.config
 import opengb.printer
 import opengb.database as OGD
+import opengb.utils as OGU
 
 # TODO: use rotated file logging.
 LOGGER = tornado.log.app_log
@@ -192,19 +193,13 @@ class MessageHandler(object):
         except OGD.GCodeFile.DoesNotExist:
             raise IndexError('No gcode file found with id {0}'.format(id))
         if content:
-            destination = os.path.join(options.gcode_dir, str(id))
-            if not os.path.isfile(destination):
-                LOGGER.error('Error reading gcode file '
-                             '{0}'.format(destination))
-                raise IndexError('No gcode file found with id {0}'.format(id))
-            with open(destination, "r") as gcode_file_in:
-                try:
-                    gcode = gcode_file_in.read()
-                except IOError:
-                    LOGGER.error('Error reading gcode file '
-                                 '{0}'.format(destination))
-                    raise IndexError('Error reading gcode file')
-            gcode_file['content'] = gcode
+            try:
+                gcode_file['content'] = OGU.load_gcode_file(id)
+            except IOError as err:
+                LOGGER.error('Error reading gcode file with id {0}: '
+                             '{1}'.format(id, err))
+                raise IndexError('Error reading gcode file with '
+                                 'id {0}'.format(id))
         return gcode_file
 
     def get_gcode_files(self):
