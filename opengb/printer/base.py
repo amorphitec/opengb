@@ -239,7 +239,7 @@ class IPrinter(multiprocessing.Process):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, to_printer, printer_callbacks=None, baud_rate=115200,
-                 port='/dev/ttyACM0'):
+                 port=None):
         # Configuration.
         # TODO: make these configurable in config file?
         self._connect_retry_sec = 2

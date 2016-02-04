@@ -1,31 +1,44 @@
+import os
 import serial
 import time
 import threading
 import random
 import logging
 import re
+import json
 
 from opengb.printer import IPrinter
 from opengb.printer import State 
 
-
 # Map Marlin message patterns to callbacks.
 MSG_PATTERNS = [
+    # Standard 'ok' message.
+    (re.compile(r'ok$'),
+     lambda g, c: (None)),
     # Standard 'echo' message.
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
-     lambda g, c: (getattr(c, 'log')(logging.INFO, g['msg']))),
+     lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
     # Temperature update.
     (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
-                'T0:(?P<n2temp>\d*\.?\d+)\s/(?P<n2target>\d*\.?\d+)\s.*$'),
+                'T0:(?P<n2temp>\d*\.?\d+)\s/(?P<n2target>\d*\.?\d+).*?$'),
      lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
                                              g['n1temp'], g['n1target'],
                                              g['n2temp'], g['n2target']))),
     # Position update.
-    (re.compile(r'ok C:\sX:(?P<xpos>\d*\.?\d+)\sY:/(?P<ypos>\d*\.?\d+)\s'
-                'Z:/(?P<zpos>\d*\.?\d+)'),
+    # Note: Marlin sends an errant space between X: and <xsteps>.
+    (re.compile(r'X:(?P<xpos>\d*\.?\d+)\sY:(?P<ypos>\d*\.?\d+)\s'
+                'Z:(?P<zpos>\d*\.?\d+)\sE:(?P<epos>\d*\.?\d+)\sCount\s'
+                'X:\s(?P<xsteps>\d*\.?\d+)\sY:(?P<ysteps>\d*\.?\d+)\s'
+                'Z:(?P<zsteps>\d*\.?\d+).*?$'),
      lambda g, c: (getattr(c, 'position_update')(g['xpos'], g['ypos'],
                                                  g['zpos']))),
+]
+
+# USB device name patterns.
+USB_PATTERNS = [
+    'ttyUSB\d*?',
+    'ttyACM\d*?',
 ]
 
 
@@ -40,15 +53,41 @@ class Marlin(IPrinter):
         super().__init__(*args, **kwargs)
 
     def _connect(self):
+        # Detect serial port if unspecified.
+        if self._port == None:
+            port = self._detect_port()
+        else:
+            port = self._port
         try:
+            self._serial.setPort(port)
             self._serial.setBaudrate(self._baud_rate)
-            self._serial.setPort(self._port)
             self._serial.setTimeout(self._timeout)
             self._serial.open()
             # Allow time for serial open to complete before reading/writing.
             time.sleep(1)
         except serial.SerialException as e:
-            raise ConnectionError(e)
+            raise ConnectionError(e.args[0])
+
+    def _detect_port(self):
+        """
+        Detect which port has a Marlin printer connected.
+
+        NOTE: presently this is quite basic. It just looks for a connected
+        USB device. In future it should probably attempt to connect to the
+        port, send a piece of gcode and wait for a response.
+        """
+        self._callbacks.log(logging.INFO, 'Searching for printer.')
+        usb_patterns_combined = "(" + ")|(".join(USB_PATTERNS) + ")"
+        usb_paths = [os.path.join('/dev', p)
+                     for p in os.listdir('/dev')
+                     if re.match(usb_patterns_combined, p)]
+        if len(usb_paths) == 0:
+            #TODO: work out what to do with this downstream.
+            self._callbacks.log(logging.ERROR, 'No printer found.')
+            return None
+        self._callbacks.log(logging.INFO, 'Printer found at '
+                                          '{0}.'.format(usb_paths[0]))
+        return usb_paths[0]
 
     def _send_command(self, command):
         """
@@ -112,8 +151,17 @@ class Marlin(IPrinter):
                                           'connect to serial port: ' + e)
                     finally:
                         return None
+                except TypeError:
+                    # Occasionally we encounter a BlockingIOError when reading
+                    # from the serial port. This is not neccessarily a problem
+                    # so log and continue.
+                    self._callbacks.log, (logging.WARN, 'Blocking IO while '
+                                          'reading from serial port')
+                    return False
         except IOError:
             # Unable to lock the serial port.
+            self._callbacks.log, (logging.WARN, 'Unable to lock serial port '
+                                  'for reading')
             return False
         return message
 
@@ -128,7 +176,6 @@ class Marlin(IPrinter):
                 self._callbacks.log(logging.DEBUG, 'Parsed: ' + message)
                 each[1](m.groupdict(), self._callbacks)
                 break
-            time.sleep(1)
         else:
             self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
 
@@ -151,6 +198,9 @@ class Marlin(IPrinter):
         self._send_command(b'G90')
         self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
         self._request_printer_position()
+        #self._to_printer.put(json.dumps({
+        #    'method': '_request_printer_position',
+        #    'params': {}}))           
 
     def home_head(self, x=True, y=True, z=True):
         if not x and not y and not z:
@@ -163,5 +213,9 @@ class Marlin(IPrinter):
             command += ' Y'
         if z:
             command += ' Z'
+        command += '\nM114'
         self._send_command(command.encode())
         self._request_printer_position()
+        #self._to_printer.put(json.dumps({
+        #    'method': '_request_printer_position',
+        #    'params': {}}))           
