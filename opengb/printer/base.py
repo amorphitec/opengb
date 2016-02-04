@@ -246,9 +246,11 @@ class IPrinter(multiprocessing.Process):
         self._run_loop_delay_sec = 0.1
         self._print_loop_delay_sec = 0.001
         self._metric_interval_print_sec = 5 
-        self._metric_interval_idle_sec = 2
+        self._metric_interval_idle_sec = 1 
         self._metric_update_time = time.time() - self._metric_interval_idle_sec
         # State.
+        # TODO: Decide whether we just get rid of these. We probably don't
+        # need anything except self._state and self._to_printer.
         self._temp_bed = 0
         self._temp_nozzle1 = 0
         self._temp_nozzle2 = 0
