@@ -1,7 +1,4 @@
 from peewee import *
-from tornado.options import options
-
-import opengb.config
 
 
 DB = SqliteDatabase(None)

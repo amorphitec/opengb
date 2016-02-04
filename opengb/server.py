@@ -21,7 +21,7 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 
 import opengb.config
 import opengb.printer
-import opengb.database as ODB
+import opengb.database as OGD
 
 # TODO: use rotated file logging.
 LOGGER = tornado.log.app_log
@@ -160,7 +160,7 @@ class MessageHandler(object):
         # ever uploaded to PyPI https://github.com/thegaragelab/gctools
         payload_bytes = payload.encode()
         payload_size = len(payload_bytes)
-        gcode_file = ODB.GCodeFile.create(name=name, size=payload_size)
+        gcode_file = OGD.GCodeFile.create(name=name, size=payload_size)
         destination = os.path.join(options.gcode_dir, str(gcode_file.id))
         with open(destination, "wb") as gcode_file_out:
             try:
@@ -181,13 +181,13 @@ class MessageHandler(object):
         :type content: :class:`bool` (default False)
         """
         try:
-            result = ODB.GCodeFile.get(ODB.GCodeFile.id == id)
+            result = OGD.GCodeFile.get(OGD.GCodeFile.id == id)
             gcode_file = {
                 'id':   result.id,
                 'name': result.name,
                 'size': result.size,
             }
-        except ODB.GCodeFile.DoesNotExist:
+        except OGD.GCodeFile.DoesNotExist:
             raise IndexError('No gcode file found with id {0}'.format(id))
         if content:
             destination = os.path.join(options.gcode_dir, str(id))
@@ -223,7 +223,7 @@ class MessageHandler(object):
 
         Counters are listed in :data:`opengb.database.COUNTERS`.
         """
-        return {'counters': {c.name: c.count for c in ODB.Counter.select()}}
+        return {'counters': {c.name: c.count for c in OGD.Counter.select()}}
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -333,8 +333,8 @@ def update_counters(count=1):
     :type count: :class:`int`
     """
     LOGGER.debug('Incrementing printer counters')
-    query = ODB.Counter.update(count=ODB.Counter.count+1).where(
-        ODB.Counter.name.contains('uptime'))
+    query = OGD.Counter.update(count=OGD.Counter.count+1).where(
+        OGD.Counter.name.contains('uptime'))
     query.execute()
 
 
@@ -393,7 +393,7 @@ def main():
     options.parse_config_file(opengb.config.CONFIG_FILE)
 
     # Initialize database.
-    ODB.initialize(options.db_file)
+    OGD.initialize(options.db_file)
 
     # Initialize printer queues.
     to_printer = multiprocessing.Queue()
