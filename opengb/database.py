@@ -49,13 +49,13 @@ def initialize(path):
         created.
     """
     # Connect to database
-    DB.init(path) 
+    DB.init(path)
     try:
         DB.connect()
     except OperationalError:
         # TODO: handle this, though it shouldn't happen if we ensure path
         # exists and is writeable upstream.
-        raise 
+        raise
 
     # Create database tables if not already present.
     DB.create_tables([
