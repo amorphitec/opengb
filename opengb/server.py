@@ -173,10 +173,12 @@ class MessageHandler(object):
 
     def get_gcode_file(self, id, content=False):
         """
-        Get details of a single gcode file with the given id.
+        Get details of a single gcode file with the given `id`.
 
         Optionally include the gcode file content.
 
+        :param id: ID of the gcode file to get.
+        :type id: :class:`int`
         :param content: Include the gcode file content in the results.
         :type content: :class:`bool` (default False)
         """
