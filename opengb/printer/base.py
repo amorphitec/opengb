@@ -1,7 +1,5 @@
 """
 Printer exceptions and interface.
-
-TODO: Handle Farenheit vs Celsius
 """
 
 import multiprocessing
