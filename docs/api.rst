@@ -103,6 +103,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+emergency_stop
+==============
+
+.. automethod:: opengb.server.Messagehandler.emergency_stop
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"emergency_stop","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 put_gcode_file
 ==============
 

@@ -148,6 +148,16 @@ class MessageHandler(object):
         }))
         return True
 
+    def emergency_stop(self):
+        """
+        Stop immediately.
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'emergency_stop',
+            'params': {}
+        }))
+        return True
+
     def put_gcode_file(self, payload, name):
         """
         Upload a gcode file.
