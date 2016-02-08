@@ -304,7 +304,7 @@ class Marlin(IPrinter):
         self._request_printer_position()
 
     def execute_gcode(self, gcode_commands):
-        self._update_state(State.BUSY)
+        self._update_state(State.EXECUTING)
         self._gcode_commands = gcode_commands
         self._gcode_position = 0
 
