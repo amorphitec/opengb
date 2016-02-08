@@ -9,7 +9,6 @@ import json
 
 from opengb.printer import IPrinter
 from opengb.printer import State
-from opengb.printer import NotReadyException
 
 # Response message patterns mapped to callbacks.
 RESPONSE_MSG_PATTERNS = [

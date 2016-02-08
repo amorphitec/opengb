@@ -347,12 +347,12 @@ def update_counters(count=1):
 
 def get_frontend_handlers(frontend_name):
     """
-    Return handlers for frontend with the given name. 
+    Return handlers for frontend with the given name.
 
     Returns an empty list if running backend-only and no frontend is defined.
 
     NOTE: Currently each frontend dir must conform to a specific layout:
-    
+
         frontend_name
             /bower_components
             /fonts
@@ -360,7 +360,7 @@ def get_frontend_handlers(frontend_name):
             /scripts
             /styles
             /views
-            
+
         This may change in the future if different frontends have different
         directory structures. But for now we use the same directory structure
         for all frontends so this does the job.
@@ -421,7 +421,7 @@ def main():
     # Frontend-specfic handlers added if required.
     try:
         handlers += get_frontend_handlers(options.frontend)
-    except IOError as e: 
+    except IOError as e:
         LOGGER.exception(e)
         LOGGER.warn('No frontend will be served.')
     app = Application(handlers=handlers, debug=options.debug)
