@@ -188,6 +188,20 @@ class TestHomeHead(OpengbTestCase):
             json.loads(self.to_printer.get())["params"]["x"], True)
 
 
+class TestEmergencyStop(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+
+    def test_pass_emergency_stop_method_to_printer(self):
+        """Emergency stop adds 'emergency_stop' msg to to_printer queue."""
+        self.message_handler.emergency_stop()
+        self.assertEqual(json.loads(self.to_printer.get())["method"],
+                         "emergency_stop")
+
+
 class TestPutGCodeFile(OpengbTestCase):
 
     def setUp(self):
