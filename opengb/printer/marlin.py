@@ -11,14 +11,11 @@ from opengb.printer import IPrinter
 from opengb.printer import State
 from opengb.printer import NotReadyException
 
-# Map Marlin message patterns to callbacks.
-MSG_PATTERNS = [
+# Response message patterns mapped to callbacks.
+RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
     (re.compile(r'ok$'),
      lambda g, c: (None)),
-    # Standard 'echo' message.
-    (re.compile(r'echo:\s*(?P<msg>.*)$'),
-     lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
     # Temperature update.
     (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
@@ -37,6 +34,23 @@ MSG_PATTERNS = [
     # Error.
     (re.compile(r'Error:(?P<error>.*)$'),
      lambda g, c: (getattr(c, 'log')(logging.ERROR, g['error']))),
+]
+
+# Event message patterns mapped to callbacks
+EVENT_MSG_PATTERNS = [
+    # Standard 'echo' message.
+    (re.compile(r'echo:\s*(?P<msg>.*)$'),
+     lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
+    # Bed heating temperature update.
+    # TODO: call 'temp_update'.
+    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\sE:/(?P<extruded>\d*)\s'
+                'B:(?P<btemp>\d*\.?\d+).*$'),
+     lambda g, c: (None)),
+    # Nozzle heating temperature update.
+    # TODO: call 'temp_update'.
+    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\sE:/(?P<extruded>\d*)\s'
+                'W:(?P<btemp>\d*\.?\d+).*$'),
+     lambda g, c: (None)),
 ]
 
 # USB device name patterns.
@@ -95,7 +109,7 @@ class Marlin(IPrinter):
         self._connect_retry_sec = 2
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
-        self._serial_buffersize = 10 
+        self._serial_buffersize = 4
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
         # Timing
         self._idle_loop_delay_sec = 0.1
@@ -153,6 +167,8 @@ class Marlin(IPrinter):
 
         :param command: Command to send to the serial port.
         :type command: :class:`bytes`
+        :param buffer: Only send command if space exists in the buffer.
+        :type buffer: :class:`bool`
         :returns: True if successful, otherwise False.
         :rtype: :class:`bool`
         :raises: `BufferFullException` if unable to send because the send
@@ -162,8 +178,10 @@ class Marlin(IPrinter):
         self._callbacks.log(logging.DEBUG, 'Sending command: ' + str(command))
         try:
             with self._serial_lock:
-                if self._serial_buffer.full():
-                    raise BufferFullException
+                if buffer and self._serial_buffer.full():
+                    self._callbacks.log(logging.DEBUG, 'Buffer full. ')
+                    raise BufferFullException('Buffer full. Unable to send '
+                                              'command: ' + str(command))
                 try:
                     self._serial.write(command + b'\n')
                     self._serial_buffer.put(command)
@@ -232,18 +250,25 @@ class Marlin(IPrinter):
         TODO: describe how this works in conjunction w/MSG_PATTERNS.
         """
         message = message.decode().rstrip()
-        for each in MSG_PATTERNS:
+        for each in RESPONSE_MSG_PATTERNS:
             matched = each[0].match(message)
             if matched:
-                self._callbacks.log(logging.DEBUG, 'Parsed: ' + message)
+                self._callbacks.log(logging.DEBUG,
+                                    'Parsed response: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
-                break
-        else:
-            self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
-        # A message indicates a command was processed. So pop an item from
-        # the serial buffer.
-        if not self._serial_buffer.empty():
-            self._serial_buffer.get()
+                # Response message indicates a command was processed.
+                # Pop an item off the serial buffer.
+                if not self._serial_buffer.empty():
+                    self._serial_buffer.get()
+                return
+        for each in EVENT_MSG_PATTERNS:
+            matched = each[0].match(message)
+            if matched:
+                self._callbacks.log(logging.DEBUG,
+                                    'Parsed event: ' + message)
+                # TODO: Process message.
+                return
+        self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed:
@@ -288,7 +313,7 @@ class Marlin(IPrinter):
         # NOTE: Marlin will skip buffering and process an M112 immediately
         # regardless of printer state:
         # https://github.com/MarlinFirmware/Marlin/issues/836
-        self._send_command(b'M112')
+        self._send_command(b'M112', buffer=False)
         self._update_state(State.ERROR)
 
     def run(self):
@@ -351,15 +376,19 @@ class Marlin(IPrinter):
         """
         while True:
             # Request a metric update if the requisite interval has passed.
-            metric_interval = time.time() - self._temp_update_time
-            if (self._state == State.EXECUTING and
-                metric_interval > self._temp_poll_execute_sec):
+            try:
+                metric_interval = time.time() - self._temp_update_time
+                if (self._state == State.EXECUTING and
+                    metric_interval > self._temp_poll_execute_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
-            elif (self._state == State.READY and
-                metric_interval > self._temp_poll_ready_sec):
+                elif (self._state == State.READY and
+                    metric_interval > self._temp_poll_ready_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
+            except BufferFullException:
+                # Wait until next time.
+                pass
             # Process a message from the to_printer queue.
             if not self._to_printer.empty():
                 message = self._to_printer.get()
@@ -369,6 +398,12 @@ class Marlin(IPrinter):
                     self._callbacks.log(logging.ERROR,
                                         'Malformed message sent to '
                                         'printer: ' + str(err))
+                # TODO: catch BufferFullException
+            # Execute gcode if present.
+            if (self._state == State.EXECUTING and
+                len(self._gcode_commands) > 0):
+                self._execute_next_gcode_command()
+                # TODO: send regular progress updates here.
             time.sleep(self._idle_loop_delay_sec)
 
     def _process_message_to_printer(self, message):
