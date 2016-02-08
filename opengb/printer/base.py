@@ -25,6 +25,7 @@ class State(enum.Enum):
     DISCONNECTED = 10
     READY = 20
     EXECUTING = 30
+    PAUSED = 40
     ERROR = 100
 
 
