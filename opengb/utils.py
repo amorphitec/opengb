@@ -27,3 +27,21 @@ def load_gcode_file(id):
         except IOError:
             raise
     return gcode
+
+
+def prepare_gcode(gcode, remove_comments=True):
+    """
+    Prepare a :class:`str` containing gcode commands for execution by
+    converting it to a :class:`iter` of :class:`str` representing individual
+    commands.
+
+    Optionally remove comments.
+
+    :param remove_comments: Remove lines representing comments.
+    :type remove_comments: :class:`bool`
+    """
+    gcode_list = [g.strip() for g in gcode.split('\n') if g != '']
+    if remove_comments:
+        return [g.split(';', 1)[0] for g in gcode_list
+                if not g.startswith(';')]
+    return gcode_list

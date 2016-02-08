@@ -222,7 +222,35 @@ class MessageHandler(object):
                 'name': g.name,
                 'size': g.size,
             }
-            for g in ODB.GCodeFile.select()]}
+            for g in OGD.GCodeFile.select()]}
+
+    def print_gcode_file(self, id):
+        """
+        Print gcode file with given `id`.
+
+        :param id: ID of the gcode file to get.
+        :type id: :class:`int`
+        """
+        if PRINTER['state'] != opengb.printer.State.READY:
+            raise IndexError('Printer not ready')
+        try:
+            OGD.GCodeFile.get(OGD.GCodeFile.id == id)
+        except OGD.GCodeFile.DoesNotExist:
+            raise IndexError('No gcode file found with id {0}'.format(id))
+        try:
+            gcode = OGU.prepare_gcode(OGU.load_gcode_file(id))
+        except IOError as err:
+            LOGGER.error('Error reading gcode file with id {0}: '
+                         '{1}'.format(id, err))
+            raise IndexError('Error reading gcode file with '
+                             'id {0}'.format(id))
+        self._to_printer.put(json.dumps({
+            'method':   'execute_gcode',
+            'params': {
+                'gcode_commands':    gcode,
+            }
+        }))
+        return True
 
     def get_counters(self):
         """

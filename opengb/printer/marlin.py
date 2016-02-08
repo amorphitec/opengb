@@ -343,10 +343,25 @@ class Marlin(IPrinter):
 
     def _reset_gcode_state(self):
         """
-        Reset gcode state.
+        Clear the current gcode sequence and return position to 0.
         """
-        self._gcode = []
+        self._gcode_commands = []
         self._gcode_position = 0
+
+    def _execute_next_gcode_command(self):
+        """
+        Execute the next gcode command in the current sequence.
+        """
+        try:
+            self._send_command(
+                self._gcode_commands[self._gcode_position].encode())
+            self._gcode_position += 1
+            if self._gcode_position >= len(self._gcode_commands):
+                self._reset_gcode_state()
+                self._update_state(State.READY)
+        except BufferFullException:
+            # This probably means we're waiting for bed or nozzle temperature.
+            pass
 
     def _reader(self):
         """
@@ -360,7 +375,6 @@ class Marlin(IPrinter):
             msg_from_printer = self._get_message_from_printer()
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
-            print('queue: ' + str(self._serial_buffer.qsize()))
             time.sleep(self._idle_loop_delay_sec)
 
     def _writer(self):
