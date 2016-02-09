@@ -15,7 +15,6 @@
     "ng-file-upload": "~7.2.1",
     "ng-file-upload-shim": "~7.2.1",
     "ng-lodash": "~0.2.3",
-    "ng-websocket": "git://github.com/wilk/ng-websocket.git#master",
     "angular-ui-ace": "0.1.1"
   },
   "overrides": {

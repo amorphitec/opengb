@@ -6,57 +6,32 @@
 
     	function getAllFiles(){
 
-    		fileFactory.getFiles()
-	            .success(function (files) {
-
-                    vm.fileList = files;
-
-	            })
-	            .error(function (error) {
-	                console.log( 'Unable to load files data: ', error );
-	            });
+            printerFactory.getFiles();
 
     	}
 
-        function addFile(file){
-
-            fileFactory.insertFile(file)
-                .success(function (files) {
-
-                    console.log(files);
-                    vm.fileList = files;
-                    vm.selectedFile = vm.uploadFile;
-
-                })
-                .error(function (error) {
-                    console.log( 'Unable to load files data: ' + error );
-                });
-
-
-        }
 
         // In order to watch a 'vm.' vs '$scope.' object, you must use 
         // $watch(function(){},function(){}) format
         $scope.$watch(
-            function watchUploadFile( scope ) {
+            function( scope ) {
                 return( vm.uploadFile );
             },
-            function handleUploadFileChange( newValue, oldValue ) {
+            function( newValue, oldValue ) {
                 if (newValue != null) {
 
-                    addFile( vm.uploadFile );
+                    printerFactory.putFile(vm.uploadFile);
                     vm.fileSelector = false;
-                    setTimeout(function(){ vm.selectedFile = vm.uploadFile; $scope.$apply(); }, 10);
 
                 }
             }
         );
 
         $scope.$watch(
-            function watchSelectedFile( scope ) {
+            function( scope ) {
                 return( vm.selectedFile );
             },
-            function handleSelectedFileChange( newValue, oldValue ) {
+            function( newValue, oldValue ) {
                 if (newValue != null) {
 
                     vm.fileSelector = false;
@@ -65,25 +40,25 @@
 
         		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
         		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
-                    if(!vm.selectedFile.contents && vm.selectedFile.url){
+               //      if(!vm.selectedFile.contents && vm.selectedFile.url){
 
-                        var file = {};
-                        angular.copy(vm.selectedFile, file);
-                        vm.selectedFile = null;
+               //          var file = {};
+               //          angular.copy(vm.selectedFile, file);
+               //          vm.selectedFile = null;
 
-                        $http.get(file.url).success(
-                            function (data) {
-                                file.contents = data;
-                                vm.selectedFile = file;
-                            }).error(function () {
-                                console.error( 'Unable to load file: ' , error );
-                            }
-                        );
-                    }
+               //          // $http.get(file.url).success(
+               //          //     function (data) {
+               //          //         file.contents = data;
+               //          //         vm.selectedFile = file;
+               //          //     }).error(function () {
+               //          //         console.error( 'Unable to load file: ' , error );
+               //          //     }
+               //          // );
+               //      }
 
-                    if(vm.selectedFile){
-            			printerFactory.setFile(vm.selectedFile);
-                    }
+               //      if(vm.selectedFile){
+            			// printerFactory.setFile(vm.selectedFile);
+               //      }
 
                 }
             }
@@ -96,8 +71,8 @@
         vm.printer = printerFactory.printer;
         vm.temperatures = vm.printer.temperatures;
         vm.connection = vm.printer.connection;
-    	vm.fileList = {};
-        vm.selectedFile = null;
+    	vm.fileList = printerFactory.files;
+        vm.selectedFile = printerFactory.selectedFile;
 
     	getAllFiles();
 
@@ -106,7 +81,7 @@
         vm.gcode = null;
 
         vm.selectFile = function(file){
-            vm.selectedFile = file;
+            printerFactory.getFile(file.id);
         };
 
         vm.deselectFile = function(){

@@ -35,7 +35,6 @@ module.exports = function(config) {
       'app/bower_components/ng-file-upload/ng-file-upload.js',
       'app/bower_components/ng-file-upload-shim/ng-file-upload-shim.js',
       'app/bower_components/ng-lodash/build/ng-lodash.js',
-      'app/bower_components/ng-websocket/ng-websocket.js',
       'app/bower_components/ace-builds/src-min-noconflict/ace.js',
       'app/bower_components/ace-builds/src-min-noconflict/mode-json.js',
       'app/bower_components/ace-builds/src-min-noconflict/mode-yaml.js',

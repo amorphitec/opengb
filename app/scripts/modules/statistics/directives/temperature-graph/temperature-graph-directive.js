@@ -12,8 +12,8 @@
                 scope.getSeries = function(series){
                     var arr = scope.dataSet[series].slice(0);
                     var data = [];
-                    var s = Math.ceil(arr.length/100);
-                    for(var i = 0 ; i < 100 ; i++){
+                    var s = Math.ceil(arr.length/50);
+                    for(var i = 0 ; i < 50 ; i++){
                         var j = i * s;
                         if(j < arr.length){
                             data.push(arr[j]);

@@ -21,7 +21,7 @@ angular
     'ngMaterial',
     'ngFileUpload',
     'ngLodash',
-    'ngWebsocket',
+    'websocket',
     'ui.ace',
     'materialDesignTemplate',
     'd3',
