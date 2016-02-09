@@ -116,11 +116,10 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-
 resume_execution
 ================
 
-.. automethod:: opengb.server.MessageHandler._execution
+.. automethod:: opengb.server.MessageHandler.resume_execution
 
 Example request: ::
 
@@ -130,11 +129,10 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-
 stop_execution
 ==============
 
-.. automethod:: opengb.server.MessageHandler.pause_execution
+.. automethod:: opengb.server.MessageHandler.stop_execution
 
 Example request: ::
 
@@ -143,7 +141,6 @@ Example request: ::
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
-
 
 emergency_stop
 ==============
