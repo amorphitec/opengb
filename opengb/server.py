@@ -148,6 +148,26 @@ class MessageHandler(object):
         }))
         return True
 
+    def pause_printing(self):
+        """
+        Pause execution of a sequence of gcode commands.
+        """
+        return True
+
+    def resume_printing(self):
+        """
+        Resume paused execution of a sequence of gcode commands.
+        """
+        return True
+
+    def stop_printing(self):
+        """
+        Stop execution of a sequence of gcode commands.
+
+        The current gcode sequence and position will be forgotten.
+        """
+        return True
+
     def emergency_stop(self):
         """
         Stop immediately.
@@ -250,26 +270,6 @@ class MessageHandler(object):
                 'gcode_commands':    gcode,
             }
         }))
-        return True
-
-    def pause_printing(self):
-        """
-        Pause execution of a sequence of gcode commands.
-        """
-        return True
-
-    def resume_printing(self):
-        """
-        Resume paused execution of a sequence of gcode commands.
-        """
-        return True
-
-    def stop_printing(self):
-        """
-        Stop execution of a sequence of gcode commands.
-
-        The current gcode sequence and position will be forgotten.
-        """
         return True
 
     def get_counters(self):
