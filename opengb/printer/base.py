@@ -389,6 +389,34 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
+    def pause_execution(self):
+        """
+        Pause execution of a sequence of gcode commands.
+
+        .. note::
+
+            This method should set `self._state` to `PAUSED` to ensure
+            that commands are executed with limited interruptions.
+        """
+        pass
+
+    @abc.abstractmethod
+    def resume_execution(self):
+        """
+        Resume paused execution of a sequence of gcode commands.
+        """
+        pass
+
+    @abc.abstractmethod
+    def stop_execution(self):
+        """
+        Stop execution of a sequence of gcode commands.
+
+        The current gcode sequence and position will be forgotten.
+        """
+        pass
+
+    @abc.abstractmethod
     def emergency_stop(self):
         """
         Immediately stop the printer.

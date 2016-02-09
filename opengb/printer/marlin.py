@@ -308,6 +308,17 @@ class Marlin(IPrinter):
         self._gcode_commands = gcode_commands
         self._gcode_position = 0
 
+    def pause_execution(self):
+        self._update_state(State.PAUSED)
+
+    def resume_execution(self):
+        if self._state == State.PAUSED:
+            self._update_state(State.EXECUTING)
+
+    def stop_execution(self):
+        self._reset_gcode_state()
+        self._update_state(State.READY)
+
     def emergency_stop(self):
         # NOTE: Marlin will skip buffering and process an M112 immediately
         # regardless of printer state:
@@ -356,6 +367,7 @@ class Marlin(IPrinter):
             self._send_command(
                 self._gcode_commands[self._gcode_position].encode())
             self._gcode_position += 1
+            # Complete execution if previous line was last in sequence.
             if self._gcode_position >= len(self._gcode_commands):
                 self._reset_gcode_state()
                 self._update_state(State.READY)
