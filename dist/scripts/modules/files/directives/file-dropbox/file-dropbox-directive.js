@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function directive(gcodeService) {
+    function directive() {
 		
         /* ----- BEGIN LINK FUNCTION FOR DIRECTIVE ----- */
         function link(scope, element, attrs) {
@@ -20,7 +20,6 @@
                         var contents = e.target.result;
                         file = {
                                     "name":"new file",
-                                    "url":"api/file/1/new-file.gcode",
                                     "contents":contents,
                                     "image":null,
                                     "meta":{}
@@ -54,6 +53,6 @@
 
     angular
         .module('openGbApp')
-        .directive('ogFileDropbox', ['gcodeService', directive ]);
+        .directive('ogFileDropbox', [ directive ]);
 
 })(angular);

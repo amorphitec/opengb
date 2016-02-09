@@ -13,7 +13,7 @@
             threeService.THREE().then(function(THREE){
                 vm.THREE = THREE;
 
-                vm.scene = createScene();
+                //vm.scene = createScene();
                 scope.progressMode = '';
 //              zoomToFit();
 
@@ -68,7 +68,9 @@
                                     );
 
                                 }else{
-                                    vm.scene.remove(vm.model);
+                                    if(vm.scene){
+                                        vm.scene.remove(vm.model);                                        
+                                    }
                                 }
 
             });
@@ -242,7 +244,7 @@
 			'scope': {
                 'file': '=ogGcodeFile'
             },
-            'template': '<div id="renderArea" ><md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular></div>',
+            'template': '<div id="renderArea" ><og-file-image og-fi-file="file"></og-file-image><md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular></div>',
             'link': link
         };
 

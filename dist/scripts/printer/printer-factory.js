@@ -24,47 +24,46 @@
                         }
                       };
         var files = {};
-        var id = 0;
+        var selectedFile;
 
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
 //        var baseUrl = 'ws://localhost:8000/ws';
         var ws;
-        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-//        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+//        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
+
             console.log('attempting to connect to: ' + printer.connection.baseUrl );
-            ws = $websocket.$new({
-                                    url: printer.connection.baseUrl,
-                                    reconnect: false
-                                });
 
-            ws.$on('$open',function(){
-                console.log('ws connected to: ' + printer.connection.baseUrl );
-                printer.connected = true;
-            });
-            ws.$on('$close',function(){
-                console.log('ws failed connection to: ' + printer.connection.baseUrl );
-                printer.connected = false;
-            });
-            ws.$on('$error',function(){
-                console.log('error: ',ws.$status());
-            });
+            ws = $websocket(printer.connection.baseUrl);
 
-            //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
-            ws.$$ws.onmessage = function (message) {
-                try {
-                    var decoded = JSON.parse(message.data);
-                    ws.$$fireEvent(decoded.event, decoded.params);
-                    ws.$$fireEvent('$message', decoded);
-                }
-                catch (err) {
-                    ws.$$fireEvent('$message', message.params);
-                }
-                $rootScope.$apply();
-            };
+            // ws.$on('$open',function(){
+            //     console.log('ws connected to: ' + printer.connection.baseUrl );
+            //     printer.connected = true;
+            // });
+            // ws.$on('$close',function(){
+            //     console.log('ws failed connection to: ' + printer.connection.baseUrl );
+            //     printer.connected = false;
+            // });
+            // ws.$on('$error',function(){
+            //     console.log('error: ',ws.$status());
+            // });
+
+            // //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
+            // ws.$$ws.onmessage = function (message) {
+            //     try {
+            //         var decoded = JSON.parse(message.data);
+            //         ws.$$fireEvent(decoded.event, decoded.params);
+            //         ws.$$fireEvent('$message', decoded);
+            //     }
+            //     catch (err) {
+            //         ws.$$fireEvent('$message', message.params);
+            //     }
+            //     $rootScope.$apply();
+            // };
 
             /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
 
@@ -83,13 +82,14 @@
                 printer.statistics.temperatures.nozzle2.current.push({x:time,y:params.nozzle2_current});
 
             });
-            ws.$on('pos', function (message) {
-                var params = message;
-                printer.position.x = params.x;
-                printer.position.y = params.y;
-                printer.position.z = params.z;
-                console.log('position event:', message);
-            });
+
+            // ws.$on('pos', function (message) {
+            //     var params = message;
+            //     printer.position.x = params.x;
+            //     printer.position.y = params.y;
+            //     printer.position.z = params.z;
+            //     console.log('position event:', message);
+            // });
             /* ------------- END WEBSOCKET EVENTS ------------------ */
 
 
@@ -102,59 +102,52 @@
         //file should be in form of: 
         //{'name':<name>,'contents':<gcode>}
         function getFiles() {
-            var data = {
-                'jsonrpc': '2.0',
-                'id':       id,
-                'method':   'get_gcode_files',
-                'params': {
-                }
-            };
-            ws.$$send(data);
-            id++;
+            ws.call('get_gcode_files')
+                .then(function(d){
+                    angular.forEach(d['gcode_files'],function(f){
+                        files[f.id] = f;
+                    });
+                }, function(e){
+
+                });
         }
 
-        function getFile(id) {
-            var data = {
-                'jsonrpc': '2.0',
-                'id':       1,
-                'method':   'get_gcode_file',
-                'params': {
-                    'id':id
-                }
-            };
-            ws.$$send(data);
-            id++;
+        function getFile(fid,getContent) {
+            var method = 'get_gcode_file';
+            var params = {
+                            'id':fid
+                         };
+            ws.call(method, params)
+                .then(function(d){
+                    selectedFile = d;
+                }, function(e){
+                   
+                })
         }
 
         function putFile(file) {
-            var data = {
-                'jsonrpc': '2.0',
-                'id':       id,
-                'method':   'put_gcode_file',
-                'params': {
+            var method = 'put_gcode_file';
+            var params = {
                     'name':file.name,
                     'payload':file.contents
-                }
-            };
-            ws.$$send(data);
-            var thisId = id;
-            ws.$on('$message',function(message){
-                if(thisId == message.id){
+                };
+
+            ws.call(method,params)
+                .then(function(d){
+                    getFile(d.id)
                     printer.connection.printReady = true;
-                    $rootScope.$apply();
-                }
-            });
-            id++;
+                }, function(e){
+                    printer.connection.printReady = false;
+                })
+            
         }
 
         function printFile(){
-            var data = {
-                'jsonrpc': '2.0',
-                'id': id,
-                'method': 'print_file',
-            };
-            ws.$$send(data);
-            id++;
+            var method = 'print_file';
+            var params = {
+                            'id':fid
+                         };
+            ws.call(method, params);
         }
 
         function pausePrint() {
@@ -168,33 +161,25 @@
         //temps should be in form of: 
         //{'bed':<temp>,'nozzle1':<temp>,'nozzle2':<temp>}
         function setTemp(temps) {
-            var data = {
-                'jsonrpc': '2.0',
-                'id':       id,
-                'method':   'set_temp',
-                'params': {
-                    "bed":temps.bed,
-                    "nozzle1":temps.nozzle1,
-                    "nozzle2":temps.nozzle2
-                }
-            };
-            ws.$$send(data);
+            var method = 'get_gcode_file';
+            var params = {
+                            "bed":temps.bed,
+                            "nozzle1":temps.nozzle1,
+                            "nozzle2":temps.nozzle2
+                         };
+            ws.call(method, params);
         }
 
         //position should be in form of: 
         //{'x':<val>,'y':<val>,'z':<val>}
         function movePrintHead(position){
-            var data = {
-                "jsonrpc":"2.0",
-                "id":id,
-                "method":"move_head",
-                "params":{
-                    "x":position.x,
-                    "y":position.y,
-                    "z":position.z
-                }
-            };
-            ws.$$send(data);
+            var method = 'get_gcode_file';
+            var params = {
+                            "x":position.x,
+                            "y":position.y,
+                            "z":position.z
+                         };
+            ws.call(method, params);
         }
 
         //home should be in form of: 
@@ -205,31 +190,26 @@
             printer.position.y = home.y ? 600 : printer.position.y;
             printer.position.z = home.z ? 0 : printer.position.z;
 
-            var data = {
-                "jsonrpc":"2.0",
-                "id":id,
-                "method":"home_head",
-                "params":{
-                    "x":!!home.x,
-                    "y":!!home.y,
-                    "z":!!home.z
-                }
-            };
-            ws.$$send(data);
+            var method = 'get_gcode_file';
+            var params = {
+                            "x":!!home.x,
+                            "y":!!home.y,
+                            "z":!!home.z
+                         };
+            ws.call(method, params);
         }
         /* --------- END PRIVATE WEBSOCKET FUNCTIONS ---------- */
 
 
         /* -------- BEGIN PUBLIC WEBSOCKET FUNCTIONS ---------- */
 
-        printerFactory.setFile = function(file){
-            console.log("new gcode has be loaded");
+        printerFactory.putFile = function(file){
             putFile(file);
         };
-        printerFactory.getFile = function(){
-            getFile(id);
+        printerFactory.getFile = function(id){
+            getFile(id,true);
         };
-        printerFactory.listFiles = function(){
+        printerFactory.getFiles = function(){
             getFiles();
         };
         printerFactory.printFile = function(){
@@ -261,6 +241,8 @@
 
         // This is the printer object
         printerFactory.printer = printer;
+        printerFactory.files = files;
+        printerFactory.selectedFile = selectedFile;
 
         return printerFactory;
 

@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function directive(lodash) {
+    function directive(lodash,printerFactory) {
 		
         /* ----- BEGIN LINK FUNCTION FOR DIRECTIVE ----- */
         function link(scope, element, attrs) {
@@ -29,7 +29,7 @@
             };
 
             scope.selectFile = function(file){
-                scope.selectedFile = file;
+                printerFactory.getFile(file.id)
             };
 
             scope.hide = function(){
@@ -63,6 +63,6 @@
 
     angular
         .module('openGbApp')
-        .directive('ogFileSearchList', [ 'lodash', directive ] );
+        .directive('ogFileSearchList', [ 'lodash', 'printerFactory', directive ] );
 
 })(angular);
