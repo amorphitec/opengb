@@ -103,6 +103,48 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+pause_execution
+===============
+
+.. automethod:: opengb.server.MessageHandler.pause_execution
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"pause_execution","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+
+resume_execution
+================
+
+.. automethod:: opengb.server.MessageHandler._execution
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"resume_execution","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+
+stop_execution
+==============
+
+.. automethod:: opengb.server.MessageHandler.pause_execution
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"pause_execution","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+
 emergency_stop
 ==============
 
