@@ -53,7 +53,7 @@ class TestFileUtils(OpengbTestCase):
         shutil.rmtree(gcode_dir)
 
     def test_missing_gcode_file_throws_IOError(self):
-        """Loading a missing gcode file throws an IOError"""
+        """Loading a missing gcode file throws an IOError."""
         gcode_dir = tempfile.mkdtemp()
         with patch.object(utils.options.mockable(), 'gcode_dir',
                           gcode_dir):
@@ -62,9 +62,35 @@ class TestFileUtils(OpengbTestCase):
         shutil.rmtree(gcode_dir)
 
     def test_failed_gcode_file_throws_IOError(self):
-        """Failure while loading a gcode file throws an IOError"""
+        """Failure while loading a gcode file throws an IOError."""
         mopen = mock_open()
         mopen.side_effect = IOError
         with patch('builtins.open', mopen):
             with self.assertRaises(IOError):
                 utils.load_gcode_file(123)
+
+class TestPrepareGcode(OpengbTestCase):
+
+    def test_gcode_lines_parsed(self):
+        """Lines containing valid gcode are included."""
+        g = "M107\nM190 S115\nM104 S205\nG28\nG1 Z5 F5000"
+        self.assertListEqual(utils.prepare_gcode(g), [
+            'M107', 'M190 S115', 'M104 S205', 'G28', 'G1 Z5 F5000'])
+
+    def test_full_line_comments_removed(self):
+        """Comments spanning a full line are removed."""
+        g = "M107\nM190 S115\n;this is a comment\nM104 S205\nG28\nG1 Z5 F5000"
+        self.assertListEqual(utils.prepare_gcode(g), [
+            'M107', 'M190 S115', 'M104 S205', 'G28', 'G1 Z5 F5000'])
+
+    def test_partial_line_comments_removed(self):
+        """Comments spanning part of a line are removed."""
+        g = "M107\nM190 S115;this is a comment\nM104 S205\nG28\nG1 Z5 F5000"
+        self.assertListEqual(utils.prepare_gcode(g), [
+            'M107', 'M190 S115', 'M104 S205', 'G28', 'G1 Z5 F5000'])
+
+    def test_blank_lines_removed(self):
+        """Blank lines are removed."""
+        g = "M107\nM190 S115\n\n\n\nM104 S205\nG28\nG1 Z5 F5000"
+        self.assertListEqual(utils.prepare_gcode(g), [
+            'M107', 'M190 S115', 'M104 S205', 'G28', 'G1 Z5 F5000'])
