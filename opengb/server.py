@@ -347,7 +347,7 @@ def process_event(event):
             PRINTER['temp'] = event['params']
         elif event['event'] == 'position_update':
             PRINTER['position'] = event['params']
-        elif event['event'] == 'print_progress':
+        elif event['event'] == 'progress_update':
             PRINTER['progress'] = event['params']
         elif event['event'] == 'z_change':
             # TODO: trigger update camera image.
