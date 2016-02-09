@@ -229,5 +229,15 @@ Example event: ::
 
     {"jsonrpc": "2.0", "event": "position_update", "params": { "x": 100, "y": 80, "z": 20}}
 
+
+progress_update
+===============
+
+Sent periodically while printer is executing a gcode sequence.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "progress_update", "params": { "current_line": 327, "total_lines": 4393}}
+
 .. _`JSON-RPC 2.0`: http://www.jsonrpc.org
 .. _`JSON-RPC 2.0 spec`: http://www.jsonrpc.org/specification
