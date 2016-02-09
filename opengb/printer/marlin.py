@@ -116,6 +116,9 @@ class Marlin(IPrinter):
         self._temp_poll_execute_sec = 5
         self._temp_poll_ready_sec = 1
         self._temp_update_time = time.time() - self._temp_poll_ready_sec
+        self._progress_update_sec = 5
+        self._progress_update_time = time.time() - \
+            self._progress_update_sec
         # Gcode
         self._gcode_commands = []
         self._gcode_position = 0
@@ -407,7 +410,7 @@ class Marlin(IPrinter):
                     metric_interval > self._temp_poll_execute_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
-                elif (self._state == State.READY and
+                elif (self._state in [State.READY, State.PAUSED] and
                     metric_interval > self._temp_poll_ready_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
@@ -428,7 +431,11 @@ class Marlin(IPrinter):
             if (self._state == State.EXECUTING and
                 len(self._gcode_commands) > 0):
                 self._execute_next_gcode_command()
-                # TODO: send regular progress updates here.
+                progress_interval = time.time() - self._progress_update_time
+                if progress_interval > self._progress_update_sec:
+                    self._callbacks.progress_update(self._gcode_position, 
+                        len(self._gcode_commands))
+                    self._progress_update_time = time.time()
             time.sleep(self._idle_loop_delay_sec)
 
     def _process_message_to_printer(self, message):

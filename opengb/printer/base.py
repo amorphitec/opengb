@@ -110,15 +110,13 @@ class PrinterCallbacks(object):
         """
         pass
 
-    def print_progress(self, current_file, current_line, total_lines):
+    def progress_update(self, current_line, total_lines):
         """
-        Publish a print progress event.
+        Publish an execution progress update event.
 
-        :param current_file: File currently being printed.
-        :type current_file: :class:`str`
-        :param current_line: Line number currently being printed.
+        :param current_line: Line number currently being executed.
         :type current_line: :class:`int`
-        :param total_lines: Total number of lines to be printed.
+        :param total_lines: Total number of lines to be executed.
         :type total_lines: :class:`int`
         """
         pass
@@ -210,11 +208,10 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             }
         })
 
-    def print_progress(self, current_file, current_line, total_lines):
+    def progress_update(self, current_line, total_lines):
         self._publish({
-            'event':   'print_progress',
+            'event':   'progress_update',
             'params':   {
-                'current_file': current_file,
                 'current_line': current_line,
                 'total_lines':  total_lines,
             }
