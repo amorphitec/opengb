@@ -433,7 +433,7 @@ class Marlin(IPrinter):
                 self._execute_next_gcode_command()
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
-                    self._callbacks.progress_update(self._gcode_position, 
+                    self._callbacks.progress_update(self._gcode_position,
                         len(self._gcode_commands))
                     self._progress_update_time = time.time()
             time.sleep(self._idle_loop_delay_sec)
