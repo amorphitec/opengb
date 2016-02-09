@@ -5,7 +5,6 @@ Printer exceptions and interface.
 import multiprocessing
 import abc
 import json
-import logging
 import enum
 
 
