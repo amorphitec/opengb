@@ -148,7 +148,7 @@ class MessageHandler(object):
         }))
         return True
 
-    def pause_printing(self):
+    def pause_print(self):
         """
         Pause the current print job.
         """
@@ -158,7 +158,7 @@ class MessageHandler(object):
         }))
         return True
 
-    def resume_printing(self):
+    def resume_print(self):
         """
         Resume a paused print job.
         """
@@ -168,7 +168,7 @@ class MessageHandler(object):
         }))
         return True
 
-    def stop_printing(self):
+    def stop_print(self):
         """
         Stop the current print job.
 

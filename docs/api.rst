@@ -117,40 +117,40 @@ Example response: ::
     {"jsonrpc":"2.0","id":1,"result":true}
 
 
-pause_printing
+pause_print
 ===============
 
-.. automethod:: opengb.server.MessageHandler.pause_printing
+.. automethod:: opengb.server.MessageHandler.pause_print
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"pause_printing","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"pause_print","params":{}}
 
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-resume_printing
+resume_print
 ================
 
-.. automethod:: opengb.server.MessageHandler.resume_printing
+.. automethod:: opengb.server.MessageHandler.resume_print
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"resume_printing","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"resume_print","params":{}}
 
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-stop_printing
+stop_print
 ==============
 
-.. automethod:: opengb.server.MessageHandler.stop_printing
+.. automethod:: opengb.server.MessageHandler.stop_print
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"pause_printing","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"pause_print","params":{}}
 
 Example response: ::
 
