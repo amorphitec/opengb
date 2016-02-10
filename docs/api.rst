@@ -103,6 +103,20 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+print_gcode_file
+================
+
+.. automethod:: opengb.server.MessageHandler.print_gcode_file
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"print_gcode_file","params":{"id":1}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+
 pause_printing
 ===============
 
