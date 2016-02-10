@@ -168,9 +168,9 @@ class MessageHandler(object):
         }))
         return True
 
-    def stop_print(self):
+    def cancel_print(self):
         """
-        Stop the current print job.
+        Cancel the current print job.
 
         The current print job status and position will be discarded.
         """

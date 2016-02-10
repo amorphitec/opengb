@@ -143,14 +143,14 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-stop_print
+cancel_print
 ==============
 
-.. automethod:: opengb.server.MessageHandler.stop_print
+.. automethod:: opengb.server.MessageHandler.cancel_print
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"pause_print","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"cancel_print","params":{}}
 
 Example response: ::
 
