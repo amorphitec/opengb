@@ -182,7 +182,12 @@ class MessageHandler(object):
 
     def emergency_stop(self):
         """
-        Stop immediately.
+        Halt the printer immediately.
+
+        .. note::
+        
+            Use only in emergencies as this will most likely lock the printer
+            and require a reboot.
         """
         self._to_printer.put(json.dumps({
             'method':   'emergency_stop',
