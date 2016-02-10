@@ -103,40 +103,40 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-pause_execution
+pause_printing
 ===============
 
-.. automethod:: opengb.server.MessageHandler.pause_execution
+.. automethod:: opengb.server.MessageHandler.pause_printing
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"pause_execution","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"pause_printing","params":{}}
 
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-resume_execution
+resume_printing
 ================
 
-.. automethod:: opengb.server.MessageHandler.resume_execution
+.. automethod:: opengb.server.MessageHandler.resume_printing
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"resume_execution","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"resume_printing","params":{}}
 
 Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
-stop_execution
+stop_printing
 ==============
 
-.. automethod:: opengb.server.MessageHandler.stop_execution
+.. automethod:: opengb.server.MessageHandler.stop_printing
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"pause_execution","params":{}}
+    {"jsonrpc":"2.0","id":1,"method":"pause_printing","params":{}}
 
 Example response: ::
 
