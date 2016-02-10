@@ -155,7 +155,7 @@ class MessageHandler(object):
         self._to_printer.put(json.dumps({
             'method':   'pause_execution',
             'params': {}
-        }
+        }))
         return True
 
     def resume_printing(self):
@@ -165,7 +165,7 @@ class MessageHandler(object):
         self._to_printer.put(json.dumps({
             'method':   'resume_execution',
             'params': {}
-        }
+        }))
         return True
 
     def stop_printing(self):
@@ -177,7 +177,7 @@ class MessageHandler(object):
         self._to_printer.put(json.dumps({
             'method':   'stop_execution',
             'params': {}
-        }
+        }))
         return True
 
     def emergency_stop(self):

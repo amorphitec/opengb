@@ -145,7 +145,7 @@ Example response: ::
 emergency_stop
 ==============
 
-.. automethod:: opengb.server.Messagehandler.emergency_stop
+.. automethod:: opengb.server.MessageHandler.emergency_stop
 
 Example request: ::
 
