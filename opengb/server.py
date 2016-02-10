@@ -150,7 +150,7 @@ class MessageHandler(object):
 
     def pause_printing(self):
         """
-        Pause execution of a sequence of gcode commands.
+        Pause the current print job.
         """
         self._to_printer.put(json.dumps({
             'method':   'pause_execution',
@@ -160,7 +160,7 @@ class MessageHandler(object):
 
     def resume_printing(self):
         """
-        Resume paused execution of a sequence of gcode commands.
+        Resume a paused print job.
         """
         self._to_printer.put(json.dumps({
             'method':   'resume_execution',
@@ -170,9 +170,9 @@ class MessageHandler(object):
 
     def stop_printing(self):
         """
-        Stop execution of a sequence of gcode commands.
+        Stop the current print job.
 
-        The current gcode sequence and position will be forgotten.
+        The current print job status and position will be discarded.
         """
         self._to_printer.put(json.dumps({
             'method':   'stop_execution',
