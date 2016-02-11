@@ -267,51 +267,6 @@ class IPrinter(multiprocessing.Process):
         self._callbacks.state_change(old_state, new_state)
 
     @abc.abstractmethod
-    def _connect(self):
-        """
-        Establish connection to printer hardware.
-
-        :raises: :class:`ConnectionError` if connection is unsuccessful.
-        """
-        pass
-
-    @abc.abstractmethod
-    def request_printer_temperature(self):
-        """
-        Request a temperature update from the printer.
-        """
-        pass
-
-    @abc.abstractmethod
-    def request_printer_position(self):
-        """
-        Request a position update from the printer.
-        """
-        pass
-
-    @abc.abstractmethod
-    def _get_message_from_printer(self):
-        """
-        Get a message from the printer
-
-        :returns: A message or None if no messages.
-        """
-        pass
-
-    @abc.abstractmethod
-    def _process_message_from_printer(self, message):
-        """
-        Process a message from the printer.
-
-        If the message contains relevant data, extract this data and pass
-        it to the most appropriate of the `self._callbacks`.
-
-        :param message: Message from the printer.
-        :type message: :class:`str`
-        """
-        pass
-
-    @abc.abstractmethod
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         """
         Set printer target temperatures.
