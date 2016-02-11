@@ -185,7 +185,7 @@ class MessageHandler(object):
         Halt the printer immediately.
 
         .. note::
-        
+
             Use only in emergencies as this will most likely lock the printer
             and require a reboot.
         """
