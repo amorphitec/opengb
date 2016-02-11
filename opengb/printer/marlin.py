@@ -204,10 +204,16 @@ class Marlin(IPrinter):
         return True
 
     def _request_printer_temperature(self):
+        """
+        Request a temperature update from the printer.
+        """
         self._callbacks.log(logging.DEBUG, 'Requesting printer temperature')
         self._send_command(b'M105')
 
     def _request_printer_position(self):
+        """
+        Request a position update from the printer.
+        """
         self._callbacks.log(logging.DEBUG, 'Requesting printer position')
         self._send_command(b'M114')
 
@@ -312,13 +318,16 @@ class Marlin(IPrinter):
         self._gcode_position = 0
 
     def pause_execution(self):
+        self._callbacks.log(logging.DEBUG, 'Pausing execution')
         self._update_state(State.PAUSED)
 
     def resume_execution(self):
         if self._state == State.PAUSED:
+            self._callbacks.log(logging.DEBUG, 'Resuming execution')
             self._update_state(State.EXECUTING)
 
     def stop_execution(self):
+        self._callbacks.log(logging.DEBUG, 'Stopping execution')
         self._reset_gcode_state()
         self._update_state(State.READY)
 
@@ -327,6 +336,7 @@ class Marlin(IPrinter):
         # regardless of printer state:
         # https://github.com/MarlinFirmware/Marlin/issues/836
         self._send_command(b'M112', buffer=False)
+        self._callbacks.log(logging.ERROR, 'Emergency stop')
         self._update_state(State.ERROR)
 
     def run(self):
