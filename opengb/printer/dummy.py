@@ -1,7 +1,10 @@
+import time
 import random
 import logging
+import json
 
 from opengb.printer import IPrinter
+from opengb.printer import State
 
 
 class Dummy(IPrinter):
@@ -16,67 +19,38 @@ class Dummy(IPrinter):
     """
 
     def __init__(self, *args, **kwargs):
+        # Temperature
+        self._temp_target_bed = 0
+        self._temp_target_nozzle1 = 0
+        self._temp_target_nozzle2 = 0
+        # Timing
+        self._idle_loop_delay_sec = 0.1
+        self._print_loop_delay_sec = 0.01
+        self._temp_poll_execute_sec = 5
+        self._temp_poll_ready_sec = 1
+        self._temp_update_time = time.time() - self._temp_poll_ready_sec
+        self._progress_update_sec = 5
+        self._progress_update_time = time.time() - \
+            self._progress_update_sec
+        # Gcode
+        self._gcode_commands = []
+        self._gcode_position = 0
         self._dummy_responses = []
-        self._temp_bed = 0
-        self._temp_nozzle1 = 0
-        self._temp_nozzle2 = 0
         super().__init__(*args, **kwargs)
-
-    def _connect(self):
-        self._callbacks.log(logging.DEBUG, 'Connecting to printer')
-
-    def _request_printer_metrics(self):
-        """
-        Simulate a printer metric request/response by immediately generating a
-        set of randomized dummy metrics and placing them on the dummy response
-        queue.
-        """
-        self._callbacks.log(logging.DEBUG, 'Requesting printer metrics')
-        self._dummy_responses.insert(0, (
-            self._callbacks.temp_update,
-            [
-                random.randrange(200, 210),
-                self._temp_bed,
-                random.randrange(100, 110),
-                self._temp_nozzle1,
-                random.randrange(100, 110),
-                self._temp_nozzle2,
-            ]))
-
-    def _print_line(self, line):
-        """
-        Generates a log response containing the gode that would be printed.
-
-        :param line: Line of gcode.
-        :type line: :class:`str`
-        """
-        self._dummy_responses.insert(
-            self._callbacks.log,
-            logging.DEBUG,
-            'Printing gcode: ' + line)
-
-    def _get_message_from_printer(self):
-        """
-        Simulate Grab the next dummy response in the queue.
-        """
-        if len(self._dummy_responses) > 0:
-            return self._dummy_responses.pop()
-        return None
-
-    def _process_message_from_printer(self, message):
-        """
-        Fire the callback specified in the given message using specified
-        arguments.
-        """
-        message[0](*message[1])
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed:
-            self._temp_bed = bed
+            self._callbacks.log(logging.DEBUG,
+                                'Setting bed temp: {0}'.format(bed))
+            self._temp_target_bed = bed
         if nozzle1:
-            self._temp_nozzle1 = nozzle1
+            self._callbacks.log(logging.DEBUG,
+                                'Setting nozzle1 temp: {0}'.format(nozzle1))
+            self._temp_target_nozzle1 = nozzle1
         if nozzle2:
-            self._temp_nozzle2 = nozzle2
+            self._callbacks.log(logging.DEBUG,
+                                'Setting nozzle2 temp: {0}'.format(nozzle2))
+            self._temp_target_nozzle2 = nozzle2
 
     def move_head_relative(self, x=0, y=0, z=0):
         self._callbacks.log(logging.DEBUG, 'Moving print head to relative '
@@ -91,3 +65,111 @@ class Dummy(IPrinter):
     def home_head(self, x=True, y=True, z=True):
         self._callbacks.log(logging.DEBUG, 'Homing print head: x|{0}, '
                                            'y|{1}, z|{2}'.format(x, y, z))
+
+    def execute_gcode(self, gcode_commands):
+        self._update_state(State.EXECUTING)
+        self._gcode_commands = gcode_commands
+        self._gcode_position = 0
+
+    def pause_execution(self):
+        self._callbacks.log(logging.DEBUG, 'Pausing execution')
+        self._update_state(State.PAUSED)
+
+    def resume_execution(self):
+        if self._state == State.PAUSED:
+            self._callbacks.log(logging.DEBUG, 'Resuming execution')
+            self._update_state(State.EXECUTING)
+
+    def stop_execution(self):
+        self._callbacks.log(logging.DEBUG, 'Stopping execution')
+        self._reset_gcode_state()
+        self._update_state(State.READY)
+
+    def emergency_stop(self):
+        self._callbacks.log(logging.ERROR, 'Emergency stop')
+        self._update_state(State.ERROR)
+
+    def _reset_gcode_state(self):
+        """
+        Clear the current gcode sequence and return position to 0.
+        """
+        self._gcode_commands = []
+        self._gcode_position = 0
+
+    def _request_printer_temperature(self):
+        """
+        Request a temperature update from the printer.
+        """
+        self._callbacks.log(logging.DEBUG, 'Sending temperature update.')
+        self._callbacks.temp_update(
+            random.randrange(100, 110),
+            self._temp_target_bed,
+            random.randrange(200, 210),
+            self._temp_target_nozzle1,
+            random.randrange(200, 210),
+            self._temp_target_nozzle2,
+        )
+
+    def _reset_gcode_state(self):
+        """
+        Clear the current gcode sequence and return position to 0.
+        """
+        self._gcode_commands = []
+        self._gcode_position = 0
+
+
+    def _execute_next_gcode_command(self):
+        """
+        Execute the next gcode command in the current sequence.
+        """
+        self._callbacks.log(logging.DEBUG, 'Executing gcode command {0} at '
+            'position {1}'.format(self._gcode_commands[self._gcode_position],
+                                  self._gcode_position))
+        self._gcode_position += 1
+        # Complete execution if previous line was last in sequence.
+        if self._gcode_position >= len(self._gcode_commands):
+            self._reset_gcode_state()
+            self._update_state(State.READY)
+
+    def run(self):
+        """
+        Printer run loop.
+        """
+        while True:
+            # Ensure connected
+            if self._state == State.DISCONNECTED:
+                self._update_state(State.READY)
+            # Process a message from the to_printer queue.
+            if not self._to_printer.empty():
+                message = json.loads(self._to_printer.get())
+                try:
+                    if 'method' and 'params' in message.keys():
+                        getattr(self, message['method'])(**message['params'])
+                except (KeyError, AttributeError):
+                    self._callbacks.log(logging.ERROR,
+                                        'Malformed message sent to '
+                                        'printer: ' + str(message))
+            # Report temperatures
+            metric_interval = time.time() - self._temp_update_time
+            if (self._state == State.EXECUTING and
+                metric_interval > self._temp_poll_execute_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
+            elif (self._state in [State.READY, State.PAUSED] and
+                metric_interval > self._temp_poll_ready_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
+            # Execute gcode if present.
+            if (self._state == State.EXECUTING and
+                len(self._gcode_commands) > 0):
+                self._execute_next_gcode_command()
+                progress_interval = time.time() - self._progress_update_time
+                if progress_interval > self._progress_update_sec:
+                    self._callbacks.progress_update(self._gcode_position,
+                        len(self._gcode_commands))
+                    self._progress_update_time = time.time()
+            # Sleep before continuing. Delay determined by state.
+            if (self._state == State.EXECUTING):
+                time.sleep(self._print_loop_delay_sec)
+            else:
+                time.sleep(self._idle_loop_delay_sec)
