@@ -5,6 +5,8 @@
         <input class="md-primary md-hue-2" ng-model="filterString" type="text" ng-change="filterFiles()">
       </md-input-container>
 
+      <md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular>
+
       <div ng-hide="hide()" ng-switch on="view">
 
         <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="10px" ng-switch-when="block">

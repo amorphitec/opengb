@@ -9,11 +9,12 @@
 
             var vm = {};
             scope.progressMode = 'indeterminate';
+            scope.no3d = false;
 
             threeService.THREE().then(function(THREE){
                 vm.THREE = THREE;
 
-                //vm.scene = createScene();
+                vm.scene = createScene();
                 scope.progressMode = '';
 //              zoomToFit();
 
@@ -42,24 +43,31 @@
 
                                                     gcodeService.gcode().then(function(gcode){
 
-                                                        vm.gcode = gcode.init(scope.file.contents);
+                                                        if(scope.file.content){
 
-                                                        scope.file.meta = scope.file.meta ? scope.file.meta : {};
-                                                        for( var key in vm.gcode.meta){
-                                                            if(!scope.file.meta[key]){
-                                                                scope.file.meta[key] = vm.gcode.meta[key];
+                                                            vm.gcode = gcode.init(scope.file.content);
+
+                                                            scope.file.meta = scope.file.meta ? scope.file.meta : {};
+                                                            for( var key in vm.gcode.meta){
+                                                                if(!scope.file.meta[key]){
+                                                                    scope.file.meta[key] = vm.gcode.meta[key];
+                                                                }
                                                             }
-                                                        }
-                                                                                                
-                                                        console.log(scope.file);
+                                                                                                    
+                                                            console.log(scope.file);
 
-                                                        threeService.THREE().then(function(THREE){
-                                                            vm.THREE = vm.THREE != null ? vm.THREE : THREE;
-                                                            vm.scene = vm.scene != null ? vm.scene : createScene();
-                                                            vm.model = generateModel();
-                                                            vm.scene.add(vm.model);
-                                                            scope.progressMode = '';
-                                                        });
+                                                            threeService.THREE().then(function(THREE){
+                                                                vm.THREE = vm.THREE != null ? vm.THREE : THREE;
+                                                                vm.scene = vm.scene != null ? vm.scene : createScene();
+                                                                vm.model = generateModel();
+                                                                vm.scene.add(vm.model);
+                                                                scope.progressMode = '';
+                                                            });
+
+                                                        }else{
+                                                            vm.scene = null;
+                                                        }
+
                                                     });
                                                     
                                                 },
@@ -73,7 +81,9 @@
                                     }
                                 }
 
-            });
+                            },
+                            true
+            );
 
             function generateModel(){
 
@@ -244,7 +254,7 @@
 			'scope': {
                 'file': '=ogGcodeFile'
             },
-            'template': '<div id="renderArea" ><og-file-image og-fi-file="file"></og-file-image><md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular></div>',
+            'template': '<div id="renderArea" ><og-file-image ng-if="no3d && file" og-fi-file="file"></og-file-image><md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular></div>',
             'link': link
         };
 
