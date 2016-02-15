@@ -36,8 +36,8 @@
         //can be manually updated using setBaseUrl function
 //        var baseUrl = 'ws://localhost:8000/ws';
         var ws;
-//        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+//        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
 
