@@ -24,7 +24,12 @@
                         }
                       };
         var files = {};
-        var selectedFile;
+        var selectedFile = {file:null};
+
+        // This is the printer object
+        printerFactory.printer = printer;
+        printerFactory.files = files;
+        printerFactory.selectedFile = selectedFile;
 
 
         //Setup url location of webservice
@@ -39,31 +44,6 @@
             console.log('attempting to connect to: ' + printer.connection.baseUrl );
 
             ws = $websocket(printer.connection.baseUrl);
-
-            // ws.$on('$open',function(){
-            //     console.log('ws connected to: ' + printer.connection.baseUrl );
-            //     printer.connected = true;
-            // });
-            // ws.$on('$close',function(){
-            //     console.log('ws failed connection to: ' + printer.connection.baseUrl );
-            //     printer.connected = false;
-            // });
-            // ws.$on('$error',function(){
-            //     console.log('error: ',ws.$status());
-            // });
-
-            // //OVERRIDE NG-WEBSOCKET ON MESSAGE TO POINT TO .PARAMS INSTEAD OF .DATA
-            // ws.$$ws.onmessage = function (message) {
-            //     try {
-            //         var decoded = JSON.parse(message.data);
-            //         ws.$$fireEvent(decoded.event, decoded.params);
-            //         ws.$$fireEvent('$message', decoded);
-            //     }
-            //     catch (err) {
-            //         ws.$$fireEvent('$message', message.params);
-            //     }
-            //     $rootScope.$apply();
-            // };
 
             /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
 
@@ -115,13 +95,16 @@
         function getFile(fid,getContent) {
             var method = 'get_gcode_file';
             var params = {
-                            'id':fid
+                            'id':fid,
+                            'content':!!getContent
                          };
             ws.call(method, params)
                 .then(function(d){
-                    selectedFile = d;
+                    printer.connection.printReady = true;
+                    printerFactory.selectedFile.file = d;
                 }, function(e){
-                   
+                    printer.connection.printReady = false;
+                    printerFactory.selectedFile.file = null;
                 })
         }
 
@@ -142,8 +125,8 @@
             
         }
 
-        function printFile(){
-            var method = 'print_file';
+        function printFile(fid){
+            var method = 'print_gcode_file';
             var params = {
                             'id':fid
                          };
@@ -212,9 +195,12 @@
         printerFactory.getFiles = function(){
             getFiles();
         };
-        printerFactory.printFile = function(){
+        printerFactory.deselectFile = function(){
+            printerFactory.selectedFile.file = null;
+        };
+        printerFactory.printFile = function(fid){
             if(printer.connection.printReady){
-                printFile();
+                printFile(fid);
             }else{
                 console.log('cannot print because print file not ready')
             }
@@ -237,12 +223,6 @@
         };
 
         /* -------- END PUBLIC WEBSOCKET FUNCTIONS ---------- */
-
-
-        // This is the printer object
-        printerFactory.printer = printer;
-        printerFactory.files = files;
-        printerFactory.selectedFile = selectedFile;
 
         return printerFactory;
 

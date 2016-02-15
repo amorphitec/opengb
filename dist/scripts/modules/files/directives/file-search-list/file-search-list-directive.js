@@ -7,6 +7,8 @@
         /* ----- BEGIN LINK FUNCTION FOR DIRECTIVE ----- */
         function link(scope, element, attrs) {
 
+            scope.progressMode = '';
+
             scope.filterFiles = function(){
 
                 if(scope.filterString.length > 0){
@@ -29,8 +31,16 @@
             };
 
             scope.selectFile = function(file){
-                printerFactory.getFile(file.id)
+                printerFactory.getFile(file.id);
+                scope.progressMode = 'indeterminate';
             };
+
+            scope.$watch(
+                function(){return printerFactory.selectedFile.file},
+                function(newValue){
+                    scope.progressMode = '';
+                }
+            );
 
             scope.hide = function(){
                 return (scope.hideEmpty && scope.filterString.length === 0);
@@ -51,7 +61,6 @@
 			'replace':true,
 			'scope': {
                 fileList:'=ogFslFiles',
-                selectedFile:'=ogFslSelectedFile',
                 view:'@ogFslView',
                 hideEmpty:'=ogFslHideEmpty'
             },

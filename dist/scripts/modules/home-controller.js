@@ -11,6 +11,33 @@
     	}
 
 
+
+    	var vm = this;
+        
+        vm.printer = printerFactory.printer;
+        vm.temperatures = vm.printer.temperatures;
+        vm.connection = vm.printer.connection;
+    	vm.fileList = printerFactory.files;
+        vm.selectedFile = printerFactory.selectedFile.file;
+
+    	getAllFiles();
+
+        vm.fileSelector = true;
+        vm.fileRenderer = true;
+        vm.gcode = null;
+        vm.loading = false;
+
+        vm.deselectFile = function(){
+            printerFactory.deselectFile();
+        };
+
+        vm.printSelectedFile = function(){
+            console.log("trying to print file",[vm.selectedFile]);
+            if(vm.selectedFile && vm.selectedFile.content){
+                printerFactory.printFile(vm.selectedFile.id);
+            }
+        }
+
         // In order to watch a 'vm.' vs '$scope.' object, you must use 
         // $watch(function(){},function(){}) format
         $scope.$watch(
@@ -29,74 +56,30 @@
 
         $scope.$watch(
             function( scope ) {
-                return( vm.selectedFile );
+                return( printerFactory.selectedFile.file );
             },
             function( newValue, oldValue ) {
                 if (newValue != null) {
 
+                    vm.selectedFile = printerFactory.selectedFile.file;
                     vm.fileSelector = false;
                     vm.fileRenderer = true;
-                    vm.printReady = false;
 
-        		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
-        		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
-               //      if(!vm.selectedFile.contents && vm.selectedFile.url){
+                    if(newValue.content){
+                        vm.printReady = true;
+                        console.log("ready to print")
+                    }
 
-               //          var file = {};
-               //          angular.copy(vm.selectedFile, file);
-               //          vm.selectedFile = null;
+                }else{
 
-               //          // $http.get(file.url).success(
-               //          //     function (data) {
-               //          //         file.contents = data;
-               //          //         vm.selectedFile = file;
-               //          //     }).error(function () {
-               //          //         console.error( 'Unable to load file: ' , error );
-               //          //     }
-               //          // );
-               //      }
-
-               //      if(vm.selectedFile){
-            			// printerFactory.setFile(vm.selectedFile);
-               //      }
+                    vm.fileSelector = true;
+                    vm.fileRenderer = true;
+                    vm.printReady = null;
 
                 }
-            }
+            },
+            true
         );
-
-
-
-    	var vm = this;
-        
-        vm.printer = printerFactory.printer;
-        vm.temperatures = vm.printer.temperatures;
-        vm.connection = vm.printer.connection;
-    	vm.fileList = printerFactory.files;
-        vm.selectedFile = printerFactory.selectedFile;
-
-    	getAllFiles();
-
-        vm.fileSelector = true;
-        vm.fileRenderer = true;
-        vm.gcode = null;
-
-        vm.selectFile = function(file){
-            printerFactory.getFile(file.id);
-        };
-
-        vm.deselectFile = function(){
-            vm.selectedFile = null;
-            vm.fileSelector = true;
-            vm.fileRenderer=true;
-            vm.printReady=null;
-        };
-
-        vm.printSelectedFile = function(){
-            if(vm.selectedFile && vm.selectedFile.contents){
-                printerFactory.printFile(vm.selectedFile);
-            }
-        }
-
 
     }
 
