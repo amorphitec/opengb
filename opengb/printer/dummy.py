@@ -36,7 +36,11 @@ class Dummy(IPrinter):
         self._gcode_commands = []
         self._gcode_position = 0
         self._dummy_responses = []
+
         super().__init__(*args, **kwargs)
+
+        # Some feedback to indicate that the Dummy printer is working.
+        self._callbacks.log(logging.INFO, 'Connected to dummy printer.')
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed:
