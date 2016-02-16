@@ -224,6 +224,21 @@ Example response: ::
 Events
 ^^^^^^
 
+state_change
+============
+
+Sent when the printer status changes. Valid states are:
+
+#. ``DISCONNECTED``
+#. ``READY``
+#. ``EXECUTING``
+#. ``PAUSED``
+#. ``ERROR``
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "state_change", "params": { "old": "READY", "new": "EXECUTING"}}
+
 temp_update
 ===========
 
