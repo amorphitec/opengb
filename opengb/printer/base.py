@@ -179,8 +179,8 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
         self._publish({
             'event':   'state_change',
             'params':   {
-                'old':      old.value,
-                'new':      new.value,
+                'old':      old.name,
+                'new':      new.name,
             }
         })
 

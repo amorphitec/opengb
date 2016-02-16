@@ -359,7 +359,7 @@ def process_event(event):
     try:
         if event['event'] == 'state_change':
             # TODO: if state changes from printing to ready, reset progress.
-            PRINTER['state'] = opengb.printer.State(event['params']['new'])
+            PRINTER['state'] = opengb.printer.State([event['params']['new']])
         elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params']
         elif event['event'] == 'position_update':
