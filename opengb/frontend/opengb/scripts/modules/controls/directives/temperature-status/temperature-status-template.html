@@ -1,0 +1,42 @@
+<div>
+	
+	<link rel="stylesheet" href="styles/directives/temperature-status.css">
+
+	<div class="name" layout="row" layout-align="center">
+		<div>{{name}}</div>
+	</div>
+
+	<div class="current-temp bold" layout="row" layout-align="center">
+		<div>{{currentTemp}}°</div>
+	</div>
+
+	<div class="temp-info" layout="row" layout-align="center">
+
+		<form layout="column" layout-padding layout-align="center" flex="50">
+			<label>Set Temp</label>
+			<div layout="row" class="bold" layout-align="center center">
+				<div flex="75">
+					<input />
+				</div>
+				<div flex="25">
+					°C
+				</div>
+			</div>
+		</form>
+		<div layout="column" layout-padding layout-align="center" flex="50">
+			<label>Target</label>
+			<div class="bold">{{targetTemp}}°C</div>
+		</div>
+		
+	</div>
+
+	<div class="temp-buttons" layout="row" layout-align="center">
+		<div class="btn left-btn" layout="column" layout-align="center" flex="50">
+			<div>Heat</div>
+		</div>
+		<div class="btn right-btn" layout="column" layout-align="center" flex="50">
+			<div>Off</div>
+		</div>
+	</div>
+
+</div>

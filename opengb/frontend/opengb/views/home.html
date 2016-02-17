@@ -1,0 +1,129 @@
+<style>
+
+h2{
+  text-align: center;
+  font-family:'proxima_novalight';
+}
+
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 60%;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 0px auto;
+}
+.drop-box.drag-over{
+  background: #eee;
+  border-color: #cfc;
+} 
+#files-page{
+  position:relative;
+  min-height: 100%;
+}
+     #renderArea {
+        position: relative;
+        left: 0;
+        top: 0;
+        width:100%;
+        height:calc(100vh - 100px);
+        z-index: 0;
+      }
+
+      #renderArea md-progress-circular {
+        position: absolute;
+        z-index: -1;
+        left: 50%;
+        top: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+      }
+
+</style>
+
+<section id="home-page" ng-controller="homeController as hc">
+
+  <md-content style="height:100vh;">
+    <div layout="row" layout-wrap>
+      <div flex-sm="100" flex="50" layout-padding>
+        <h2>OpenGb Status</h2>
+        <div layout="row" layout-align="center" layout-wrap>
+          <div flex="33" flex-sm="100" layout-padding>
+            <og-temperature-status ts-name="nozzle1" 
+                                   ts-slug="Extruder 1" 
+                                   ts-current-temp="{{hc.temperatures.nozzle1.current}}" 
+                                   ts-target-temp="{{hc.temperatures.nozzle1.target}}">
+            </og-temperature-status>
+          </div>
+          <div flex="33" flex-sm="100" layout-padding>
+            <og-temperature-status ts-name="nozzle2" 
+                                   ts-slug="Extruder 2" 
+                                   ts-current-temp="{{hc.temperatures.nozzle2.current}}" 
+                                   ts-target-temp="{{hc.temperatures.nozzle2.target}}">
+            </og-temperature-status>
+          </div>
+          <div flex="33" flex-sm="100" layout-padding>
+            <og-temperature-status ts-name="bed"
+                                   ts-slug="Heated Bed" 
+                                   ts-current-temp="{{hc.temperatures.bed.current}}" 
+                                   ts-target-temp="{{hc.temperatures.bed.target}}">
+            </og-temperature-status>
+          </div>
+        </div>
+        <div layout="row" layout-align="center">
+
+          <div flex="100" ng-show="hc.selectedFile != null">
+            <h2>Selected File</h2>
+            <og-file-data-table og-fdt-file="hc.selectedFile"
+                                og-fdt-cancel="hc.deselectFile()">
+            </og-file-data-table>
+          </div>
+
+          <div flex="100"  ng-show="hc.selectedFile == null">
+            <h2>Select A File</h2>
+            <og-file-search-list og-fsl-files="hc.fileList"
+                                 og-fsl-view="block" 
+                                 og-fsl-hide-empty="true" 
+                                 og-fsl-selected-file="hc.selectedFile" 
+                                 ng-show="hc.fileSelector">
+            </og-file-search-list>
+          </div>
+
+        </div>
+        <div layout="row" layout-align="center">
+          <div flex="100">
+            <h2>Recent Prints</h2>
+          </div>
+        </div>
+      </div>
+
+      <div flex-sm="100"
+           flex="50"
+           layout-padding
+           style="position:relative;">
+
+        <og-gcode-viewer og-gcode-file="hc.selectedFile"
+                         ng-show="hc.fileRenderer">
+        </og-gcode-viewer>
+
+        <div layout="row" layout-align="center center" style="position:absolute;top:350px;left:0;width:100%;z-index:1000;">
+          <md-button flex="30" 
+                     ng-show="hc.printReady != null" 
+                     ng-disabled="!hc.connection.printReady" 
+                     ng-click="hc.printSelectedFile()"
+                     class="md-raised md-primary">
+            Print File
+          </md-button>
+        </div>
+
+        <og-file-dropbox style="position:absolute;top:150px;left:0;width:100%;"
+                         ng-show="hc.fileSelector" 
+                         og-fd-upload-file="hc.uploadFile">
+        </og-file-dropbox>
+
+      </div>
+    </div>
+  </md-content>
+
+</section>
