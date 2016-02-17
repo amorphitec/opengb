@@ -19,7 +19,7 @@
 
                         var contents = e.target.result;
                         file = {
-                                    "name":"new file",
+                                    "name":scope.preUploadFile.name,
                                     "contents":contents,
                                     "image":null,
                                     "meta":{}

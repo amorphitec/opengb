@@ -74,10 +74,22 @@ h2{
         <div layout="row" layout-align="center">
 
           <div flex="100" ng-show="hc.selectedFile != null">
+            
             <h2>Selected File</h2>
             <og-file-data-table og-fdt-file="hc.selectedFile"
                                 og-fdt-cancel="hc.deselectFile()">
             </og-file-data-table>
+
+            <div layout="row" layout-align="center center" style="">
+              <md-button flex="30" 
+                         ng-show="hc.printReady != null" 
+                         ng-disabled="!hc.connection.printReady" 
+                         ng-click="hc.printSelectedFile()"
+                         class="md-raised md-primary">
+                Print File
+              </md-button>
+            </div>
+
           </div>
 
           <div flex="100"  ng-show="hc.selectedFile == null">
@@ -88,14 +100,11 @@ h2{
                                  og-fsl-selected-file="hc.selectedFile" 
                                  ng-show="hc.fileSelector">
             </og-file-search-list>
+            <h2>Recent Prints</h2>
           </div>
 
         </div>
-        <div layout="row" layout-align="center">
-          <div flex="100">
-            <h2>Recent Prints</h2>
-          </div>
-        </div>
+
       </div>
 
       <div flex-sm="100"
@@ -106,16 +115,6 @@ h2{
         <og-gcode-viewer og-gcode-file="hc.selectedFile"
                          ng-show="hc.fileRenderer">
         </og-gcode-viewer>
-
-        <div layout="row" layout-align="center center" style="position:absolute;top:350px;left:0;width:100%;z-index:1000;">
-          <md-button flex="30" 
-                     ng-show="hc.printReady != null" 
-                     ng-disabled="!hc.connection.printReady" 
-                     ng-click="hc.printSelectedFile()"
-                     class="md-raised md-primary">
-            Print File
-          </md-button>
-        </div>
 
         <og-file-dropbox style="position:absolute;top:150px;left:0;width:100%;"
                          ng-show="hc.fileSelector" 
