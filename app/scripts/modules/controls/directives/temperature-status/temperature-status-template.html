@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="styles/directives/temperature-status.css">
 
 	<div class="name" layout="row" layout-align="center">
-		<div>{{name}}</div>
+		<div>{{slug}}</div>
 	</div>
 
 	<div class="current-temp bold" layout="row" layout-align="center">
@@ -16,7 +16,7 @@
 			<label>Set Temp</label>
 			<div layout="row" class="bold" layout-align="center center">
 				<div flex="75">
-					<input />
+					<input ng-model="tempTargetTemp" />
 				</div>
 				<div flex="25">
 					°C
@@ -31,10 +31,10 @@
 	</div>
 
 	<div class="temp-buttons" layout="row" layout-align="center">
-		<div class="btn left-btn" layout="column" layout-align="center" flex="50">
-			<div>Heat</div>
+		<div class="btn left-btn" ng-class="{active:(status()=='on')}" layout="column" layout-align="center" flex="50" ng-click="applyTarget()" >
+			<div>{{onButton}}</div>
 		</div>
-		<div class="btn right-btn" layout="column" layout-align="center" flex="50">
+		<div class="btn right-btn" ng-class="{active:(status()=='off')}" layout="column" layout-align="center" flex="50" ng-click="off()" >
 			<div>Off</div>
 		</div>
 	</div>

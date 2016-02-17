@@ -19,7 +19,7 @@
 
                         var contents = e.target.result;
                         file = {
-                                    "name":"new file",
+                                    "name":scope.preUploadFile.name,
                                     "contents":contents,
                                     "image":null,
                                     "meta":{}
@@ -27,12 +27,12 @@
 
                         scope.uploadFile = file;
                         scope.$apply();
-                        console.log(file.name);
-
-                    };
-
-                    fr.readAsText(newValue);
-
+                        console.log("my file name: ",file.name);
+                        
+                                            };
+                        
+                                            fr.readAsText(newValue);
+                        "
                 }
 
             });

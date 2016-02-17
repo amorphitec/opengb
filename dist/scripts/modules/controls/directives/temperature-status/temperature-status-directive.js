@@ -48,7 +48,7 @@
 				currentTemp:'@tsCurrentTemp',
 				targetTemp:'@tsTargetTemp'
             },
-            'templateUrl': 'scripts/modules/controls/directives/temperature-status/colored-temperature-status-template.html',
+            'templateUrl': 'scripts/modules/controls/directives/temperature-status/temperature-status-template.html',
             'link': link
         };
 

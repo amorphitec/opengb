@@ -11,7 +11,7 @@
         vm.position = vm.printer.printer.position;
         vm.temperatures = vm.printer.printer.temperatures;
         vm.statistics = vm.printer.printer.statistics;
-        vm.absolute = false;
+        vm.absolute = true;
 
         var prevPos;
 

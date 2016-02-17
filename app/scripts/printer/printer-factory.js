@@ -10,6 +10,7 @@
         var printer = {
                         connection:{baseUrl:null,connected:false,printReady:false},
                         position:{x:null,y:null,z:null},
+                        print:{},
                         temperatures:{
                             bed:{target:null,current:null},
                             nozzle1:{target:null,current:null},
@@ -34,10 +35,9 @@
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
-//        var baseUrl = 'ws://localhost:8000/ws';
         var ws;
-        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-//        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+//        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
 
@@ -63,13 +63,27 @@
 
             });
 
-            // ws.$on('pos', function (message) {
-            //     var params = message;
-            //     printer.position.x = params.x;
-            //     printer.position.y = params.y;
-            //     printer.position.z = params.z;
-            //     console.log('position event:', message);
-            // });
+            ws.$on('position_update', function (message) {
+                var params = message;
+                printer.position.x = params.x;
+                printer.position.y = params.y;
+                printer.position.z = params.z;
+                console.log('position event:', message);
+            });
+
+            ws.$on('progress_update', function (message) {
+                var params = message;
+                printer.print.currentLine = params["current_line"];
+                printer.print.totalLines = params["total_lines"];
+                console.log('progress event:', message);
+            });
+
+            ws.$on('state_change', function (message) {
+                var params = message;
+                printer.state = params["new"];
+                console.log('state change event:', message);
+            });
+
             /* ------------- END WEBSOCKET EVENTS ------------------ */
 
 
@@ -117,7 +131,7 @@
 
             ws.call(method,params)
                 .then(function(d){
-                    getFile(d.id)
+                    getFile(d.id,true)
                     printer.connection.printReady = true;
                 }, function(e){
                     printer.connection.printReady = false;
@@ -144,7 +158,7 @@
         //temps should be in form of: 
         //{'bed':<temp>,'nozzle1':<temp>,'nozzle2':<temp>}
         function setTemp(temps) {
-            var method = 'get_gcode_file';
+            var method = 'set_temp';
             var params = {
                             "bed":temps.bed,
                             "nozzle1":temps.nozzle1,
@@ -156,7 +170,7 @@
         //position should be in form of: 
         //{'x':<val>,'y':<val>,'z':<val>}
         function movePrintHead(position){
-            var method = 'get_gcode_file';
+            var method = 'move_head_absolute';
             var params = {
                             "x":position.x,
                             "y":position.y,
@@ -168,12 +182,8 @@
         //home should be in form of: 
         //{'x':<bool>,'y':<bool>,'z':<bool>}
         function homePrintHead(home){
-            //TODO: Remove next 3 lines once testing is done;
-            printer.position.x = home.x ? 0 : printer.position.x;
-            printer.position.y = home.y ? 600 : printer.position.y;
-            printer.position.z = home.z ? 0 : printer.position.z;
 
-            var method = 'get_gcode_file';
+            var method = 'home_head';
             var params = {
                             "x":!!home.x,
                             "y":!!home.y,
@@ -234,5 +244,4 @@
         .module('openGbApp')
         .factory('printerFactory', ['$websocket','$rootScope','$location', factory]);
     
-})(angular);        
-    
+})(angular);

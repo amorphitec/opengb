@@ -53,31 +53,35 @@
                                                                     scope.file.meta[key] = vm.gcode.meta[key];
                                                                 }
                                                             }
-                                                                                                    
-                                                            console.log(scope.file);
 
                                                             threeService.THREE().then(function(THREE){
                                                                 vm.THREE = vm.THREE != null ? vm.THREE : THREE;
                                                                 vm.scene = vm.scene != null ? vm.scene : createScene();
-                                                                vm.model = generateModel();
-                                                                vm.scene.add(vm.model);
+                                                                if(vm.model == null){
+                                                                    vm.model = generateModel();
+                                                                    vm.scene.add(vm.model);
+                                                                }
                                                                 scope.progressMode = '';
                                                             });
 
                                                         }else{
-                                                            vm.scene = null;
+                                                            threeService.THREE().then(function(THREE){
+                                                                vm.THREE = vm.THREE != null ? vm.THREE : THREE;
+                                                                vm.scene = vm.scene != null ? vm.scene : createScene();
+                                                                scope.progressMode = '';
+                                                            });
                                                         }
 
                                                     });
                                                     
                                                 },
-
                                                 100
                                     );
 
                                 }else{
                                     if(vm.scene){
-                                        vm.scene.remove(vm.model);                                        
+                                        vm.scene.remove(vm.model);
+                                        vm.model = null;
                                     }
                                 }
 
