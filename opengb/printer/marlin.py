@@ -120,6 +120,7 @@ class Marlin(IPrinter):
         self._progress_update_time = time.time() - \
             self._progress_update_sec
         # Gcode
+        self._priority_gcode_commands = []
         self._gcode_commands = []
         self._gcode_position = 0
         super().__init__(*args, **kwargs)
@@ -279,11 +280,11 @@ class Marlin(IPrinter):
         self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
-        if bed:
+        if bed != None:
             self._send_command(b'M140 S' + str(bed).encode())
-        if nozzle1:
+        if nozzle1 != None:
             self._send_command(b'M104 T0 S' + str(nozzle1).encode())
-        if nozzle2:
+        if nozzle2 != None:
             self._send_command(b'M104 T1 S' + str(nozzle2).encode())
 
     def move_head_relative(self, x=0, y=0, z=0):
@@ -372,6 +373,18 @@ class Marlin(IPrinter):
         self._gcode_commands = []
         self._gcode_position = 0
 
+    def _execute_next_priority_gcode_command(self):
+        """
+        Execute the next priority gcode command.
+        """
+        try:
+            self._send_command(
+                self._priority_gcode_commands[0].encode())
+            self._priority_gcode_commands.pop(0)
+        except BufferFullException:
+            # This probably means we're waiting for bed or nozzle temperature.
+            pass
+
     def _execute_next_gcode_command(self):
         """
         Execute the next gcode command in the current sequence.
@@ -408,6 +421,7 @@ class Marlin(IPrinter):
 
         * Requesting metric updates.
         * Forwarding message from the `self._to_printer` queue.
+        * Executing buffered priority gcode commands
         * Executing buffered sequence of gcode commands
 
         Runs as a separate thread.
@@ -437,10 +451,15 @@ class Marlin(IPrinter):
                                         'Malformed message sent to '
                                         'printer: ' + str(err))
                 # TODO: catch BufferFullException
+            # Execute priority gcode if present.
+            if len(self._gcode_commands_priority) > 0:
+                self._execute_next_priority_gcode_command()
             # Execute gcode if present.
             if (self._state == State.EXECUTING and
                 len(self._gcode_commands) > 0):
                 self._execute_next_gcode_command()
+                # Request a position update if the requisite interval has 
+                # passed.
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
                     self._callbacks.progress_update(self._gcode_position,
