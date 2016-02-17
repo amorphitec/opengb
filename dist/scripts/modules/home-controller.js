@@ -72,6 +72,7 @@
 
                 }else{
 
+                    vm.selectedFile = null;
                     vm.fileSelector = true;
                     vm.fileRenderer = true;
                     vm.printReady = null;

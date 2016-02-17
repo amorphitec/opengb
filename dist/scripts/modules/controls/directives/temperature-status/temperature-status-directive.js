@@ -7,13 +7,17 @@
         /* ----- BEGIN LINK FUNCTION FOR DIRECTIVE ----- */
         function link(scope, element, attrs) {
 
-            var on = true;
+            var on = false;
             scope.onButton;
         	scope.tempTargetTemp = scope.targetTemp;
 
+            if(scope.targetTemp && scope.targetTemp > 0){
+                on = true;
+            }
+
             scope.status = function(){
                 var status = on ? 'on' : 'off';
-                scope.onButton = 'on';
+                scope.onButton = 'On';
                 if(on && scope.tempTargetTemp != scope.targetTemp){
                     status = 'update';
                     scope.onButton = 'update';

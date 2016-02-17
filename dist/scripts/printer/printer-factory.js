@@ -10,6 +10,7 @@
         var printer = {
                         connection:{baseUrl:null,connected:false,printReady:false},
                         position:{x:null,y:null,z:null},
+                        print:{},
                         temperatures:{
                             bed:{target:null,current:null},
                             nozzle1:{target:null,current:null},
@@ -34,10 +35,9 @@
 
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
-//        var baseUrl = 'ws://localhost:8000/ws';
         var ws;
-        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-//        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+//        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
 
@@ -73,8 +73,8 @@
 
             ws.$on('progress_update', function (message) {
                 var params = message;
-                printer.print.current = params["current_line"];
-                printer.position.y = params["total_lines"];
+                printer.print.currentLine = params["current_line"];
+                printer.print.totalLines = params["total_lines"];
                 console.log('progress event:', message);
             });
 
@@ -158,7 +158,7 @@
         //temps should be in form of: 
         //{'bed':<temp>,'nozzle1':<temp>,'nozzle2':<temp>}
         function setTemp(temps) {
-            var method = 'get_gcode_file';
+            var method = 'set_temp';
             var params = {
                             "bed":temps.bed,
                             "nozzle1":temps.nozzle1,
@@ -244,5 +244,4 @@
         .module('openGbApp')
         .factory('printerFactory', ['$websocket','$rootScope','$location', factory]);
     
-})(angular);        
-    
+})(angular);

@@ -13,7 +13,10 @@
 	  	<md-button class="bold" ng-click="cancel()">X</md-button>
 	  </div>
   </div>
-  <md-divider></md-divider>     
+  <md-divider></md-divider>
+  <div layout="row" ng-if="!file.meta.length">
+    There is no meta data associated with this file.
+  </div>
   <div layout="row" ng-repeat="(key,value) in file.meta">
   	<div flex="35" class="file-data-table-key">
   		{{key}}
@@ -22,7 +25,7 @@
   		<div>{{value}}</div>
   	</div>
   </div>
-  <div layout="row">
+  <div layout="row" ng-if="file.note">
   	<textbox class="file-data-table-notes">{{file.note}}</textbox>
   </div>      
 </div>
