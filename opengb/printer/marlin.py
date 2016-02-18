@@ -452,7 +452,7 @@ class Marlin(IPrinter):
                                         'printer: ' + str(err))
                 # TODO: catch BufferFullException
             # Execute priority gcode if present.
-            if len(self.priority_gcode_commands) > 0:
+            if len(self._priority_gcode_commands) > 0:
                 self._execute_next_priority_gcode_command()
             # Execute gcode if present.
             if (self._state == State.EXECUTING and
