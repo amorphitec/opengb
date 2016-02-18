@@ -153,7 +153,7 @@ class MessageHandler(object):
         Retract filament into the print head.
 
         :param head: Print head to retract (0 or 1).
-        :type x: :class:`int`
+        :type head: :class:`int`
         :param length: Amount of filament to retract in mm.
         :type length: :class:`float`
         :param rate: Rate at which to retract in mm/s.
@@ -176,7 +176,7 @@ class MessageHandler(object):
         Unretract filament from the print head.
 
         :param head: Print head to unretract (0 or 1).
-        :type x: :class:`int`
+        :type head: :class:`int`
         :param length: Amount of filament to unretract in mm.
         :type length: :class:`float`
         :param rate: Rate at which to unretract in mm/s.
