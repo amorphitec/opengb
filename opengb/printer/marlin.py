@@ -194,13 +194,13 @@ class Marlin(IPrinter):
             buffer is full.
         """
 
-        self._callbacks.log(logging.DEBUG, 'Sending command: ' + str(command))
         try:
             with self._serial_lock:
                 if buffer and self._serial_buffer.full():
-                    self._callbacks.log(logging.DEBUG, 'Buffer full. ')
                     raise BufferFullException('Buffer full. Unable to send '
                                               'command: ' + str(command))
+                self._callbacks.log(logging.DEBUG,
+                                    'Sending command: ' + str(command))
                 try:
                     self._serial.write(command + b'\n')
                     self._serial_buffer.put(command)
