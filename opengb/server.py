@@ -152,7 +152,7 @@ class MessageHandler(object):
         """
         Retract filament into the print head
 
-        :param head: Print head to retract (1 or 2).
+        :param head: Print head to retract (0 or 1).
         :type x: :class:`int`
         :param length: Amount of filament to retract in mm.
         :type length: :class:`float`
