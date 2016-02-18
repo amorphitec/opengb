@@ -163,13 +163,20 @@ class Marlin(IPrinter):
             raise ConnectionError('No printer found')
         return usb_paths[0]
 
-    def _queue_command(self, command):
+    def _queue_command(self, command, deduplicate=False):
         """
         Queue a gcode command to be sent to the printer.
 
         :param command: Gcode command to queue.
         :type command: :class:`bytes`
+        :param deduplicate: Only add command if it does not already exist in
+            the queue.
+        :type deduplicate: :class:`bool`
         """
+        if deduplicate and command in self._gcode_command_queue:
+            self._callbacks.log(logging.DEBUG, 'Deduplicated queued '
+                                'command: ' + str(command))
+            return
         self._gcode_command_queue.append(command)
 
     def _send_command(self, command, buffer=True):
@@ -218,14 +225,14 @@ class Marlin(IPrinter):
         Request a temperature update from the printer.
         """
         self._callbacks.log(logging.DEBUG, 'Requesting printer temperature')
-        self._queue_command(b'M105')
+        self._queue_command(b'M105', deduplicate=True)
 
     def _request_printer_position(self):
         """
         Request a position update from the printer.
         """
         self._callbacks.log(logging.DEBUG, 'Requesting printer position')
-        self._queue_command(b'M114')
+        self._queue_command(b'M114', deduplicate=True)
 
     def _get_message_from_printer(self):
         """
