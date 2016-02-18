@@ -150,7 +150,7 @@ class MessageHandler(object):
 
     def retract_filament(self, head, length, rate):
         """
-        Retract filament into the print head
+        Retract filament into the print head.
 
         :param head: Print head to retract (0 or 1).
         :type x: :class:`int`
@@ -173,7 +173,7 @@ class MessageHandler(object):
 
     def unretract_filament(self, head, length, rate):
         """
-        Unretract filament from the print head
+        Unretract filament from the print head.
 
         :param head: Print head to unretract (0 or 1).
         :type x: :class:`int`
