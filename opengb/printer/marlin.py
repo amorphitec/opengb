@@ -111,8 +111,8 @@ class Marlin(IPrinter):
         self._serial_buffersize = 4
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
         # Timing
-        self._idle_loop_delay_sec = 0.1
-        self._print_loop_delay_sec = 0.001
+        self._read_loop_delay_sec = 0.1
+        self._write_loop_delay_sec = 0.001
         self._temp_poll_execute_sec = 5
         self._temp_poll_ready_sec = 1
         self._temp_update_time = time.time() - self._temp_poll_ready_sec
@@ -120,9 +120,9 @@ class Marlin(IPrinter):
         self._progress_update_time = time.time() - \
             self._progress_update_sec
         # Gcode
-        self._priority_gcode_commands = []
-        self._gcode_commands = []
-        self._gcode_position = 0
+        self._gcode_command_queue = []
+        self._gcode_sequence = []
+        self._gcode_sequence_position = 0
         super().__init__(*args, **kwargs)
 
     def _connect(self):
@@ -162,6 +162,15 @@ class Marlin(IPrinter):
         if len(usb_paths) == 0:
             raise ConnectionError('No printer found')
         return usb_paths[0]
+
+    def _queue_command(self, command):
+        """
+        Queue a gcode command to be sent to the printer.
+
+        :param command: Gcode command to queue.
+        :type command: :class:`bytes`
+        """
+        self._gcode_command_queue.append(command)
 
     def _send_command(self, command, buffer=True):
         """
@@ -209,14 +218,14 @@ class Marlin(IPrinter):
         Request a temperature update from the printer.
         """
         self._callbacks.log(logging.DEBUG, 'Requesting printer temperature')
-        self._send_command(b'M105')
+        self._queue_command(b'M105')
 
     def _request_printer_position(self):
         """
         Request a position update from the printer.
         """
         self._callbacks.log(logging.DEBUG, 'Requesting printer position')
-        self._send_command(b'M114')
+        self._queue_command(b'M114')
 
     def _get_message_from_printer(self):
         """
@@ -281,22 +290,22 @@ class Marlin(IPrinter):
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed != None:
-            self._send_command(b'M140 S' + str(bed).encode())
+            self._queue_command(b'M140 S' + str(bed).encode())
         if nozzle1 != None:
-            self._send_command(b'M104 T0 S' + str(nozzle1).encode())
+            self._queue_command(b'M104 T0 S' + str(nozzle1).encode())
         if nozzle2 != None:
-            self._send_command(b'M104 T1 S' + str(nozzle2).encode())
+            self._queue_command(b'M104 T1 S' + str(nozzle2).encode())
 
     def move_head_relative(self, x=0, y=0, z=0):
         # Switch to relative coordinates before sending.
-        self._send_command(b'G91')
-        self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command(b'G91')
+        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
         self._request_printer_position()
 
     def move_head_absolute(self, x=0, y=0, z=0):
         # Switch to absolute coordinates before sending.
-        self._send_command(b'G90')
-        self._send_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command(b'G90')
+        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
         self._request_printer_position()
 
     def home_head(self, x=True, y=True, z=True):
@@ -310,13 +319,14 @@ class Marlin(IPrinter):
             command += ' Y'
         if z:
             command += ' Z'
-        self._send_command(command.encode())
+        self._queue_command(command.encode())
         self._request_printer_position()
 
-    def execute_gcode(self, gcode_commands):
+    def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
-        self._gcode_commands = gcode_commands
-        self._gcode_position = 0
+        self._gcode_sequence = gcode_sequence
+        self._gcode_sequence_position = 0
+        print('done!')
 
     def pause_execution(self):
         self._callbacks.log(logging.DEBUG, 'Pausing execution')
@@ -370,31 +380,31 @@ class Marlin(IPrinter):
         """
         Clear the current gcode sequence and return position to 0.
         """
-        self._gcode_commands = []
-        self._gcode_position = 0
+        self._gcode_sequence = []
+        self._gcode_sequence_position = 0
 
-    def _execute_next_priority_gcode_command(self):
+    def _execute_next_queued_command(self):
         """
         Execute the next priority gcode command.
         """
         try:
             self._send_command(
-                self._priority_gcode_commands[0].encode())
-            self._priority_gcode_commands.pop(0)
+                self._gcode_command_queue[0])
+            self._gcode_command_queue.pop(0)
         except BufferFullException:
             # This probably means we're waiting for bed or nozzle temperature.
             pass
 
-    def _execute_next_gcode_command(self):
+    def _execute_next_sequence_command(self):
         """
         Execute the next gcode command in the current sequence.
         """
         try:
             self._send_command(
-                self._gcode_commands[self._gcode_position].encode())
-            self._gcode_position += 1
+                self._gcode_sequence[self._gcode_sequence_position].encode())
+            self._gcode_sequence_position += 1
             # Complete execution if previous line was last in sequence.
-            if self._gcode_position >= len(self._gcode_commands):
+            if self._gcode_sequence_position >= len(self._gcode_sequence):
                 self._reset_gcode_state()
                 self._update_state(State.READY)
         except BufferFullException:
@@ -413,7 +423,7 @@ class Marlin(IPrinter):
             msg_from_printer = self._get_message_from_printer()
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
-            time.sleep(self._idle_loop_delay_sec)
+            time.sleep(self._read_loop_delay_sec)
 
     def _writer(self):
         """
@@ -451,21 +461,22 @@ class Marlin(IPrinter):
                                         'Malformed message sent to '
                                         'printer: ' + str(err))
                 # TODO: catch BufferFullException
-            # Execute priority gcode if present.
-            if len(self._priority_gcode_commands) > 0:
-                self._execute_next_priority_gcode_command()
-            # Execute gcode if present.
+            # Execute the next queued gcode command.
+            if len(self._gcode_command_queue) > 0:
+                self._execute_next_queued_command()
+            # Execute the next command in the current sequence.
             if (self._state == State.EXECUTING and
-                len(self._gcode_commands) > 0):
-                self._execute_next_gcode_command()
+                len(self._gcode_sequence) > 0):
+                self._execute_next_sequence_command()
                 # Request a position update if the requisite interval has 
                 # passed.
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
-                    self._callbacks.progress_update(self._gcode_position,
-                        len(self._gcode_commands))
+                    self._callbacks.progress_update(
+                        self._gcode_sequence_position,
+                        len(self._gcode_sequence))
                     self._progress_update_time = time.time()
-            time.sleep(self._idle_loop_delay_sec)
+            time.sleep(self._write_loop_delay_sec)
 
     def _process_message_to_printer(self, message):
         """

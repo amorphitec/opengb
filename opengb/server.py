@@ -284,7 +284,7 @@ class MessageHandler(object):
         self._to_printer.put(json.dumps({
             'method':   'execute_gcode',
             'params': {
-                'gcode_commands':    gcode,
+                'gcode_sequence':    gcode,
             }
         }))
         return True
