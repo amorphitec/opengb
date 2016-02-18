@@ -65,6 +65,10 @@ body {
   max-height: 100%;
 }
 
+.logo img{
+  display:none;
+}
+
 a {
   color: #333333;
   text-decoration: none;
