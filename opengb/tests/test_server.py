@@ -1,5 +1,10 @@
 """
 Opengb server unit tests.
+
+TODO:
+    
+    * Add print-related API method tests
+    * Add retract/unretract tests
 """
 
 import os

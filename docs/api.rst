@@ -103,6 +103,32 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+retract_filament
+================
+
+.. automethod:: opengb.server.MessageHandler.retract_filament
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"retract_filament","params":{"head":0,"length":5,"rate":300}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+unretract_filament
+================
+
+.. automethod:: opengb.server.MessageHandler.unretract_filament
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"unretract_filament","params":{"head":0,"length":5,"rate":300}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 print_gcode_file
 ================
 

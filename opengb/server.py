@@ -148,6 +148,52 @@ class MessageHandler(object):
         }))
         return True
 
+    def retract_filament(self, head, length, rate):
+        """
+        Retract filament into the print head
+
+        :param head: Print head to retract (1 or 2).
+        :type x: :class:`int`
+        :param length: Amount of filament to retract in mm.
+        :type length: :class:`float`
+        :param rate: Rate at which to retract in mm/s.
+        :type rate: :class:`float`
+        """
+        if head not in [0, 1]:
+            raise IndexError('Head must be either 0 or 1')
+        self._to_printer.put(json.dumps({
+            'method':   'retract_filament',
+            'params': {
+                'head':     head,
+                'length':   length,
+                'rate':     rate,
+            }
+        }))
+        return True
+
+    def unretract_filament(self, head, length, rate):
+        """
+        Unretract filament from the print head
+
+        :param head: Print head to unretract (0 or 1).
+        :type x: :class:`int`
+        :param length: Amount of filament to unretract in mm.
+        :type length: :class:`float`
+        :param rate: Rate at which to unretract in mm/s.
+        :type rate: :class:`float`
+        """
+        if head not in [0, 1]:
+            raise IndexError('Head must be either 0 or 1')
+        self._to_printer.put(json.dumps({
+            'method':   'unretract_filament',
+            'params': {
+                'head':     head,
+                'length':   length,
+                'rate':     rate,
+            }
+        }))
+        return True
+
     def pause_print(self):
         """
         Pause the current print job.

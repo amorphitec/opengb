@@ -329,6 +329,19 @@ class Marlin(IPrinter):
         self._queue_command(command.encode())
         self._request_printer_position()
 
+    def unretract_filament(self, head=0, length=5, rate=300):
+        if head not in [0, 1]:
+            self._callbacks.log(logging.ERROR, 'Invalid head: ' + str(head))
+            return
+        # Switch to relative coordinates before sending.
+        self._queue_command(b'G91')
+        # Switch to defined head.
+        self._queue_command('T{0}'.format(head).encode())
+        self._queue_command('G1 E{0} F{1}'.format(length, rate).encode())
+
+    def retract_filament(self, head=0, length=5, rate=300):
+        self.unretract_filament(head, -length, rate)
+
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
         self._gcode_sequence = gcode_sequence
