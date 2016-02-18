@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function controller($scope, $http, fileFactory, printerFactory, lodash, gcodeService){
+    function controller($scope, $http, printerFactory, lodash, gcodeService){
 
     	function getAllFiles(){
 
@@ -86,6 +86,6 @@
 
     angular
         .module('openGbApp')
-        .controller('homeController', ['$scope', '$http', 'fileFactory', 'printerFactory', 'lodash', 'gcodeService', controller ]);
+        .controller('homeController', ['$scope', '$http', 'printerFactory', 'lodash', 'gcodeService', controller ]);
 
 })(angular);
