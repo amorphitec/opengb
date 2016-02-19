@@ -111,7 +111,7 @@ class Marlin(IPrinter):
         self._serial_buffersize = 4
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
         # Timing
-        self._read_loop_delay_sec = 0.1
+        self._read_loop_delay_sec = 0.001
         self._write_loop_delay_sec = 0.001
         self._temp_poll_execute_sec = 5
         self._temp_poll_ready_sec = 1
