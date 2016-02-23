@@ -38,8 +38,8 @@
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
         var ws;
-        // printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+        // printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
 

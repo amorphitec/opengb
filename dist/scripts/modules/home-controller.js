@@ -10,8 +10,6 @@
 
     	}
 
-
-
     	var vm = this;
         
         vm.printer = printerFactory.printer;
