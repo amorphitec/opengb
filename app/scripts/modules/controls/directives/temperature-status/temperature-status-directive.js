@@ -25,6 +25,15 @@
                 return status;
             }
 
+            scope.$watch("tempTargetTemp",function(newValue){
+                if(newValue.substr(newValue.length - 3) == 'PLA'){
+                    scope.tempTargetTemp = 170;
+                }
+                if(newValue.substr(newValue.length - 3) == 'ABS'){
+                    scope.tempTargetTemp = 220;
+                }
+            });
+
             scope.off = function(){
                 var obj = {};
                 obj[scope.name] = 0;
@@ -38,6 +47,13 @@
                 printerFactory.setTemperatures(obj);
                 on = true;
             }
+
+            element.find("input").on('click', function () {
+                if (!$window.getSelection().toString()) {
+                    // Required for mobile Safari
+                    this.setSelectionRange(0, this.value.length)
+                }
+            });
 
         }
         /* ----- END LINK FUNCTION FOR DIRECTIVE ----- */

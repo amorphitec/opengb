@@ -15,7 +15,8 @@
     "ng-file-upload": "~7.2.1",
     "ng-file-upload-shim": "~7.2.1",
     "ng-lodash": "~0.2.3",
-    "angular-ui-ace": "0.1.1"
+    "angular-ui-ace": "0.1.1",
+    "angular-virtual-keyboard": "~0.4.3"
   },
   "overrides": {
     "ace-builds": {

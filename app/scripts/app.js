@@ -26,17 +26,33 @@ angular
     'materialDesignTemplate',
     'd3',
     'three',
-    'gcode'
+    'gcode',
+    'angular-virtual-keyboard'
   ])
-  .config(function ($routeProvider,$locationProvider) {
+  .config([
+      '$routeProvider','$locationProvider','VKI_CONFIG', 
+      function ($routeProvider,$locationProvider,VKI_CONFIG) {
+
 //    $locationProvider.html5Mode(true).hashPrefix('!');
-    $routeProvider
-      .when('/:name*', {
-        templateUrl: function(urlattr){
-                return 'views/' + urlattr.name + '.html';
-            },
-      })
-      .otherwise({
-        redirectTo: 'home'
-      });
-  });
+        
+        $routeProvider
+          .when('/:name*', {
+            templateUrl: function(urlattr){
+                    return 'views/' + urlattr.name + '.html';
+                },
+          })
+          .otherwise({
+            redirectTo: 'home'
+          });
+
+          VKI_CONFIG.layout.Temperature = {
+            'name': "Temperature", 'keys': [
+            [["PLA"], ["ABS"]],
+            [["1", '1'], ["2", "2"], ["3", "3"]],
+            [["4", "4"], ["5", "5"], ["6", '6']],
+            [["7", "7"], ["8", "8"], ["9", "9"]],
+            [["0", "0"]],
+            [["Bksp", "Bksp"],["Enter", "Enter"]]
+          ], 'lang': ["en"] };
+
+  }]);

@@ -41,6 +41,7 @@ module.exports = function(config) {
       'app/bower_components/ace-builds/src-min-noconflict/theme-idle_fingers.js',
       'app/bower_components/ace-builds/src-min-noconflict/worker-json.js',
       'app/bower_components/angular-ui-ace/ui-ace.js',
+      'app/bower_components/angular-virtual-keyboard/release/angular-virtual-keyboard.min.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

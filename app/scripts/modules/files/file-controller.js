@@ -2,131 +2,78 @@
 
     'use strict';
 
-    function controller($scope, $http, fileFactory, printerFactory, lodash, gcodeService){
+    function controller($scope, $http, $location, printerFactory, lodash){
 
-    	function getAllFiles(){
+        function getAllFiles(){
 
-    		fileFactory.getFiles()
-	            .success(function (files) {
-
-                    vm.fileList = files;
-
-	            })
-	            .error(function (error) {
-	                console.log( 'Unable to load files data: ', error );
-	            });
-
-    	}
-
-        function addFile(file){
-
-            fileFactory.insertFile(file)
-                .success(function (files) {
-
-                    console.log(files);
-                    vm.fileList = files;
-                    vm.selectedFile = vm.uploadFile;
-
-                })
-                .error(function (error) {
-                    console.log( 'Unable to load files data: ' + error );
-                });
-
+            printerFactory.getFiles();
 
         }
 
-        function preflightCheck(){
-            setTimeout(function(){
-    		  vm.printReady = true;
-    		  $scope.$apply();
-    	    }, 
-            5000);
-        }
+        var vm = this;
+        
+        vm.printer = printerFactory.printer;
+        vm.connection = vm.printer.connection;
+        vm.fileList = printerFactory.files;
+        vm.selectedFile = printerFactory.selectedFile.file;
 
-        // In order to watch a 'vm.' vs '$scope.' object, you must use .$watch(function(){},function(){}) format
-        $scope.$watch(
-            function watchUploadFile( scope ) {
-                return( vm.uploadFile );
-            },
-            function handleUploadFileChange( newValue, oldValue ) {
-                if (newValue != null) {
-
-                    addFile( vm.uploadFile );
-                    vm.fileSelector = false;
-                    setTimeout(function(){ vm.selectedFile = vm.uploadFile; $scope.$apply(); }, 10);
-
-                }
-            }
-        );
-
-        $scope.$watch(
-            function watchSelectedFile( scope ) {
-                return( vm.selectedFile );
-            },
-            function handleSelectedFileChange( newValue, oldValue ) {
-                if (newValue != null) {
-
-                    vm.fileSelector = false;
-                    vm.fileRenderer = true;
-                    vm.printReady = false;
-
-		    // IF FILE CONTENTS IS NOT LOADED LOAD THE FILE
-		    // SET VM.SELECTED FILE TO NULL, ADD CONTENTS TO OBJ, THEN RESET SELECTED FILE VALUE
-                    if(!vm.selectedFile.contents && vm.selectedFile.url){
-
-                        var file = {};
-                        angular.copy(vm.selectedFile, file);
-                        vm.selectedFile = null;
-
-                        $http.get(file.url).success(
-                                                    function (data) {
-                                                        file.contents = data;
-                                                        vm.selectedFile = file;
-                                                    }).error(function () {
-                                                        console.error( 'Unable to load file: ' , error );
-                                                    });
-
-                    }
-
-                    if(vm.selectedFile){
-			printerFactory.setGcode(vm.selectedFile.contents);
-			preflightCheck();
-                    }
-
-                }
-            }
-        );
-
-
-
-    	var vm = this;
-
-    	vm.fileList = {};
-        vm.selectedFile = null;
-
-    	getAllFiles();
-
-        vm.fileSelector = true;
-        vm.fileRenderer = true;
-        vm.printReady = null;
-        vm.gcode = null;
-
-        vm.selectFile = function(file){
-            vm.selectedFile = file;
-        };
+        getAllFiles();
 
         vm.deselectFile = function(){
-            vm.selectedFile = null;
-            vm.fileSelector = true;
-            vm.fileRenderer=true;
-            vm.printReady=null;
+            printerFactory.deselectFile();
         };
 
+        vm.printSelectedFile = function(){
+            console.log("trying to print file",[vm.selectedFile]);
+            if(vm.selectedFile && vm.selectedFile.content){
+                $location.path('home');
+            }
+        }
+
+        // In order to watch a 'vm.' vs '$scope.' object, you must use 
+        // $watch(function(){},function(){}) format
+        $scope.$watch(
+            function( scope ) {
+                return( vm.uploadFile );
+            },
+            function( newValue, oldValue ) {
+                if (newValue != null) {
+
+                    printerFactory.putFile(vm.uploadFile);
+                    vm.fileSelector = false;
+
+                }
+            }
+        );
+
+        $scope.$watch(
+            function( scope ) {
+                return( printerFactory.selectedFile.file );
+            },
+            function( newValue, oldValue ) {
+                if (newValue != null) {
+
+                    vm.selectedFile = printerFactory.selectedFile.file;
+
+                    if(newValue.content){
+                        vm.printReady = true;
+                        console.log("ready to print")
+                    }
+
+                }else{
+
+                    vm.selectedFile = null;
+                    vm.printReady = null;
+
+                }
+            },
+            true
+        );
 
     }
 
     angular
         .module('openGbApp')
-        .controller('fileController', ['$scope', '$http', 'fileFactory', 'printerFactory', 'lodash', 'gcodeService', controller ]);
+        .controller('fileController', ['$scope', '$http', '$location', 'printerFactory', 'lodash', controller ]);
 
-})(angular);    
+})(angular);
