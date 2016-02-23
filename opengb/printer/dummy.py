@@ -33,7 +33,7 @@ class Dummy(IPrinter):
         self._progress_update_time = time.time() - \
             self._progress_update_sec
         # Gcode
-        self._gcode_commands = []
+        self._gcode_sequence = []
         self._gcode_position = 0
         self._dummy_responses = []
 
@@ -70,9 +70,9 @@ class Dummy(IPrinter):
         self._callbacks.log(logging.DEBUG, 'Homing print head: x|{0}, '
                                            'y|{1}, z|{2}'.format(x, y, z))
 
-    def execute_gcode(self, gcode_commands):
+    def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
-        self._gcode_commands = gcode_commands
+        self._gcode_sequence = gcode_sequence
         self._gcode_position = 0
 
     def pause_execution(self):
@@ -97,7 +97,7 @@ class Dummy(IPrinter):
         """
         Clear the current gcode sequence and return position to 0.
         """
-        self._gcode_commands = []
+        self._gcode_sequence = []
         self._gcode_position = 0
 
     def _request_printer_temperature(self):
@@ -118,7 +118,7 @@ class Dummy(IPrinter):
         """
         Clear the current gcode sequence and return position to 0.
         """
-        self._gcode_commands = []
+        self._gcode_sequence = []
         self._gcode_position = 0
 
 
@@ -127,11 +127,11 @@ class Dummy(IPrinter):
         Execute the next gcode command in the current sequence.
         """
         self._callbacks.log(logging.DEBUG, 'Executing gcode command {0} at '
-            'position {1}'.format(self._gcode_commands[self._gcode_position],
+            'position {1}'.format(self._gcode_sequence[self._gcode_position],
                                   self._gcode_position))
         self._gcode_position += 1
         # Complete execution if previous line was last in sequence.
-        if self._gcode_position >= len(self._gcode_commands):
+        if self._gcode_position >= len(self._gcode_sequence):
             self._reset_gcode_state()
             self._update_state(State.READY)
 
@@ -165,12 +165,12 @@ class Dummy(IPrinter):
                 self._temp_update_time = time.time()
             # Execute gcode if present.
             if (self._state == State.EXECUTING and
-                len(self._gcode_commands) > 0):
+                len(self._gcode_sequence) > 0):
                 self._execute_next_gcode_command()
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
                     self._callbacks.progress_update(self._gcode_position,
-                        len(self._gcode_commands))
+                        len(self._gcode_sequence))
                     self._progress_update_time = time.time()
             # Sleep before continuing. Delay determined by state.
             if (self._state == State.EXECUTING):
