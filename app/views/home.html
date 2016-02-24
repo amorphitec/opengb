@@ -121,6 +121,23 @@ h2{
                          og-fd-upload-file="hc.uploadFile">
         </og-file-dropbox>
 
+        <div layout="row" ng-show="hc.showStatusBar()">
+          <og-status-bar flex></og-status-bar>
+
+          <md-button class="md-icon-button" ng-hide="hc.isPaused()" ng-click="hc.pausePrint()">
+            <md-icon class="material-icons">pause</md-icon>
+          </md-button>
+          
+          <md-button class="md-icon-button" ng-show="hc.isPaused()" ng-click="hc.resumePrint()">
+            <md-icon class="material-icons">play_arrow</md-icon>
+          </md-button>
+          
+          <md-button class="md-icon-button" ng-click="hc.stopPrint()">
+            <md-icon class="material-icons">stop</md-icon>
+          </md-button>
+
+        </div>
+
       </div>
     </div>
   </md-content>

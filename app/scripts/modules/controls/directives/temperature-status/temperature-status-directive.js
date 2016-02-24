@@ -48,13 +48,6 @@
                 on = true;
             }
 
-            element.find("input").on('click', function () {
-                if (!$window.getSelection().toString()) {
-                    // Required for mobile Safari
-                    this.setSelectionRange(0, this.value.length)
-                }
-            });
-
         }
         /* ----- END LINK FUNCTION FOR DIRECTIVE ----- */
 

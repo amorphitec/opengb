@@ -36,6 +36,31 @@
             }
         }
 
+        vm.isPrinting = function(){
+            return vm.printer.state == 'EXECUTING';
+        };
+
+        vm.isPaused = function(){
+            return vm.printer.state == 'PAUSED';
+        };
+
+        vm.showStatusBar = function(){
+            var test =  vm.isPrinting() || vm.isPaused() || true;
+            return test;
+        };
+
+        vm.pausePrint = function(){
+            printerFactory.pausePrint();
+        }
+
+        vm.resumePrint = function(){
+            printerFactory.resumePrint();
+        }
+
+        vm.stopPrint = function(){
+            printerFactory.cancelPrint();
+        }
+
         // In order to watch a 'vm.' vs '$scope.' object, you must use 
         // $watch(function(){},function(){}) format
         $scope.$watch(

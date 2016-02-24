@@ -11,6 +11,7 @@
                         connection:{baseUrl:null,connected:false,printReady:false},
                         position:{x:null,y:null,z:null},
                         print:{},
+                        state:"",
                         temperatures:{
                             bed:{target:null,current:null},
                             nozzle1:{target:null,current:null},
@@ -38,8 +39,8 @@
         //Setup url location of webservice
         //can be manually updated using setBaseUrl function
         var ws;
-        printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
-        // printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
+        // printer.connection.baseUrl = 'ws://'+$location.host()+':'+$location.port()+'/ws';
+        printer.connection.baseUrl = 'ws://'+$location.host()+':8000/ws';
 
         printerFactory.connect = function(){
 
@@ -53,6 +54,11 @@
                 var params = message;
                 printer.state = params["new"];
                 console.log('state change event:', message);
+
+                if(params["old"] == 'EXECUTING' && params["new"] == 'READY'){
+                    printer.print = {};
+                }
+
             });
 
             ws.$on('temp_update', function (message) {

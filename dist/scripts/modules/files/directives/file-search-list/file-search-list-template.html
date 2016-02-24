@@ -2,7 +2,7 @@
 
       <md-input-container>
         <label>search</label>
-        <input class="md-primary md-hue-2" ng-model="filterString" type="text" ng-change="filterFiles()">
+        <input class="md-primary md-hue-2" ng-model="filterString" type="text" ng-change="filterFiles()" ng-virtual-keyboard>
       </md-input-container>
 
       <md-progress-linear md-mode="{{progressMode}}" md-diameter="100"></md-progress-linear>
