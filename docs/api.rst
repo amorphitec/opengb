@@ -250,7 +250,7 @@ Example response: ::
 get_status
 ==========
 
-.. automethod:: opengb.server.MessageHanler.get_status
+.. automethod:: opengb.server.MessageHandler.get_status
 
 Example request: ::
 
