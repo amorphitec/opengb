@@ -335,6 +335,21 @@ class MessageHandler(object):
         }))
         return True
 
+    def get_status(self):
+        """
+        Get current printer status.
+        
+        .. note::
+
+            This method should only be used to determine baseline printer
+            status. To maintain a view of current printer status listen for
+            the various `jsonrpc` events.
+        """
+        # Enums don't serialise so replace with name. 
+        printer = PRINTER.copy() 
+        printer['state'] = printer['state'].name
+        return {'status': printer}
+
     def get_counters(self):
         """
         Get printer counter values.

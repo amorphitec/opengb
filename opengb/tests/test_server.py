@@ -20,6 +20,7 @@ from playhouse.test_utils import test_database
 from opengb.tests import OpengbTestCase
 from opengb import server
 from opengb.database import Counter, GCodeFile
+from opengb.printer import State
 
 
 GCODE = """
@@ -343,3 +344,33 @@ class TestGetCounters(OpengbTestCase):
                 Counter.create(name=k, count=v)
             mh = self.message_handler.get_counters()
             self.assertDictEqual(mh['counters'], self.test_counters)
+
+class TestGetStatus(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+        self.test_status = {
+            'state':    State.READY,
+            'temp':     {
+                'bed':      99,
+                'nozzle1':  230,
+                'nozzle2':  229,
+            },
+            'position': {
+                'x':        11.9,
+                'y':        56.0,
+                'z':        46.0,
+            },
+            'progress': {
+                'current':  2386,
+                'total':    9945,
+            },
+        }
+
+    @patch('opengb.server.PRINTER')
+    def test_get_status_returns_correct_values(self, m_printer_status):
+        """Correct status values are returned."""
+        m_printer_status = self.test_status
+        mh = self.message_handler.get_status

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - CHANGELOG
+- get_status method
 
 ### Removed
 - Non-standard printer state event on initial connection
