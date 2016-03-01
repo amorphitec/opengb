@@ -2,22 +2,37 @@
 
       <md-input-container>
         <label>search</label>
-        <input class="md-primary md-hue-2" ng-model="filterString" type="text" ng-change="filterFiles()">
+        <input class="md-primary md-hue-2" ng-model="filterString" type="text" ng-change="filterFiles()" ng-virtual-keyboard>
       </md-input-container>
 
-      <md-progress-circular md-mode="{{progressMode}}" md-diameter="100"></md-progress-circular>
+      <md-progress-linear md-mode="{{progressMode}}" md-diameter="100"></md-progress-linear>
 
       <div ng-hide="hide()" ng-switch on="view">
 
-        <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="10px" ng-switch-when="block">
-          <md-grid-tile ng-repeat="file in filteredFileList" ng-click="selectFile(file)">
+        <md-grid-list 
+          md-cols="4" 
+          md-row-height="1:1" 
+          md-gutter="10px" 
+          ng-switch-when="block">
+          <md-grid-tile 
+            ng-repeat="file in filteredFileList" 
+            ng-click="selectFile(file)">
             <og-file-image og-fi-file="file"></og-file-image>
             <md-grid-tile-footer><h3>{{file.name}}</h3></md-grid-tile-footer>
           </md-grid-tile>
         </md-grid-list>
 
-        <md-list-item class="md-3-line" ng-repeat="file in filteredFileList" ng-switch-default>
-          <img ng-src="{{file.image}}" class="md-avatar" alt="" />
+        <md-list-item 
+          class="md-3-line" 
+          ng-repeat="file in filteredFileList" 
+          ng-click="selectFile(file)"
+          ng-switch-default>
+          <og-file-image 
+            og-fi-file="file" 
+            og-fi-width="50" 
+            og-fi-height="50" 
+            og-fi-circle="true">
+          </og-file-image>
           <div class="md-list-item-text" layout="column">
             <h3>{{ file.name }}</h3>
             <h4>{{ file.url }}</h4>

@@ -1,48 +1,98 @@
 <style>
 
+h2{
+  text-align: center;
+  font-family:'proxima_novalight';
+}
+
 .drop-box {
-	background: #F8F8F8;
-	border: 5px dashed #DDD;
-	width: 60%;
-	height: 65px;
-	text-align: center;
-	padding-top: 25px;
-	margin: 20px auto;
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 60%;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 0px auto;
 }
 .drop-box.drag-over{
-	background: #eee;
-	border-color: #cfc;
-}	
+  background: #eee;
+  border-color: #cfc;
+} 
+#files-page{
+  position:relative;
+  min-height: 100%;
+}
+     #renderArea {
+        position: relative;
+        left: 0;
+        top: 0;
+        width:100%;
+        height:calc(100vh - 100px);
+        z-index: 0;
+      }
+
+      #renderArea md-progress-circular {
+        position: absolute;
+        z-index: -1;
+        left: 50%;
+        top: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+      }
 
 </style>
 
-<section id="files-page" layout="row" layout-wrap ng-controller="fileController as fc">
+<section id="home-page" ng-controller="fileController as fc">
 
-	<div  flex="50" flex-sm="100">
+  <md-content style="height:100vh;">
+    <div layout="row" layout-wrap>
+      <div flex-sm="100" flex="50" layout-padding>
+        <div layout="row" layout-align="center">
 
-	    <og-file-dropbox ng-show="fc.selectedFile === null" og-fd-upload-file="fc.uploadFile">
-		</og-file-dropbox>
+          <div flex="100" ng-show="fc.selectedFile != null">
+            
+            <h2>Selected File</h2>
+            <og-file-data-table og-fdt-file="fc.selectedFile"
+                                og-fdt-cancel="fc.deselectFile()">
+            </og-file-data-table>
 
-		<div id="front-page-file-selected" ng-show="pc.selectedFile != null">
-			<div style="text-align:center;position:relative;">
-				<div style="position:absolute;top:20px;right:20px;" ng-click="pc.selectedFile = null">X</div>
-				<img style="max-width:100%;height:100%;" ngf-src="pc.selectedFile"	>
-			</div>				
-		</div>
-		
-	</div>
+            <div layout="row" layout-align="center center" style="">
+              <md-button flex="30" 
+                         ng-show="fc.printReady != null" 
+                         ng-disabled="!fc.connection.printReady" 
+                         ng-click="fc.printSelectedFile()"
+                         class="md-raised md-primary">
+                Print File
+              </md-button>
+            </div>
 
-	<div flex-sm="100" flex="50">
-		<md-list layout-padding>
+          </div>
 
-		    <og-file-search-list og-fsl-files="fc.fileList" 
-		                         og-fsl-hide-empty="false" 
-		                         og-fsl-selected-file="fc.selectedFile"
-		                         og-fsl-view="list" 
-		                         ng-show="fc.selectedFile === null">
-		    </og-file-search-list>
+        </div>
 
-		</md-list>
-	</div>
+      </div>
+
+      <div flex-sm="100"
+           flex="50"
+           layout-padding
+           style="position:relative;">
+
+        <og-file-dropbox 
+        	og-fd-upload-file="fc.uploadFile">
+        </og-file-dropbox>
+
+      	<div flex="100">
+            <h2>Select A File</h2>
+            <og-file-search-list og-fsl-files="fc.fileList"
+                                 og-fsl-view="list" 
+                                 og-fsl-hide-empty="false" 
+                                 og-fsl-selected-file="fc.selectedFile">
+            </og-file-search-list>
+        </div>
+
+
+      </div>
+    </div>
+  </md-content>
 
 </section>

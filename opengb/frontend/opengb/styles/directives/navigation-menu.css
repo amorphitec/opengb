@@ -41,3 +41,9 @@
       md-sidenav a{color:yellow;}
       md-sidenav md-item-content.active {color:black;background:#eee;}
       md-sidenav md-item-content.active md-icon {color:black!important;}
+
+md-sidenav.md-locked-open {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}

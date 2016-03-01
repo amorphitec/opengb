@@ -12,6 +12,7 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/angular-virtual-keyboard/release/angular-virtual-keyboard.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -35,7 +36,7 @@
 
     <!-- Add your site or application content here -->
 
-    <mdt-top-toolbar hide-gt-md></mdt-top-toolbar>
+    <mdt-top-toolbar hide-gt-sm></mdt-top-toolbar>
     <mdt-navigation-menu></mdt-navigation-menu>
 
     <div layout="column" tabIndex="-1" role="main" style="min-height:100vh;width:100%;">
@@ -67,6 +68,7 @@
     <script src="bower_components/ace-builds/src-min-noconflict/theme-idle_fingers.js"></script>
     <script src="bower_components/ace-builds/src-min-noconflict/worker-json.js"></script>
     <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="bower_components/angular-virtual-keyboard/release/angular-virtual-keyboard.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -89,6 +91,7 @@
     <script src="scripts/modules/controls/directives/controls-cube/controls-cube-directive.js"></script>
     <script src="scripts/modules/controls/directives/temperature-status/temperature-status-directive.js"></script>
     <script src="scripts/modules/statistics/directives/temperature-graph/temperature-graph-directive.js"></script>
+    <script src="scripts/modules/controls/directives/status-bar/status-bar-directive.js"></script>
 
     <script src="scripts/lib/websocket/websocketService.js"></script>
     <script src="scripts/lib/d3/d3Service.js"></script>
