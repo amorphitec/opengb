@@ -1,0 +1,18 @@
+All notable changes to this project will be documented in this file.
+
+* This project adheres to [Semantic Versioning](http://semver.org/).
+* This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
+
+## [Unreleased]
+### Added
+- CHANGELOG
+
+### Removed
+- Non-standard printer state event on initial connection
+
+## [0.0.1] - 01/01/2016
+### Added
+- Basic printer control functionality
+- Documentation
+- Tests
+- Opengb-web frontend built on Angular.js
