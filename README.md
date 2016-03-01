@@ -20,6 +20,7 @@ git commit
 It may be updated in future like this:
 
 ```
+git fetch opengb-web
 git merge -s ours --no-commit opengb-web/master
 git rm -rf opengb/frontend/opengb
 git read-tree --prefix=opengb/frontend/opengb -u opengb-web/master:dist
