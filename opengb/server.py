@@ -363,9 +363,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         LOGGER.info('New connection from {0}'.format(self.request.remote_ip))
         CLIENTS.append(self)
-        self.write_message(json.dumps(
-            {'cmd': 'STATE', 'new': PRINTER['state']},
-            cls=opengb.printer.StateEncoder))
 
     def on_close(self):
         LOGGER.info('Connection closed to {0}'.format(self.request.remote_ip))
