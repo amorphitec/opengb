@@ -2,6 +2,7 @@
   'use strict'
 
   exports.wsinst = function (url) {
+    var queue = []
     var callbacks = {}
     var eventsMap = {}
     var current_cb_id = 0
@@ -10,8 +11,11 @@
     var ws = new WebSocket(url)
 
     ws.onopen = function () {
-      console.debug('WS ready')
+      console.debug('WS ready - default')
       ready = true
+      queue.forEach( function (request) {
+          ws.send(JSON.stringify(request))
+      })
     }
 
     ws.onmessage = function (msg) {
@@ -57,6 +61,7 @@
         console.debug('Sending request', request, ready)
         if (!ready) {
           console.error('WS not ready!')
+          queue.push(request)
         } else {
           ws.send(JSON.stringify(request))
         }

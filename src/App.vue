@@ -24,12 +24,12 @@
         </div>
       </div>
     </div>
+    <div id="error" v-if="isNotConnected">Error, printer not connected go to <a v-link="'settings'">Settings</a> to fix</div>
   </div>
 </template>
 
 <script>
-  import wsinst from './services/websocket-service.js'
-
+  require('./services/printer-service.js')
   export default {
     components: {
     },
@@ -38,8 +38,14 @@
         this.showSideNav = !this.showSideNav
       }
     },
+    computed:{
+      isNotConnected: function () {
+        return this.printerService.printer.state === 'ERROR'
+      }
+    },
     data () {
       return {
+        printerService : printerws,
         showSideNav: false,
         pages: {
           home: {name: 'my openGB', url: 'home', icon: 'fi-home'},
@@ -102,6 +108,16 @@
     }
     .off-canvas.position-left.is-open {
       left: -50px!important;
+    }
+    #error{
+      width: 100%;
+      height: 50px;
+      color:white;
+      text-align: center;
+      line-height: 40px;
+      position: fixed;
+      bottom:0;
+      background:#c60f13;
     }
   }
 </style>

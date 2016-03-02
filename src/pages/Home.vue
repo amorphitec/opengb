@@ -31,6 +31,19 @@
       },
       isFileInfo: function () {
         return this.view === 'file-info'
+      },
+      showFileInfo: function () {
+        var isPrinting = this.printerService.printer.state != 'READY' && this.printerService.printer.state != 'ERROR'
+        var hasFile = this.printerService.selectedFile.length > 0
+        console.log('tests',[isPrinting, hasFile, this.printerService.selectedFile])
+        return isPrinting || hasFile
+      },
+      statusState: function () {
+        var s = this.printerService.printer.state
+        if (s == 'EXECUTING') {
+          s = 'Heating/Printing'
+        }
+        return s
       }
     },
     methods: {
@@ -146,14 +159,14 @@
       <search-list></search-list>
     </div>
 
-    <div id="file-info" v-bind:class="{'is-focus': isFileInfo}" v-on:click="setView('file-info')">
+    <div id="file-info" v-if="showFileInfo" v-bind:class="{'is-focus': isFileInfo}" v-on:click="setView('file-info')">
 
       <span id="file-image" v-bind:class="{hide: selectedFile[0]===null}">
         
         <h2>{{printerService.selectedFile[0]!=null ? printerService.selectedFile[0].name : ''}}</h2>
 
         <print-status-circle 
-          v-bind:state="printerService.printer.state"
+          v-bind:state="statusState"
           v-bind:size="300" 
           v-bind:value="printerService.printer.print.currentLine" 
           v-bind:goal="printerService.printer.print.totalLines">
@@ -170,14 +183,14 @@
         <button 
           type="button" 
           v-on:click="pausePrint()"  
-          v-bind:class="{hide: (printerService.printer.state != 'EXECUTING' && printerService.printer.state != '')}" 
+          v-bind:class="{hide: (printerService.printer.state != 'EXECUTING')}" 
           class="button">
           Pause
         </button>
         
         <button type="button" 
           v-on:click="resumePrint()" 
-          v-bind:class="{hide: (printerService.printer.state != 'PAUSED' && printerService.printer.state != null )}" 
+          v-bind:class="{hide: (printerService.printer.state != 'PAUSED')}" 
           class="button">
           Resume
         </button>
@@ -185,7 +198,7 @@
         <button 
           type="button" 
           v-on:click="cancelPrint()" 
-          v-bind:class="{hide: (printerService.printer.state != 'EXECUTING' && printerService.printer.state != null ) }" 
+          v-bind:class="{hide: (printerService.printer.state != 'EXECUTING') }" 
           class="button">
           Stop
         </button>

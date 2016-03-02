@@ -46,6 +46,10 @@ export default {
     transform: function () {
       var trans = 'translate(' + this.size / 2 + ',' + this.size / 2 + ')'
       return trans
+    },
+    transformBelow: function () {
+      var trans = 'translate(' + this.size / 2  + ',' + ( this.size / 2 + 40 ) + ')'
+      return trans
     }
   }
 }
@@ -54,13 +58,14 @@ export default {
 <template>
   <div>  
     <svg v-bind:width="size" v-bind:height="size" >
-      <circle v-bind:r="size/2" v-bind:transform="transform" v-bind:class="{'pulse': state == 'EXECUTING'}">
+      <circle v-bind:r="size/2" v-bind:transform="transform" v-bind:class="{'pulse': state == 'Heating/Printing'}">
       </circle>
       <path v-bind:d="calculateGoalPath()" fill="#ccc" v-bind:transform="transform">
       </path>
       <path v-bind:d="calculateValuePath()" fill="#fecc09" v-bind:transform="transform">
       </path>
       <text style="font-size: 50px;" alignment-baseline="middle" text-anchor="middle"  v-bind:transform="transform" >{{percentComplete}}%</text> 
+      <text style="font-size: 20px;" alignment-baseline="middle" text-anchor="middle"  v-bind:transform="transformBelow" >{{state}}</text> 
     </svg>
   </div>
 </template>

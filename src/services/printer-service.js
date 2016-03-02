@@ -6,7 +6,7 @@
     connection: { baseUrl: null, connected: false, printReady: false },
     position: { x: null, y: null, z: null },
     print: { currentLine: null, totalLines: null },
-    state: null,
+    state: 'ERROR',
     temperatures: {
       bed: { target: null, current: null },
       nozzle1: { target: null, current: null },
@@ -123,6 +123,16 @@
       }
       ws.call(method, params, suc, err)
     },
+    deleteFile: function (fid) {
+      var suc = function (f) {
+        selectedFile.length = 0
+      }
+      var method = 'delete_gcode_file'
+      var params = {
+        'id': fid
+      }
+      ws.call(method, params, suc)
+    },
     getFile: function (fid) {
       var suc = function (f) {
         printer.connection.printReady = true
@@ -165,6 +175,15 @@
     deselectFile: function () {
       this.selectedFile = null
     },
+    getStatus: function () {
+      var method = 'get_status'
+      var params = {
+      }
+      var suc = function (res) {
+        printer.state = res.status.state
+      }
+      ws.call(method, params, suc)
+    },
     connect: function () {
       connect()
     }
@@ -172,12 +191,12 @@
 
   function connect () {
     ws = wsinst(printer.connection.baseUrl)
+    printerws.getStatus()
     /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
     ws.$on('state_change', function (message) {
       var params = message
       printer.state = params['new']
       console.log('state change event: ', message)
-
       if (params['old'] === 'EXECUTING' && params['new'] === 'READY') {
         printer.print.currentLine = null
         printer.print.totalLines = null
