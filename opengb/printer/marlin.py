@@ -142,17 +142,21 @@ class Marlin(IPrinter):
                 self._callbacks.log(logging.INFO, 'Printer found at ' + port)
             except ConnectionError:
                 self._callbacks.log(logging.ERROR, 'No printer found.')
+                self._update_state(State.DISCONNECTED)
                 raise
         else:
             port = self._serial_port
         try:
+            # Ensure port is closed in case last disconnect was ungraceful.
+            self._serial.close()
             self._serial.setPort(port)
             self._serial.setBaudrate(self._serial_baud_rate)
             self._serial.setTimeout(self._serial_timeout)
+            self._callbacks.log(logging.INFO, 'Connecting to printer.')
             self._serial.open()
-            # Allow time for serial open to complete before reading/writing.
-            time.sleep(1)
+            self._update_state(State.READY)
         except serial.SerialException as err:
+            self._update_state(State.DISCONNECTED)
             raise ConnectionError(err.args[0])
 
     def _detect_port(self):
