@@ -15,10 +15,18 @@ RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
     (re.compile(r'ok$'),
      lambda g, c: (None)),
-    # Temperature update.
-    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
+    # Temperature update - single extruder.
+    (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
-                'T0:(?P<n2temp>\d*\.?\d+)\s/(?P<n2target>\d*\.?\d+).*?$'),
+                'T0:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+).*?$'),
+     lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
+                                             g['n1temp'], g['n1target'],
+                                             None, None))),
+    # Temperature update - dual extruder.
+    (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
+                'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
+                'T0:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
+                'T1:(?P<n2temp>\d*\.?\d+)\s/(?P<n2target>\d*\.?\d+).*?$'),
      lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
                                              g['n1temp'], g['n1target'],
                                              g['n2temp'], g['n2target']))),
