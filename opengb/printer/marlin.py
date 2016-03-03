@@ -446,9 +446,10 @@ class Marlin(IPrinter):
         Runs as a separate thread.
         """
         while True:
-            msg_from_printer = self._get_message_from_printer()
-            if msg_from_printer:
-                self._process_message_from_printer(msg_from_printer)
+            if not self._state == State.DISCONNECTED:
+                msg_from_printer = self._get_message_from_printer()
+                if msg_from_printer:
+                    self._process_message_from_printer(msg_from_printer)
             time.sleep(self._read_loop_delay_sec)
 
     def _writer(self):
