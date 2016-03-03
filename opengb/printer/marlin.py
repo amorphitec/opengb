@@ -163,12 +163,14 @@ class Marlin(IPrinter):
         USB device. In future it should probably attempt to connect to the
         port, send a piece of gcode and wait for a response.
         """
+        self._callbacks.log(logging.DEBUG, 'Detecting port.')
         usb_patterns_combined = "(" + ")|(".join(USB_PATTERNS) + ")"
         usb_paths = [os.path.join('/dev', p)
                      for p in os.listdir('/dev')
                      if re.match(usb_patterns_combined, p)]
         if len(usb_paths) == 0:
             raise ConnectionError('No printer found')
+        self._callbacks.log(logging.DEBUG, 'Found ports: ' + str(usb_paths))
         return usb_paths[0]
 
     def _queue_command(self, command, deduplicate=False):
