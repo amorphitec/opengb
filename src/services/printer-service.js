@@ -6,7 +6,7 @@
     connection: { baseUrl: null, connected: false, printReady: false },
     position: { x: null, y: null, z: null },
     print: { currentLine: null, totalLines: null },
-    state: 'ERROR',
+    state: null,
     temperatures: {
       bed: { target: null, current: null },
       nozzle1: { target: null, current: null },
@@ -191,6 +191,13 @@
 
   function connect () {
     ws = wsinst(printer.connection.baseUrl)
+    ws.$close(
+      function () {
+        printer.state = null
+        printer.print.currentLine = null
+        printer.print.totalLines = null
+      }
+    )
     printerws.getStatus()
     /* ------------- BEGIN WEBSOCKET EVENTS ------------------ */
     ws.$on('state_change', function (message) {

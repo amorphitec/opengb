@@ -69,6 +69,9 @@
       $on: function (event, callback) {
         eventsMap[event] = callback
       },
+      $close: function (callback) {
+        ws.onclose = callback
+      },
       notify: function (method, params) {
       }
     }

@@ -44,6 +44,10 @@
           s = 'Heating/Printing'
         }
         return s
+      },
+      isNotPrinting: function () {
+        var s = this.printerService.printer.state
+        return s != 'EXECUTING' && s != 'PAUSED'
       }
     },
     methods: {
@@ -56,6 +60,9 @@
           },
           2000
         )
+      },
+      homePrinter: function () {
+        this.printerService.homePrintHead({x:true,y:true,z:true})
       },
       deselectFile: function () {
         printerws.deselectFile()
@@ -126,25 +133,29 @@
     <div id="temperature-wrapper">
       <temperature-menu 
         friendly-name="Heated Bed"
+        temp-id="bed"
         v-bind:current="printerService.printer.temperatures.bed.current"
         v-bind:target="printerService.printer.temperatures.bed.target"
         >
       </temperature-menu>
       <temperature-menu 
         friendly-name="Extruder 1"
+        temp-id="nozzle1"
         v-bind:current="printerService.printer.temperatures.nozzle1.current"
         v-bind:target="printerService.printer.temperatures.nozzle1.target"
         >
       </temperature-menu>
       <temperature-menu 
         friendly-name="Extruder 2"
+        temp-id="nozzle2"
         v-bind:current="printerService.printer.temperatures.nozzle2.current"
         v-bind:target="printerService.printer.temperatures.nozzle2.target"
         >
       </temperature-menu>
+      <button class="button" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
     </div>
 
-    <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-on:click="setView('file-selection')">
+    <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
 
       <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
         Upload a File

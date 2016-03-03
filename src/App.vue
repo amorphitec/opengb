@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div id="error" v-if="isNotConnected">Error, printer not connected go to <a v-link="'settings'">Settings</a> to fix</div>
+    <div id="error" v-if="isNotConnected">Error, printer not connected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
   </div>
 </template>
 
@@ -40,7 +40,7 @@
     },
     computed:{
       isNotConnected: function () {
-        return this.printerService.printer.state === 'ERROR'
+        return this.printerService.printer.state === null
       }
     },
     data () {
@@ -69,7 +69,7 @@
     z-index: 100;
     transition: width .5s;
   }
-  #side-nav:hover{width: 165px!important;}
+  /*#side-nav:hover{width: 165px!important;}*/
   #side-nav.small{width: 50px;overflow: hidden;background: rgba(0,0,0,.9);}
   #full-col{
     box-shadow: none;
