@@ -390,15 +390,6 @@ class Marlin(IPrinter):
         """
         Printer run loop.
         """
-        if self._state == State.DISCONNECTED:
-            try:
-                self._connect()
-                self._callbacks.log(logging.INFO, 'Connected to printer')
-                self._update_state(State.READY)
-            except ConnectionError as err:
-                self._callbacks.log(logging.ERROR, err.args[0])
-                time.sleep(self._connect_retry_sec)
-
         thread_writer = threading.Thread(target=self._writer)
         thread_writer.setDaemon(True)
         thread_writer.setName('writer')
@@ -479,7 +470,8 @@ class Marlin(IPrinter):
                     metric_interval > self._temp_poll_execute_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
-                elif (self._state in [State.READY, State.PAUSED] and
+                elif (self._state in [State.READY, State.PAUSED,
+                                      State.DISCONNECTED] and
                     metric_interval > self._temp_poll_ready_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
