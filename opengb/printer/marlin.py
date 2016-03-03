@@ -309,9 +309,11 @@ class Marlin(IPrinter):
         if bed != None:
             self._queue_command(b'M140 S' + str(bed).encode())
         if nozzle1 != None:
-            self._queue_command(b'M104 T0 S' + str(nozzle1).encode())
+            self._queue_command(b'T0')
+            self._queue_command(b'M104 S' + str(nozzle1).encode())
         if nozzle2 != None:
-            self._queue_command(b'M104 T1 S' + str(nozzle2).encode())
+            self._queue_command(b'T1')
+            self._queue_command(b'M104 S' + str(nozzle2).encode())
 
     def move_head_relative(self, x=0, y=0, z=0):
         # Switch to relative coordinates before sending.
