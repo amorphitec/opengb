@@ -451,7 +451,6 @@ class Marlin(IPrinter):
         Runs as a separate thread.
         """
         while True:
-            self._callbacks.log(logging.DEBUG, 'Reading from_printer queue')
             msg_from_printer = self._get_message_from_printer()
             if msg_from_printer:
                 self._process_message_from_printer(msg_from_printer)
