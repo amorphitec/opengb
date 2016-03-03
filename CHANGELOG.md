@@ -7,13 +7,13 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.0] - 2016-04-02
 ### Added
-- Error on frontend websocket disconnect
-- Clear printer progress on frontend websocket disconnect
 - Home all button to home page
 - File list hidden when print in progress
 - Set temperatures on home page
 
 ### Fixed
+- Error on frontend websocket disconnect
+- Clear printer progress on frontend websocket disconnect
 - Serial disconnect/reconnect not updating printer state
 - Reconnection lag due to excessive debug log messages
 - Gcode for setting temperature per nozzle
