@@ -261,10 +261,10 @@ class IPrinter(multiprocessing.Process):
         :param new_state: New printer state.
         :type new_state: :class:`State`
         """
-
         old_state = self._state
         self._state = new_state
-        self._callbacks.state_change(old_state, new_state)
+        if old_state != new_state:
+            self._callbacks.state_change(old_state, new_state)
 
     @abc.abstractmethod
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
