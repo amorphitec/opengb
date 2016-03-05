@@ -527,8 +527,9 @@ class Marlin(IPrinter):
         :param message: Message to be sent to the printer.
         :type message: :class:`dict`
         """
+        # TODO: create a utils.truncate which only truncates >80 and adds ...
         self._callbacks.log(logging.DEBUG,
-                            'Processing printer message: ' + str(message))
+                            'Processing printer message: ' + str(message)[:75])
         # TODO: Use decorator to designate allowed methods. Catch
         # NotReadyException and log error?
         if 'method' and 'params' in message.keys():

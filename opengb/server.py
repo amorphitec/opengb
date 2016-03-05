@@ -388,10 +388,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         Passes an incoming JSON-RPC message to the dispatcher for processing.
         """
         LOGGER.debug('Message received from {0}: {1}'.format(
-            self.request.remote_ip, message))
+            self.request.remote_ip, message[:75]))
         response = JSONRPCResponseManager.handle(message, self.dispatcher)
         LOGGER.debug('Sending response to {0}: {1}'.format(
-            self.request.remote_ip, response._data))
+            self.request.remote_ip, str(response._data)[:75]))
         self.write_message(response.json)
 
 
