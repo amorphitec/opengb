@@ -227,7 +227,7 @@ class Marlin(IPrinter):
                     except ConnectionError as err:
                         self._callbacks.log, (logging.ERROR, 'unable to '
                                               'connect to serial '
-                                              'port: ' + err.args[0])
+                                              'port: ' + str(err.args[0]))
                         return False
         except IOError:
             self._callbacks.log, (logging.WARN, 'unable to lock serial port')
