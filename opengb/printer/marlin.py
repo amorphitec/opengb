@@ -66,9 +66,9 @@ USB_PATTERNS = [
     'ttyACM\d*?',
 ]
 
-# Default baud rate
+# Defaults
 DEFAULT_BAUD_RATE = 115200
-
+DEFAULT_SERIAL_BUFFER_SIZE = 4
 
 class BufferFullException(Exception):
     """
@@ -116,7 +116,7 @@ class Marlin(IPrinter):
         self._connect_retry_sec = 2
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
-        self._serial_buffersize = 4
+        self._serial_buffersize = DEFAULT_SERIAL_BUFFER_SIZE
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
         # Timing
         self._read_loop_delay_sec = 0.001
