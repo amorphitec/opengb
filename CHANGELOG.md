@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2016-05-02
+### Added
+- Frontend auto-reconnect on disconnect
+
+### Changed
+- Marlin serial buffer increased from 4 to 5
+- Long log messages now trunacted to max 75 chars
+
 ## [0.3.0] - 2016-04-02
 ### Added
 - Home all button to home page
