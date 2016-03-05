@@ -362,7 +362,6 @@ class Marlin(IPrinter):
         self._update_state(State.EXECUTING)
         self._gcode_sequence = gcode_sequence
         self._gcode_sequence_position = 0
-        print('done!')
 
     def pause_execution(self):
         self._callbacks.log(logging.DEBUG, 'Pausing execution')
