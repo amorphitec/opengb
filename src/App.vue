@@ -24,7 +24,8 @@
         </div>
       </div>
     </div>
-    <div id="error" v-if="isNotConnected">Error, printer not connected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
+    <div id="error" v-if="hasNoWsConnection">Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
+    <div id="error" v-if="hasNoPrinterConnection">Error, printer is not connected to raspberry pi</div>
   </div>
 </template>
 
@@ -39,8 +40,11 @@
       }
     },
     computed:{
-      isNotConnected: function () {
+      hasNoWsConnection: function () {
         return this.printerService.printer.state === null
+      },
+      hasNoPrinterConnection: function () {
+        return this.printerService.printer.state === 'DISCONNECTED'
       }
     },
     data () {

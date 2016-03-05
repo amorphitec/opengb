@@ -71,8 +71,12 @@
       },
       $close: function (callback) {
         ws.onclose = callback
+        ready = false
       },
       notify: function (method, params) {
+      },
+      isReady: function () {
+        return ready
       }
     }
   }

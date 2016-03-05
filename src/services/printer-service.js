@@ -196,6 +196,7 @@
         printer.state = null
         printer.print.currentLine = null
         printer.print.totalLines = null
+        reconnect()
       }
     )
     printerws.getStatus()
@@ -236,6 +237,16 @@
     })
     /* ------------- END WEBSOCKET EVENTS ------------------ */
   }
+
+  function reconnect () {
+    setTimeout( function() {
+        connect ()
+    },
+    5000 
+    )
+  }
+
   connect()
+
 }
 )(window)

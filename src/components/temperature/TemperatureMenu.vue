@@ -31,7 +31,12 @@
     },
     computed:{
       isHeating: function () {
-        return this.target > (this.current + 10)
+        var test = parseFloat(this.target) > (parseFloat(this.current) + 10)
+        return test
+      },
+      isOn: function () {
+        var test = parseFloat(this.target) > 40
+        return test
       }
     }
   }
@@ -40,7 +45,7 @@
 <template>
   
   <div class="temperature-menu clear-fix" v-bind:class="{'is-open': isOpen}">
-    <span class="label friendly-name" v-bind:class="{'is-heating': isHeating}">{{friendlyName}}</span>
+    <span class="label friendly-name" v-bind:class="{'is-heating': isHeating, 'is-on': isOn}">{{friendlyName}}</span>
     <div class="temperature-wrap">
       <div class="current-temp float-left" v-on:click="toggleOpen">{{current}}°C</div>
       <div class="target-temp float-left">
@@ -92,12 +97,15 @@
     opacity:1;
   }
 
+  .label.is-on {
+    background: #c60f13;
+  }
+
   .label.is-heating {
     -webkit-animation: beat  5s linear infinite;
     -moz-animation: beat 5s linear infinite;
     -ms-animation: beat 5s linear infinite;
     animation: beat 5s linear infinite;
-    background: #c60f13;
   }
   
   @keyframes beat {
