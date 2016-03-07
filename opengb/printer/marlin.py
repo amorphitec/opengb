@@ -15,6 +15,12 @@ RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
     (re.compile(r'ok$'),
      lambda g, c: (None)),
+    # Incomplete 'ok' message.
+    # On rare occasions marlin sends back "ok" split across two lines. This
+    # appears to be a bug. We must catch one of these so that a space can be
+    # cleared in the serial buffer.
+    (re.compile(r'o$'),
+     lambda g, c: (None)),
     # Temperature update - single extruder.
     (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
