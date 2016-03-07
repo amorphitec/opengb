@@ -13,6 +13,7 @@ require('./css/foundation-icons/foundation-icons.css')
 // pages
 import HomePage from './pages/Home.vue'
 import SettingsPage from './pages/Settings.vue'
+import ControlsPage from './pages/Controls.vue'
 
 /* eslint-disable no-new */
 // new Vue({
@@ -34,6 +35,9 @@ router.map(
 		},
 		'/settings': {
 			component: SettingsPage
+		},
+		'/controls': {
+			component: ControlsPage
 		}
 	}
 )

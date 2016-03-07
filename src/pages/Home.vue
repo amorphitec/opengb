@@ -34,7 +34,7 @@
       },
       showFileInfo: function () {
         var isPrinting = this.printerService.printer.state != 'READY' && this.printerService.printer.state != 'ERROR'
-        var hasFile = this.printerService.selectedFile.length > 0
+        var hasFile = this.printerService.selectedFile.length > 0 && this.printerService.selectedFile[0] != null
         console.log('tests',[isPrinting, hasFile, this.printerService.selectedFile])
         return isPrinting || hasFile
       },
@@ -53,13 +53,6 @@
     methods: {
       setView: function (v) {
         this.view = v
-        var vm = this
-        setTimeout(
-          function () {
-            vm.$set('fileInfoWidth', vm.$el.childNodes[5].clientWidth)
-          },
-          2000
-        )
       },
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
@@ -110,8 +103,8 @@
       saveFile: function (file) {
         printerws.putFile(file)
       },
-      deleteFile: function (fid) {
-        printerws.deleteFile(fid)
+      deleteSelectedFile: function () {
+        printerws.deleteFile(this.printerService.selectedFile[0].id)
       }
     },
     watch: {
@@ -119,6 +112,9 @@
         handler: function (newVal, oldVal) {
           if (newVal[0] && newVal[0].id) {
             this.setView('file-info')
+          } else {
+            console.log('selectedFile is null', this.selectedFile)
+            this.setView('file-selection')
           }
         }
       }
@@ -156,7 +152,7 @@
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
-
+      {{printerService.selectedFile[0]}}
       <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
         Upload a File
       </button>
@@ -224,7 +220,7 @@
 
       <button 
         type="button" 
-        v-on:click="deleteFile()" 
+        v-on:click="deleteSelectedFile()" 
         class="button alert">
         Delete File
       </button>
@@ -274,6 +270,9 @@ h2{
 #file-image{
   margin: 20px auto;
 }
+#file-image h2{
+  font-size: 1.7em;
+}
 #file-info.is-focus #file-image i{
   font-size: 3em;
   margin-bottom: 0;
@@ -314,7 +313,6 @@ h2{
   height: calc(100vh - 100px);
   z-index: 0;
 }
-
 #renderArea md-progress-circular {
   position: absolute;
   z-index: -1;

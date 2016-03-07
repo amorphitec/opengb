@@ -126,6 +126,8 @@
     deleteFile: function (fid) {
       var suc = function (f) {
         selectedFile.length = 0
+        selectedFile.push(null)
+        console.log('deleted file', f)
       }
       var method = 'delete_gcode_file'
       var params = {
@@ -141,7 +143,6 @@
       }
       var err = function () {
         printer.connection.printReady = false
-        selectedFile.file = null
       }
       var method = 'get_gcode_file'
       var params = {
@@ -181,6 +182,9 @@
       }
       var suc = function (res) {
         printer.state = res.status.state
+        printer.position.x = res.status.position.x
+        printer.position.y = res.status.position.y
+        printer.position.z = res.status.position.z
       }
       ws.call(method, params, suc)
     },
