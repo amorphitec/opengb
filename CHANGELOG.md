@@ -6,7 +6,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - delete_gcode_file API method
-- Regex to match split "ok" message from Marlin. Fixes print hang bug. 
+- Final progress_update message on print completion 
+
+### Fixed
+- Print hang bug by adding regex to match split "ok" message from Marlin.
 
 ## [0.4.0] - 2016-05-02
 ### Added

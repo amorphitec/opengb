@@ -437,6 +437,11 @@ class Marlin(IPrinter):
             self._gcode_sequence_position += 1
             # Complete execution if previous line was last in sequence.
             if self._gcode_sequence_position >= len(self._gcode_sequence):
+                # Our last progress_update message probably didn't indicate
+                # 100% complete. So send one last update to be sure.
+                self._callbacks.progress_update(
+                        self._gcode_sequence_position,
+                        len(self._gcode_sequence))
                 self._reset_gcode_state()
                 self._update_state(State.READY)
         except BufferFullException:
