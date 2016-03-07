@@ -17,7 +17,7 @@
       },
       setBaseUrl: function () {
         this.printerService.printer.connection.baseUrl = this.baseUrl
-        this.connect()
+        // this.connect()
       }
     }
   }

@@ -152,7 +152,6 @@
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
-      {{printerService.selectedFile[0]}}
       <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
         Upload a File
       </button>

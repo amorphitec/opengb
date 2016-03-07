@@ -200,6 +200,7 @@
         printer.state = null
         printer.print.currentLine = null
         printer.print.totalLines = null
+        ws = null
         reconnect()
       }
     )
@@ -210,8 +211,8 @@
       printer.state = params['new']
       console.log('state change event: ', message)
       if (params['old'] === 'EXECUTING' && params['new'] === 'READY') {
-        printer.print.currentLine = null
-        printer.print.totalLines = null
+        // printer.print.currentLine = null
+        // printer.print.totalLines = null
       }
     })
 

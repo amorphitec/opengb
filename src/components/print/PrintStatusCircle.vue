@@ -34,6 +34,9 @@ export default {
     }
   },
   computed: {
+    showPercent: function () {
+      return this.state == 'Heating/Printing' || this.percentComplete == 100
+    },
     percentComplete: function () {
       var percent = 0
       if (this.value && this.goal) {
@@ -64,7 +67,7 @@ export default {
       </path>
       <path v-bind:d="calculateValuePath()" fill="#fecc09" v-bind:transform="transform">
       </path>
-      <text style="font-size: 50px;" alignment-baseline="middle" text-anchor="middle" v-if="state == 'Heating/Printing'" v-bind:transform="transform" >{{percentComplete}}%</text> 
+      <text style="font-size: 50px;" alignment-baseline="middle" text-anchor="middle" v-if="showPercent" v-bind:transform="transform" >{{percentComplete}}%</text> 
       <text style="font-size: 20px;" alignment-baseline="middle" text-anchor="middle"  v-bind:transform="transformBelow" >{{state}}</text> 
     </svg>
   </div>
