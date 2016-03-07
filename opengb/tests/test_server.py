@@ -314,6 +314,24 @@ class TestGetGCodeFiles(OpengbTestCase):
         ])
 
 
+class TestDeleteGCodeFile(OpengbTestCase):
+
+    def setUp(self):
+        self.db = SqliteDatabase(':memory:')
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+        self.gcode = GCODE
+
+    def test_gcode_file_deleted_from_fs(self):
+        # TODO: implement this
+        pass
+
+    def test_gcode_file_deleted_from_db(self):
+        # TODO: implement this
+        pass
+
+
 class TestGetCounters(OpengbTestCase):
 
     def setUp(self):
@@ -344,6 +362,7 @@ class TestGetCounters(OpengbTestCase):
                 Counter.create(name=k, count=v)
             mh = self.message_handler.get_counters()
             self.assertDictEqual(mh['counters'], self.test_counters)
+
 
 class TestGetStatus(OpengbTestCase):
 

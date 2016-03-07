@@ -234,6 +234,19 @@ Example response: ::
 
     {"jsonrpc": "2.0", "id": 1, "result": {"gcode_files": [{"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode"}, {"size": 24356, "id": 2, "name": "10mm_Test_Cube.gcode"}]}} 
  
+delete_gcode_file
+=================
+
+.. automethod:: opengb.server.MessageHandler.delete_gcode_file
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"delete_gcode_file","params":{"id":3}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 get_counters
 ============
 

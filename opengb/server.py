@@ -307,6 +307,22 @@ class MessageHandler(object):
             }
             for g in OGD.GCodeFile.select()]}
 
+    def delete_gcode_file(self, id):
+        """
+        Delete a single gcode file with the given `id`.
+
+        :param id: ID of the gcode file to delete.
+        :type id: :class:`int`
+        """
+        try:
+            OGU.delete_gcode_file(id)
+        except IOError as err:
+            LOGGER.error('Error deleting gcode file with id {0}: '
+                         '{1}'.format(id, err))
+            raise IndexError('Error deleting gcode file with '
+                             'id {0}'.format(id)) from None
+        return True
+ 
     def print_gcode_file(self, id):
         """
         Print gcode file with given `id`.

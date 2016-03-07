@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+- Add delete_gcode_file API method
 
 ## [0.4.0] - 2016-05-02
 ### Added

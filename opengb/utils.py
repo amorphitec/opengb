@@ -7,6 +7,8 @@ import os
 
 from tornado.options import options
 
+import opengb.database as OGD
+
 
 def load_gcode_file(id):
     """
@@ -27,6 +29,28 @@ def load_gcode_file(id):
         except IOError:
             raise
     return gcode
+
+
+def delete_gcode_file(id):
+    """
+    Delete gcode file with given `id`.
+
+    :param id: ID of the gcode file to delete.
+    :type id: :class:`int`
+    :raises: `IOError` if file cannot be loaded.
+    """
+    destination = os.path.join(options.gcode_dir, str(id))
+    try:
+        os.remove(destination)
+    except (OSError, FileNotFoundError):
+        raise IOError('Unable to delete gcode file at '
+                      '{0}'.format(destination)) from None
+    try:
+        gcode_instance = OGD.GCodeFile.get(OGD.GCodeFile.id == id)
+        gcode_instance.delete_instance()
+    except OGD.GCodeFile.DoesNotExist:
+        raise IOError('No gcode entry in database with id '
+                      '{0}'.format(id)) from None 
 
 
 def prepare_gcode(gcode, remove_comments=True):

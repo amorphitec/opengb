@@ -69,6 +69,17 @@ class TestFileUtils(OpengbTestCase):
             with self.assertRaises(IOError):
                 utils.load_gcode_file(123)
 
+    def test_failed_gcode_file_delete_throws_IOError(self):
+        """Failure while deleting a gcode file throws an IOError."""
+        # TODO: implement this
+        pass
+
+    def test_failed_gcode_db_entry_delete_throws_IOError(self):
+        """Failure while deleting a gcode db entry throws an IOError."""
+        # TODO: implement this
+        pass
+
+
 class TestPrepareGcode(OpengbTestCase):
 
     def test_gcode_lines_parsed(self):
