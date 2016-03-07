@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.5.0] - 2016-07-02
 ### Added
 - delete_gcode_file API method
 - Final progress_update message on print completion 
