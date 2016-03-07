@@ -4,8 +4,13 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.5.1] - 2016-07-02
 ### Changed
 - Deal with split messages by always popping from the buffer on unparsed.
+
+### Added
+- Final progress_update message on print completion to dummy printer 
 
 ## [0.5.0] - 2016-07-02
 ### Added
