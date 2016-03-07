@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- Deal with split messages by always popping from the buffer on unparsed.
 
 ## [0.5.0] - 2016-07-02
 ### Added

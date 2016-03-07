@@ -15,12 +15,6 @@ RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
     (re.compile(r'ok$'),
      lambda g, c: (None)),
-    # Incomplete 'ok' message.
-    # On rare occasions marlin sends back "ok" split across two lines. This
-    # appears to be a bug. We must catch one of these so that a space can be
-    # cleared in the serial buffer.
-    (re.compile(r'o$'),
-     lambda g, c: (None)),
     # Temperature update - single extruder.
     (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
@@ -316,6 +310,13 @@ class Marlin(IPrinter):
                 # TODO: Process message.
                 return
         self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
+        # An unparsed message sometimes indicates a message was "split" across
+        # multiple lines and thus did not match a regex. This should not
+        # happen but occasionally does causing the buffer to fill and printing
+        # to stop. Until we work out why this splitting occurs and how to fix
+        # it we simply take a message off the buffer for each of these.
+        if not self._serial_buffer.empty():
+            self._serial_buffer.get()
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed != None:
