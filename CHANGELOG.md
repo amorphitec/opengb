@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Print hang bug by adding regex to match split "ok" message from Marlin.
+- Single-nozzle regex too permissive and matching dual-nozzle lines.
 
 ## [0.4.0] - 2016-05-02
 ### Added
