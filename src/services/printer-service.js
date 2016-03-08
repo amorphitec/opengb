@@ -124,9 +124,11 @@
       ws.call(method, params, suc, err)
     },
     deleteFile: function (fid) {
+      var vm = this
       var suc = function (f) {
         selectedFile.length = 0
         selectedFile.push(null)
+        vm.getFiles()
         console.log('deleted file', f)
       }
       var method = 'delete_gcode_file'
@@ -200,7 +202,6 @@
         printer.state = null
         printer.print.currentLine = null
         printer.print.totalLines = null
-        ws = null
         reconnect()
       }
     )
