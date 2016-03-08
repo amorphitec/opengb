@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## [0.6.0] - 2016-08-02
 ### Added
-- Send temp updates using data parsed from heat bed/nozzle + wait messages.
+- Send temp updates using data parsed from heat bed/nozzle + wait messages
+- Delete files from frontend
 
 ### Fixed
 - Broken final update on print completion for dummy printer
@@ -13,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.1] - 2016-07-02
 ### Changed
-- Deal with split messages by always popping from the buffer on unparsed.
+- Deal with split messages by always popping from the buffer on unparsed
 
 ### Added
 - Final progress_update message on print completion to dummy printer 
@@ -24,8 +26,8 @@ All notable changes to this project will be documented in this file.
 - Final progress_update message on print completion 
 
 ### Fixed
-- Print hang bug by adding regex to match split "ok" message from Marlin.
-- Single-nozzle regex too permissive and matching dual-nozzle lines.
+- Print hang bug by adding regex to match split "ok" message from Marlin
+- Single-nozzle regex too permissive and matching dual-nozzle lines
 
 ## [0.4.0] - 2016-05-02
 ### Added
@@ -64,14 +66,14 @@ All notable changes to this project will be documented in this file.
 - formalised versioning.
 
 ### Removed
-- Non-standard printer state event on initial connection.
+- Non-standard printer state event on initial connection
 
 ### Changed
 - New UI from opengb-web.
 
 ## [0.0.1] - 2016-01-01
 ### Added
-- Basic printer control functionality.
+- Basic printer control functionality
 - Documentation.
-- Tests.
-- Opengb-web frontend built on Angular.js.
+- Tests
+- Opengb-web frontend built on Angular.js
