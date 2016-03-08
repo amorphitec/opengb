@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Send temp updates using data parsed from heat bed/nozzle + wait messages.
+
 ### Fixed
 - Broken final update on print completion for dummy printer
+- Heat bed/nozzle + wait message has incorrect regex and was not matching
 
 ## [0.5.1] - 2016-07-02
 ### Changed

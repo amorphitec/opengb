@@ -51,15 +51,18 @@ EVENT_MSG_PATTERNS = [
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
      lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
     # Bed heating temperature update.
-    # TODO: call 'temp_update'.
-    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\sE:/(?P<extruded>\d*)\s'
-                'B:(?P<btemp>\d*\.?\d+).*$'),
-     lambda g, c: (None)),
+    (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:(?P<extruded>\d*)\s'
+                'B:(?P<btemp>\d*\.?\d+)$'),
+     lambda g, c: (getattr(c, 'temp_update')(g['btemp'], None,
+                                             g['ntemp'], None,
+                                             g['ntemp'], None))),
     # Nozzle heating temperature update.
     # TODO: call 'temp_update'.
-    (re.compile(r'ok T:(?P<n1temp>\d*\.?\d+)\sE:/(?P<extruded>\d*)\s'
-                'W:(?P<btemp>\d*\.?\d+).*$'),
-     lambda g, c: (None)),
+    (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:(?P<extruded>\d*)\s'
+                'W:(?P<countdown>(\?|\d+))$'),
+     lambda g, c: (getattr(c, 'temp_update')(None, None,
+                                             g['ntemp'], None,
+                                             g['ntemp'], None))),
 ]
 
 # USB device name patterns.
@@ -307,7 +310,7 @@ class Marlin(IPrinter):
             if matched:
                 self._callbacks.log(logging.DEBUG,
                                     'Parsed event: ' + message)
-                # TODO: Process message.
+                each[1](matched.groupdict(), self._callbacks)
                 return
         self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
