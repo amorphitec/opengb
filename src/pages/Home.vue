@@ -94,6 +94,7 @@
               'meta': {}
             }
             vm.saveFile(file);
+            e.target.files = null
           }
           fr.readAsText(files[0]);
         } else {

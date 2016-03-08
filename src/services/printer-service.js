@@ -142,6 +142,8 @@
         printer.connection.printReady = true
         selectedFile.length = 0
         selectedFile.push(f)
+        printer.print.currentLine = null
+        printer.print.totalLines = null
       }
       var err = function () {
         printer.connection.printReady = false
