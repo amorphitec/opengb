@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Fixed
+- Broken final update on print completion for dummy printer
 
 ## [0.5.1] - 2016-07-02
 ### Changed

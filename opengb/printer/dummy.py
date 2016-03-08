@@ -134,8 +134,7 @@ class Dummy(IPrinter):
         if self._gcode_position >= len(self._gcode_sequence):
             # Our last progress_update message probably didn't indicate
             # 100% complete. So send one last update to be sure.
-            self._callbacks.progress_update(
-                self._gcode_sequence_position,
+            self._callbacks.progress_update(self._gcode_position,
                 len(self._gcode_sequence))
             self._reset_gcode_state()
             self._update_state(State.READY)
