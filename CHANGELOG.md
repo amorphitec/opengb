@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- Unparsed messages from Marlin should never happen so now raise ERROR
+
 ## [0.6.0] - 2016-08-02
 ### Added
 - Send temp updates using data parsed from heat bed/nozzle + wait messages

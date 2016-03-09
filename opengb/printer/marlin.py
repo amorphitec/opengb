@@ -312,7 +312,7 @@ class Marlin(IPrinter):
                                     'Parsed event: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
                 return
-        self._callbacks.log(logging.DEBUG, 'Unparsed: ' + message)
+        self._callbacks.log(logging.ERROR, 'Unparsed message: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
         # multiple lines and thus did not match a regex. This should not
         # happen but occasionally does causing the buffer to fill and printing
