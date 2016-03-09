@@ -8,8 +8,8 @@
       }
     },
     props: {
-      position: '',
-      label: ''
+      value: '',
+      name: ''
     },
     methods: {
       toggleOpen: function () {
@@ -21,8 +21,8 @@
 
 <template>
   <div class="position-info clear-fix" v-bind:class="{'is-open': isOpen}">
-    <span>{{label}}</span>
-    <span v-bind:class="{'is-moving': isMoving}">{{position}}</span>
+    <span>{{name}}</span>
+    <span v-bind:class="{'is-moving': isMoving}">{{value}}</span>
   </div>
 </template>
 

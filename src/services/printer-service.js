@@ -49,6 +49,15 @@
       }
       ws.call(method, params)
     },
+    setPositionRelative: function (position) {
+      var method = 'move_head_relative'
+      var params = {
+        'x': position.x,
+        'y': position.y,
+        'z': position.z
+      }
+      ws.call(method, params)
+    },
     homePrintHead: function (home) {
       var method = 'home_head'
       var params = {
