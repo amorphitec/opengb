@@ -67,15 +67,21 @@
       }
       ws.call(method, params)
     },
-    retractFilament: function () {
+    retractFilament: function (head, length, rate) {
       var method = 'retract_filament'
       var params = {
+        head: head,
+        length: length,
+        rate: rate
       }
       ws.call(method, params)
     },
-    unretractFilament: function () {
+    unretractFilament: function (head, length, rate) {
       var method = 'unretract_filament'
       var params = {
+        head: head,
+        length: length,
+        rate: rate
       }
       ws.call(method, params)
     },

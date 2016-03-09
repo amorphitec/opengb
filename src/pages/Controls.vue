@@ -39,6 +39,12 @@
       },
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
+      },
+      extrude: function (nid) {
+        this.printerService.unretractFilament(nid,100,20)
+      },
+      retract: function (nid) {
+        this.printerService.retractFilament(nid,100,20)
       }
     }
   }
@@ -56,6 +62,10 @@
           <button class="" v-on:click="setView('temperature')">more</button>
         </div>
         <div class="right-col">
+          <button class="button" v-on:click="extrude(0)">feed Extruder 1</button>
+          <button class="button" v-on:click="retract(0)">retract Extruder 1</button>
+          <button class="button" v-on:click="extrude(1)">feed Extruder 2</button>
+          <button class="button" v-on:click="retract(1)">retract Extruder 2</button>
         </div>
       </div>
     </div>
