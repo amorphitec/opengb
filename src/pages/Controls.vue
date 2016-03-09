@@ -1,12 +1,14 @@
 <script>
   require('../services/printer-service.js')
   import PositionInfo from '../components/position/PositionInfo.vue'
+  import TemperatureInfo from '../components/temperature/TemperatureInfo.vue'
   import PositionControlCube from '../components/position/PositionControlCube.vue'
   import TemperatureMenu from '../components/temperature/TemperatureMenu.vue'
 
   export default {
     components: {
       PositionInfo,
+      TemperatureInfo,
       PositionControlCube,
       TemperatureMenu
     },
@@ -15,9 +17,6 @@
         printerService: printerws,
         view: 'movement'
       }
-    },
-    ready: function () {
-      console.log('childNodes: ', this.$el.childNodes)
     },
     computed: {
       isMovement: function () {
@@ -51,6 +50,9 @@
     <div class="slider-wrapper" v-bind:class="{'is-focus': isTemperature}">
       <div class="full-section">
         <div class="left-col">
+          <temperature-info name="extruder 1" v-bind:value="printerService.printer.temperatures.nozzle1.current"></temperature-info>
+          <temperature-info name="extruder 2" v-bind:value="printerService.printer.temperatures.nozzle2.current"></temperature-info>
+          <temperature-info name="bed" v-bind:value="printerService.printer.temperatures.bed.current"></temperature-info>
           <button class="" v-on:click="setView('temperature')">more</button>
         </div>
         <div class="right-col">
