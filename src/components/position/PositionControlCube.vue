@@ -35,6 +35,9 @@
       jogDownZ: function () {
         var displacement = {z: -this.resolution}
         this.printerService.setPositionRelative(displacement)
+      },
+      setResolution: function (res) {
+        this.resolution = res
       }
     }
   }
@@ -55,10 +58,10 @@
       </div>
     </div>
     <div id="cube-resolution">
-      <button class="button">0.1mm</button>
-      <button class="button">1mm</button>
-      <button class="button">10mm</button>
-      <button class="button">100mm</button>
+      <button class="button" v-on:click="setResolution(0.1)">0.1mm</button>
+      <button class="button" v-on:click="setResolution(1)">1mm</button>
+      <button class="button" v-on:click="setResolution(10)">10mm</button>
+      <button class="button" v-on:click="setResolution(100)">100mm</button>
     </div>
   </div>
 </template>
