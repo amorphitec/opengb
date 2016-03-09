@@ -62,6 +62,27 @@
           <button class="" v-on:click="setView('temperature')">more</button>
         </div>
         <div class="right-col">
+          <temperature-menu 
+            friendly-name="Heated Bed - Target"
+            temp-id="bed"
+            v-bind:current="printerService.printer.temperatures.bed.target"
+            v-bind:target="printerService.printer.temperatures.bed.target"
+            >
+          </temperature-menu>
+          <temperature-menu 
+            friendly-name="Extruder 1 - Target"
+            temp-id="nozzle1"
+            v-bind:current="printerService.printer.temperatures.nozzle1.target"
+            v-bind:target="printerService.printer.temperatures.nozzle1.target"
+            >
+          </temperature-menu>
+          <temperature-menu 
+            friendly-name="Extruder 2 - Target"
+            temp-id="nozzle2"
+            v-bind:current="printerService.printer.temperatures.nozzle2.target"
+            v-bind:target="printerService.printer.temperatures.nozzle2.target"
+            >
+          </temperature-menu>
           <button class="button" v-on:click="extrude(0)">feed Extruder 1</button>
           <button class="button" v-on:click="retract(0)">retract Extruder 1</button>
           <button class="button" v-on:click="extrude(1)">feed Extruder 2</button>
