@@ -70,6 +70,22 @@ class Dummy(IPrinter):
         self._callbacks.log(logging.DEBUG, 'Homing print head: x|{0}, '
                                            'y|{1}, z|{2}'.format(x, y, z))
 
+    def unretract_filament(self, head=0, length=5, rate=300):
+        if head not in [0, 1]:
+            self._callbacks.log(logging.ERROR, 'Invalid head: ' + str(head))
+            return
+        self._callbacks.log(logging.DEBUG, 'Unretracting filament: '
+                                           'head|{0}, length|{1}, rate|'
+                                           '{2}'.format(head, length, rate))
+
+    def retract_filament(self, head=0, length=5, rate=300):
+        if head not in [0, 1]:
+            self._callbacks.log(logging.ERROR, 'Invalid head: ' + str(head))
+            return
+        self._callbacks.log(logging.DEBUG, 'Retracting filament: '
+                                           'head|{0}, length|{1}, rate|'
+                                           '{2}'.format(head, length, rate))
+
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
         self._gcode_sequence = gcode_sequence

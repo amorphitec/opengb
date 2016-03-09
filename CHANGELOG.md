@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.7.1] - 2016-10-02
+### Added
+- Retract filament method to Dummy printer
+- Unretract filament method to Dummy printer
+
+## [0.7.0] - 2016-10-02
 ### Added
 - Controls page
 - Position Control
