@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Controls page
+- Position Control
+- Temperature Control
+- Extruder retract/extrude buttons
+
 ### Changed
 - Unparsed messages from Marlin should never happen so now raise ERROR
 
