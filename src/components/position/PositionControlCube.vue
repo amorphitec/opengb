@@ -47,15 +47,15 @@
   <div id="cube-wrapper">
 
     <div id="cube" class="edge-top">
-      <div class="face one" layout="row" layout-align="center">
-        <div flex="30" style="position:relative;">
+      <div class="face one">
+        <div flex="30" style="position:relative;width:30%;;height:100%;float:left;">
           <div id="x-down" class="ctrl" v-on:click="jogDownX()"></div>
         </div>
-        <div layout="column" flex="40" layout-align="center center" style="position:relative;">
-          <div class="ctrl" flex="50" id="y-up" v-on:click="jogUpY()"></div>
-          <div class="ctrl" flex="50" id="y-down" v-on:click="jogDownY()"></div>
+        <div layout="column" flex="40" layout-align="center center" style="position:relative;width:40%;;height:100%;float:left;">
+          <div class="ctrl" style="width:90%" flex="50" id="y-up" v-on:click="jogUpY()"></div>
+          <div class="ctrl" style="width:90%" flex="50" id="y-down" v-on:click="jogDownY()"></div>
         </div>
-        <div flex="30" style="position:relative;">
+        <div flex="30" style="position:relative;width:30%;height:100%;float:left;">
           <div class="ctrl" id="x-up" v-on:click="jogUpX()"></div>
         </div>
       </div>
