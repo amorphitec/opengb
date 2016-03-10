@@ -44,12 +44,16 @@
 
 <template>
   
-  <div class="temperature-menu clear-fix" v-bind:class="{'is-open': isOpen}">
-    <span class="label friendly-name" v-bind:class="{'is-heating': isHeating, 'is-on': isOn}">{{friendlyName}}</span>
+  <div class="temperature-menu clear-fix" v-bind:class="{'is-open': isOpen, 'is-on':isOn}">
+    <div class="temperature-menu-heading">
+      <span class="label friendly-name" v-bind:class="{'is-heating': isHeating}">{{friendlyName}}</span>
+      <span class="label friendly-name">prepare</span>
+    </div>
     <div class="temperature-wrap">
       <div class="current-temp float-left" v-on:click="toggleOpen">{{current}}°C</div>
       <div class="target-temp float-left">
-        <button class="button temp-select" v-bind:class="{'is-selected': target == 50}" v-if="tempId == 'bed'" v-on:click="setTemperature(50)">50°C</button>
+        <button class="button temp-select" v-bind:class="{'is-selected': target == 50}" v-if="tempId == 'bed'" v-on:click="setTemperature(50)">PLA</button>
+        <button class="button temp-select" v-bind:class="{'is-selected': target == 60}" v-if="tempId == 'bed'" v-on:click="setTemperature(60)">ABS</button>
         <button class="button temp-select" v-bind:class="{'is-selected': target == 180}" v-if="tempId != 'bed'" v-on:click="setTemperature(180)">PLA</button>
         <button class="button temp-select" v-bind:class="{'is-selected': target == 210}" v-if="tempId != 'bed'" v-on:click="setTemperature(210)">ABS</button>
       </div>
@@ -61,26 +65,32 @@
 
 <style>
   .temperature-menu{
-    margin-bottom:15px;
+    margin-bottom:10px;
     border-radius:5px;
-    padding:5px;
-    background:rgba(0,0,0,.7);
+    padding:5px 0px;
+    background:#22f;
     color:white;
     width:150px;
     overflow:hidden;
-    font-size:2.5em;
+    font-size:2em;
     transition: width 0.5s;
   }
   .temperature-menu.is-open{
     width:300px;
   }
+  .temperature-menu-heading{
+    width:300px;    
+  }
   .friendly-name{
     float:left;
-    width:calc(100%);
-    margin-right:50%;
+    width:50%;
+    background: transparent!important;
+    text-align: center;
+    padding-bottom:0;
   }
   .temperature-wrap{
     width:300px;
+    text-align: center;
   }
   .current-temp{
     cursor:pointer;
@@ -90,14 +100,25 @@
     width:50%;
   }
   .button.temp-select{
-    margin-top: 10px;
-    opacity:.5;
+    margin: 0px;
+    padding: 0.5em 1em;
+    background: #ddd;
+    color:#777;
+    opacity: 0.5;
+  }
+  .button.temp-select:hover, .button.temp-select:focus{
+    background: #ccc!important;
   }
   .button.temp-select.is-selected{
-    opacity:1;
+    background: #a60003!important;
+    color:#fff;
+    opacity: 1;
+  }
+  .button.temp-select.is-selected:hover, .button.temp-select.is-selected:focus{
+    background: #900!important;
   }
 
-  .label.is-on {
+  .temperature-menu.is-on {
     background: #c60f13;
   }
 

@@ -26,7 +26,7 @@
 <template>
   <section id="settings-page">
 
-    <input class="search-input" placeholder="address for printer" v-model="baseUrl" v-on:blur="setBaseUrl">
+    <input class="url-input" placeholder="address for printer" v-model="baseUrl" v-on:blur="setBaseUrl">
 
   </section>
 </template>
@@ -37,7 +37,16 @@ h2{
   text-align: center;
   font-family:'proxima_novalight';
 }
-
+.url-input{
+  width: 100%;
+  font-size: 1.5em;
+  padding: 10px 10px;
+  padding-bottom: 0px;
+  padding-left: 0;
+  color: #333;
+  border: 0;
+  border-bottom: 5px #ddd solid;
+}
 #home-page{
   min-height: 100%;
   display:flex;

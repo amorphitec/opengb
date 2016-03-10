@@ -90,6 +90,7 @@
     color: #333;
     border: 0;
     border-bottom: 5px #ddd solid;
+    display:none;
   }
   .search-input:focus{outline: none;}
   #file-list{
@@ -103,7 +104,7 @@
   .file-list-item{
     /*background:#eee;*/
     cursor: pointer;
-    width: 200px;
+    width: 100%;
     margin: 5px 0;
     margin-right: 10px;
     border-radius: 25px 0 0 25px;

@@ -128,6 +128,7 @@
   <section id="home-page">
 
     <div id="temperature-wrapper">
+      <div style="width:100%;height:100px;"></div>
       <temperature-menu 
         friendly-name="Heated Bed"
         temp-id="bed"
@@ -174,7 +175,7 @@
 
         <print-status-circle 
           v-bind:state="statusState"
-          v-bind:size="300" 
+          v-bind:size="250" 
           v-bind:value="printerService.printer.print.currentLine" 
           v-bind:goal="printerService.printer.print.totalLines">
         </print-status-circle>

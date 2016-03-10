@@ -45,12 +45,19 @@
 
 <template>
   <div id="cube-wrapper">
+
     <div id="cube" class="edge-top">
-      <div class="face one">
-        <div class="ctrl" id="x-down" v-on:click="jogDownX()"></div>
-        <div class="ctrl" id="y-up" v-on:click="jogUpY()"></div>
-        <div class="ctrl" id="y-down" v-on:click="jogDownY()"></div>
-        <div class="ctrl" id="x-up" v-on:click="jogUpX()"></div>
+      <div class="face one" layout="row" layout-align="center">
+        <div flex="30" style="position:relative;">
+          <div id="x-down" class="ctrl" v-on:click="jogDownX()"></div>
+        </div>
+        <div layout="column" flex="40" layout-align="center center" style="position:relative;">
+          <div class="ctrl" flex="50" id="y-up" v-on:click="jogUpY()"></div>
+          <div class="ctrl" flex="50" id="y-down" v-on:click="jogDownY()"></div>
+        </div>
+        <div flex="30" style="position:relative;">
+          <div class="ctrl" id="x-up" v-on:click="jogUpX()"></div>
+        </div>
       </div>
       <div class="face two">
         <div class="ctrl" id="z-up" v-on:click="jogUpZ()"></div>
@@ -58,10 +65,10 @@
       </div>
     </div>
     <div id="cube-resolution">
-      <button class="button" v-on:click="setResolution(0.1)">0.1mm</button>
-      <button class="button" v-on:click="setResolution(1)">1mm</button>
-      <button class="button" v-on:click="setResolution(10)">10mm</button>
-      <button class="button" v-on:click="setResolution(100)">100mm</button>
+      <button class="button resolution-select" v-bind:class="{'selected': resolution == 0.1}" v-on:click="setResolution(0.1)">0.1mm</button>
+      <button class="button resolution-select" v-bind:class="{'selected': resolution == 1}" v-on:click="setResolution(1)">1mm</button>
+      <button class="button resolution-select" v-bind:class="{'selected': resolution == 10}" v-on:click="setResolution(10)">10mm</button>
+      <button class="button resolution-select" v-bind:class="{'selected': resolution == 100}" v-on:click="setResolution(100)">100mm</button>
     </div>
   </div>
 </template>
@@ -78,21 +85,28 @@
     align-content: center;  
     width:100px;
 }
-#cube{position:relative;top:175px;left:100px;}
+.resolution-select{
+   opacity:0.6;
+   color:#444!important;
+}
+.resolution-select.selected{
+   opacity:1;
+}
 #cube .ctrl:hover{background:rgba(200,200,200,.8);}
-#x-down{width:50px;height:218px;border:solid black 2px;position:absolute;top:10px;left:10px;border-radius:5px;}
-#y-up{width:100px;height:103px;border:solid black 2px;position:absolute;margin-left:-50px;top:10px;left:50%;border-radius:5px;}
-#y-down{width:100px;height:103px;border:solid black 2px;position:absolute;margin-left:-50px;bottom:10px;left:50%;border-radius:5px;}
-#x-up{width:50px;height:218px;border:solid black 2px;position:absolute;top:10px;right:10px;border-radius:5px;}
-#z-up{width:200px;height:103px;border:solid black 2px;position:absolute;margin-left:-100px;top:10px;left:50%;border-radius:5px;}
-#z-down{width:200px;height:103px;border:solid black 2px;position:absolute;margin-left:-100px;bottom:10px;left:50%;border-radius:5px;}
+#x-down{width:80%;height:90%;position:absolute;top:5%;left:20%;border-radius:0 15px 15px 0;background: #000;}
+#y-up{width:90%;height:40%;position:absolute;top:7%;left:5%;border-radius:0 0 15px 15px;background: #000;}
+#y-down{width:90%;height:40%;position:absolute;bottom:7%;left:5%;border-radius:15px 15px 0 0;background: #000;}
+#x-up{width:80%;height:90%;position:absolute;top:5%;right:20%;border-radius:15px 0 0 15px;background: #000;}
+#z-up{width:90%;height:42%;position:absolute;top:5%;left:5%;border-radius:0 0 15px 15px;background: #000;}
+#z-down{width:90%;height:42%;position:absolute;bottom:5%;left:5%;border-radius:15px 15px 0 0;background: #000;}
 .position-status{transition:all 1s;}
 #cube-wrapper{
-  height:450px;
-  width:400px;
+  height:350px;
+  margin-bottom:50px;
+  position: relative;
 }
 #cube-info{height:50px;position:absolute;bottom:-50px;width:100%;}  
-#cube .face {
+#cube, #cube .face {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -101,72 +115,79 @@
 background:white;
   box-sizing: border-box;
   border: solid 1px;
-  margin: -120px;
-  width: 240px;
-  height: 240px;
+  margin: -80px;
+  width: 160px;
+  height: 160px;
   transition: transform .7s;
   /** backface-visibility: hidden; /**/
 }
 /*   BEGIN CUBE ROTATIONS  */
 #cube .one, #cube .two{ z-index:100;}
 #cube.front .one  {
-  -webkit-transform: perspective(600px)  rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px)  rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:20px 20px 0 0;
   z-index:99;
 }
 #cube.front .two {
-  -webkit-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  transform: perspective(600px) rotateX(0deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:0 0 20px 20px;
 }
 #cube.edge-top .one  {
 
-  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:20px 20px 0 0;
   border-bottom: 0;
 }
 #cube.edge-top .two {
-  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:0 0 20px 20px;
   border-top: 0;
   z-index:99;
 }
 #cube.edge-front .one  {
-  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:20px 20px 0 0;
   border-bottom: 0;
   z-index:99;
 }
 #cube.edge-front .two {
-  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-45deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:0 0 20px 20px;
   border-top: 0;
 }
 #cube.top .one  {
-  -webkit-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(90deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:20px 20px;
 }
 #cube.top .two {
-  -webkit-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  -ms-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(120px);
-  border: solid black 2px;
+  -webkit-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  -ms-transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  transform: perspective(600px) rotateX(-90deg) rotateY(0deg) rotateX(0deg) translateZ(80px);
+  border: solid black 8px;
+  border-radius:20px;
   z-index:99;
 }
 /*   END CUBE ROTATIONS  */
 /*   END CUBE DEFINITION  */
-
 </style>

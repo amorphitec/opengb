@@ -2,13 +2,6 @@
   require('../../services/printer-service.js')
   var d3 = require('d3')
 
-var dataSet = scope.dataSet;
-
-var xmin = 0; 
-var ymin = 0; 
-var xmax = 0; 
-var ymax = 0;
-
 for (var series in dataSet ){
     var data = scope.getSeries(series);
     for (var i = 0 ; i < data.length ; i++ ){
