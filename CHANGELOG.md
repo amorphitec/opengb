@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.7.2] - 2016-11-02
+### Added
+- Conversion of retract/unretract from mm/sec to mm/min for Marlin
+
 ## [0.7.1] - 2016-10-02
 ### Added
 - Retract filament method to Dummy printer

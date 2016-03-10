@@ -361,6 +361,8 @@ class Marlin(IPrinter):
         if head not in [0, 1]:
             self._callbacks.log(logging.ERROR, 'Invalid head: ' + str(head))
             return
+        # Convert rate from mm/sec to mm/min.
+        rate *= 60
         # Switch to relative coordinates before sending.
         self._queue_command(b'G91')
         # Switch to defined head.
