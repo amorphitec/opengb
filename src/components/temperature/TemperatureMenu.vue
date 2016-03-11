@@ -65,7 +65,7 @@
 
 <style>
   .temperature-menu{
-    margin-bottom:10px;
+    margin-bottom:8px;
     border-radius:5px;
     padding:5px 0px;
     background:#22f;
@@ -86,7 +86,7 @@
     width:50%;
     background: transparent!important;
     text-align: center;
-    padding-bottom:0;
+    padding-bottom:0!important;
   }
   .temperature-wrap{
     width:300px;

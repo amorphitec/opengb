@@ -150,10 +150,11 @@
         v-bind:target="printerService.printer.temperatures.nozzle2.target"
         >
       </temperature-menu>
-      <button class="button" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
+      <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
+      <div style="height:100px;">
       <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
         Upload a File
       </button>
@@ -163,6 +164,7 @@
         type="file"
         accept=".gcode"
         v-on:change="onFileChange"/>
+      </div>
 
       <search-list></search-list>
     </div>

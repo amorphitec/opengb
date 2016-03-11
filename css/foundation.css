@@ -1259,12 +1259,12 @@ h6 {
     font-size: 1rem; } }
 
 a {
-  color: #fecc09;
+  color: #666;
   text-decoration: none;
   line-height: inherit;
   cursor: pointer; }
   a:hover, a:focus {
-    color: #e1b301; }
+    color: #444; }
   a img {
     border: 0; }
 
@@ -1464,7 +1464,7 @@ kbd {
   padding: 0.85em 1em;
   margin: 0 0 1rem 0;
   font-size: 0.9rem;
-  background-color: #fecc09;
+  background-color: #666;
   color: #fff; }
   [data-whatinput='mouse'] .button {
     outline: 0; }
@@ -1483,7 +1483,7 @@ kbd {
     margin-left: 0;
     margin-right: 0; }
   .button.primary {
-    background-color: #fecc09;
+    background-color: #666;
     color: #fff; }
     .button.primary:hover, .button.primary:focus {
       background-color: #d2a701;
@@ -1507,22 +1507,22 @@ kbd {
       background-color: #9e0c0f;
       color: #fff; }
   .button.warning {
-    background-color: #fecc09;
+    background-color: #666;
     color: #fff; }
     .button.warning:hover, .button.warning:focus {
       background-color: #d2a701;
       color: #fff; }
   .button.hollow {
-    border: 1px solid #fecc09;
-    color: #fecc09; }
+    border: 1px solid #666;
+    color: #666; }
     .button.hollow, .button.hollow:hover, .button.hollow:focus {
       background-color: transparent; }
     .button.hollow:hover, .button.hollow:focus {
       border-color: #836801;
       color: #836801; }
     .button.hollow.primary {
-      border: 1px solid #fecc09;
-      color: #fecc09; }
+      border: 1px solid #666;
+      color: #666; }
       .button.hollow.primary:hover, .button.hollow.primary:focus {
         border-color: #836801;
         color: #836801; }
@@ -1545,8 +1545,8 @@ kbd {
         border-color: #63080a;
         color: #63080a; }
     .button.hollow.warning {
-      border: 1px solid #fecc09;
-      color: #fecc09; }
+      border: 1px solid #666;
+      color: #666; }
       .button.hollow.warning:hover, .button.hollow.warning:focus {
         border-color: #836801;
         color: #836801; }
@@ -1880,7 +1880,7 @@ select {
   padding: 1.25rem 1rem;
   line-height: 1;
   font-size: 0.75rem;
-  color: #fecc09;
+  color: #666;
   position: relative;
   border-bottom: 1px solid #e6e6e6; }
   .accordion-title:hover, .accordion-title:focus {
@@ -1908,7 +1908,7 @@ select {
     width: 0;
     height: 0;
     border: inset 6px;
-    border-color: #fecc09 transparent transparent;
+    border-color: #666 transparent transparent;
     border-top-style: solid;
     border-bottom-width: 0;
     position: absolute;
@@ -1931,7 +1931,7 @@ select {
   font-size: 0.6rem;
   text-align: center;
   border-radius: 50%;
-  background: #fecc09;
+  background: #666;
   color: #fefefe; }
   .badge.secondary {
     background: #be9b23;
@@ -1943,7 +1943,7 @@ select {
     background: #c60f13;
     color: #fefefe; }
   .badge.warning {
-    background: #fecc09;
+    background: #666;
     color: #fefefe; }
 
 .breadcrumbs {
@@ -1968,7 +1968,7 @@ select {
       top: 1px;
       opacity: 1; }
   .breadcrumbs a {
-    color: #fecc09; }
+    color: #666; }
     .breadcrumbs a:hover {
       text-decoration: underline; }
   .breadcrumbs .disabled {
@@ -2004,7 +2004,7 @@ select {
       display: table-cell;
       float: none; }
   .button-group.primary .button {
-    background-color: #fecc09;
+    background-color: #666;
     color: #fefefe; }
     .button-group.primary .button:hover, .button-group.primary .button:focus {
       background-color: #d2a701;
@@ -2028,7 +2028,7 @@ select {
       background-color: #9e0c0f;
       color: #fefefe; }
   .button-group.warning .button {
-    background-color: #fecc09;
+    background-color: #666;
     color: #fefefe; }
     .button-group.warning .button:hover, .button-group.warning .button:focus {
       background-color: #d2a701;
@@ -2129,7 +2129,7 @@ select {
     width: 0;
     height: 0;
     border: inset 6px;
-    border-color: transparent transparent transparent #fecc09;
+    border-color: transparent transparent transparent #666;
     border-left-style: solid;
     border-right-width: 0;
     position: absolute;
@@ -2143,7 +2143,7 @@ select {
   width: 0;
   height: 0;
   border: inset 6px;
-  border-color: transparent #fecc09 transparent transparent;
+  border-color: transparent #666 transparent transparent;
   border-right-style: solid;
   border-left-width: 0;
   border-left-width: 0;
@@ -2213,7 +2213,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: #fecc09 transparent transparent;
+    border-color: #666 transparent transparent;
     border-top-style: solid;
     border-bottom-width: 0;
     position: absolute;
@@ -2225,7 +2225,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: transparent #fecc09 transparent transparent;
+    border-color: transparent #666 transparent transparent;
     border-right-style: solid;
     border-left-width: 0;
     float: left;
@@ -2237,7 +2237,7 @@ select {
     width: 0;
     height: 0;
     border: inset 5px;
-    border-color: transparent transparent transparent #fecc09;
+    border-color: transparent transparent transparent #666;
     border-left-style: solid;
     border-right-width: 0; }
   .is-dropdown-submenu-parent.is-left-arrow.opens-inner .is-dropdown-submenu {
@@ -2296,7 +2296,7 @@ select {
   white-space: nowrap;
   cursor: default;
   border-radius: 3px;
-  background: #fecc09;
+  background: #666;
   color: #fefefe; }
   .label.secondary {
     background: #be9b23;
@@ -2308,7 +2308,7 @@ select {
     background: #c60f13;
     color: #fefefe; }
   .label.warning {
-    background: #fecc09;
+    background: #666;
     color: #fefefe; }
 
 .media-object {
@@ -2613,7 +2613,7 @@ body {
       background: #e6e6e6; }
   .pagination .current {
     padding: 0.1875rem 0.625rem;
-    background: #fecc09;
+    background: #666;
     color: #fefefe;
     cursor: default; }
   .pagination .disabled {
@@ -2645,7 +2645,7 @@ body {
   margin-bottom: 1rem;
   border-radius: 3px; }
   .progress.primary .progress-meter {
-    background-color: #fecc09; }
+    background-color: #666; }
   .progress.secondary .progress-meter {
     background-color: #be9b23; }
   .progress.success .progress-meter {
@@ -2653,14 +2653,14 @@ body {
   .progress.alert .progress-meter {
     background-color: #c60f13; }
   .progress.warning .progress-meter {
-    background-color: #fecc09; }
+    background-color: #666; }
 
 .progress-meter {
   position: relative;
   display: block;
   width: 0%;
   height: 100%;
-  background-color: #fecc09;
+  background-color: #666;
   border-radius: 3px; }
 
 .progress-meter-text {
@@ -2716,7 +2716,7 @@ body {
   display: inline-block;
   width: 1.4rem;
   height: 1.4rem;
-  background-color: #fecc09;
+  background-color: #666;
   transition: all 0.2s ease-in-out;
   -ms-touch-action: manipulation;
       touch-action: manipulation;
@@ -2890,7 +2890,7 @@ body.is-reveal-open {
             transform: translate3d(0, 0, 0);
     border-radius: 3px; }
   input:checked ~ .switch-paddle {
-    background: #fecc09; }
+    background: #666; }
     input:checked ~ .switch-paddle::after {
       left: 2.25rem; }
   [data-whatinput='mouse'] input:focus ~ .switch-paddle {
@@ -3027,7 +3027,7 @@ table.hover tr:nth-of-type(even):hover {
     background: transparent; }
 
 .tabs.primary {
-  background: #fecc09; }
+  background: #666; }
   .tabs.primary > li > a {
     color: #fefefe; }
     .tabs.primary > li > a:hover, .tabs.primary > li > a:focus {
@@ -3040,7 +3040,7 @@ table.hover tr:nth-of-type(even):hover {
     padding: 1.25rem 1.5rem;
     line-height: 1;
     font-size: 12px;
-    color: #fecc09; }
+    color: #666; }
     .tabs-title > a:hover {
       background: #fefefe; }
     .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {

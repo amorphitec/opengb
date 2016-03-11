@@ -10,10 +10,21 @@
         searchString: '',
         filteredFiles: [],
         view: 'default',
+        page: 1,
         loading: []
       }
     },
-    calulated: {
+    computed: {
+      filesPage: function () {
+        var fileList = []
+        for( var i = 0 ; i < 5 ; i++ ) {
+          var j = (this.page - 1) * 5 + i
+          if(this.filteredFiles[j]){
+            fileList.push(this.filteredFiles[j])
+          }
+        }
+        return fileList
+      }
     },
     methods: {
       selectFile: function (fid, e) {
@@ -32,6 +43,12 @@
         } else {
           this.filteredFiles = this.files
         }
+      },
+      nextPage: function () {
+        this.page = this.page + 1;
+      },
+      prevPage: function () {
+        this.page = this.page - 1;
       }
     },
     ready: function () {
@@ -56,17 +73,20 @@
     <input class="search-input" placeholder="search your files" v-model="searchString" v-on:keyup="filterFiles">
     <div id="file-list">
       <div id="fli-{{file.id}}" 
-           v-for="file in filteredFiles" 
+           v-for="file in filesPage" 
            class="file-list-item clear-fix"
            v-on:click="selectFile(file.id, $event)">
-        <span class="badge float-left" v-bind:class="{'pulse1': file.id == loading[0]}" >
+        <span class="badge" v-bind:class="{'pulse1': file.id == loading[0]}" >
           {{file.name.substr(0,1).toUpperCase() + file.name.substr(1,1).toLowerCase()}}
         </span>
-        <span class="float-left padded">
-          <div>{{file.name}}</div>
-          <div class="small">{{(file.size/1000).toFixed(2)}}kB</div>
-        </span>
+        <span class="file-info file-name">{{file.name}}</span>
+        <span class="file-info center small">{{(file.size/1000).toFixed(2)}}kB</span>
+        <span class="file-info center small">3/11/16</span>
       </div>
+    </div>
+    <div>
+      <button class="button" v-if="page > 1" v-on:click="prevPage()">&lt; prev</button>
+      <button class="button" v-if="page < (filteredFiles.length / 5)" v-on:click="nextPage()" style="float:right">next &gt;</button>
     </div>
   </div>
 
@@ -80,7 +100,7 @@
   .padded{
     padding: 5px;
   }
-  .search-list{margin: 0 20px;margin-bottom: 50px;}
+  .search-list{margin: 0 20px;}
   .search-input{
     width: 100%;
     font-size: 1.5em;
@@ -96,31 +116,42 @@
   #file-list{
     min-height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-content: center;
     flex-wrap: wrap;
   }
   .file-list-item{
-    /*background:#eee;*/
-    cursor: pointer;
-    width: 100%;
-    margin: 5px 0;
-    margin-right: 10px;
-    border-radius: 25px 0 0 25px;
-
+    background: #ccc;
+    padding:5px;
+    margin-bottom:5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
   }
   .file-list-item:hover{
-    background:#fecc09;
-    color:white;
+    color:#444;
   }
   .file-list-item .badge{
-    border:5px solid #fecc09;
-    background: white;
-    font-size: 1.5em;
-    height: 55px;
-    width: 55px;
-    color:#ccc;
+    line-height: 24px;
+    border:5px solid white;
+    background: transparent;
+    font-size: 1.2em;
+    height: 45px;
+    width: 45px;
+    color:#444;
+  }
+
+  .file-info{
+    width:130px;
+    margin-left: 20px;
+    word-wrap: break-word;
+    white-space: pre;
+  }
+  .file-info.center{
+    text-align: center;
   }
 
   .pulse1 {
@@ -181,7 +212,4 @@
    }
 
 }
-
-
-
 </style>
