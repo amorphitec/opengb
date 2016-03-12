@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.9.0] - 2016-13-02
+### Added
+- Frontend tweaks
+
 ## [0.8.0] - 2016-11-02
 ### Added
 - Frontend tweaks
