@@ -128,7 +128,8 @@
   <section id="home-page">
 
     <div id="temperature-wrapper">
-      <div style="width:100%;height:100px;"></div>
+      <div style="width:100%;height:100px;">
+      </div>
       <temperature-menu 
         friendly-name="Heated Bed"
         temp-id="bed"
@@ -237,7 +238,6 @@
 
 h2{
   text-align: center;
-  font-family: 'proxima_novalight';
 }
 
 #home-page{
@@ -252,6 +252,8 @@ h2{
 }
 #file-upload{
   margin: 0px 20px;
+  margin-top:22px;
+  float:right;
 }
 #file-selection{
   flex: 1;

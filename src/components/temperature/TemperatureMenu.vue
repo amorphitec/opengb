@@ -74,6 +74,8 @@
     overflow:hidden;
     font-size:2em;
     transition: width 0.5s;
+    font-family: 'Exo', sans-serif;
+    font-weight: 700;
   }
   .temperature-menu.is-open{
     width:300px;

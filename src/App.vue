@@ -54,8 +54,8 @@
         pages: {
           home: {name: 'my openGB', url: 'home', icon: 'fi-home'},
           controls: {name: 'controls', url: 'controls', icon: 'fi-layout'},
-          files: {name: 'my files', url: 'files', icon: 'fi-page'},
-          statistics: {name: 'statistics', url: 'statistics', icon: 'fi-graph-bar'},
+          // files: {name: 'my files', url: 'files', icon: 'fi-page'},
+          // statistics: {name: 'statistics', url: 'statistics', icon: 'fi-graph-bar'},
           settings: {name: 'settings', url: 'settings', icon: 'fi-widget'}
         }
       }
@@ -64,6 +64,14 @@
 </script>
 
 <style>
+  body{
+    font-family: 'Roboto', sans-serif;
+  }
+  .button{
+    font-family: 'Exo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;  
+  }
   .off-canvas-content .off-canvas-content{
     box-shadow: none;
   }
