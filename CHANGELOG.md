@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.10.0] - 2016-13-02
+### Added
+- Updated fonts
+- Front page new look and feel
+- Menu icons limited to what has options (no stats or file page)
+- Controls page working (but without new layout)
+
 ## [0.9.0] - 2016-13-02
 ### Added
 - Frontend tweaks
