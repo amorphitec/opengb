@@ -3,7 +3,7 @@
   import PositionInfo from '../components/position/PositionInfo.vue'
   import TemperatureInfo from '../components/temperature/TemperatureInfo.vue'
   import PositionControlCube from '../components/position/PositionControlCube.vue'
-  import TemperatureMenu from '../components/temperature/TemperatureMenu.vue'
+  import TemperatureMenu from '../components/temperature/TemperatureMenuAdv.vue'
 
   export default {
     components: {
@@ -54,39 +54,57 @@
   <section id="controls-page">
 
     <div class="slider-wrapper" v-bind:class="{'is-focus': isTemperature}">
-      <div class="full-section">
+      <div class="full-section dark">
         <div class="left-col">
+          <h2>heat</h2>
           <temperature-info name="extruder 1" v-bind:value="printerService.printer.temperatures.nozzle1.current"></temperature-info>
           <temperature-info name="extruder 2" v-bind:value="printerService.printer.temperatures.nozzle2.current"></temperature-info>
           <temperature-info name="bed" v-bind:value="printerService.printer.temperatures.bed.current"></temperature-info>
           <button class="" v-on:click="setView('temperature')">more</button>
         </div>
         <div class="right-col">
-          <temperature-menu 
-            friendly-name="Heated Bed - Target"
-            temp-id="bed"
-            v-bind:current="printerService.printer.temperatures.bed.target"
-            v-bind:target="printerService.printer.temperatures.bed.target"
-            >
-          </temperature-menu>
-          <temperature-menu 
-            friendly-name="Extruder 1 - Target"
-            temp-id="nozzle1"
-            v-bind:current="printerService.printer.temperatures.nozzle1.target"
-            v-bind:target="printerService.printer.temperatures.nozzle1.target"
-            >
-          </temperature-menu>
-          <temperature-menu 
-            friendly-name="Extruder 2 - Target"
-            temp-id="nozzle2"
-            v-bind:current="printerService.printer.temperatures.nozzle2.target"
-            v-bind:target="printerService.printer.temperatures.nozzle2.target"
-            >
-          </temperature-menu>
-          <button class="button" v-on:click="extrude(0)">feed Extruder 1</button>
-          <button class="button" v-on:click="retract(0)">retract Extruder 1</button>
-          <button class="button" v-on:click="extrude(1)">feed Extruder 2</button>
-          <button class="button" v-on:click="retract(1)">retract Extruder 2</button>
+          <div class="top-padding"></div>
+          <div class="temp-menu-wrapper">
+            <span class="block">
+              <temperature-menu 
+                friendly-name="Extruder 1 - Target"
+                temp-id="nozzle1"
+                v-bind:current="printerService.printer.temperatures.nozzle1.target"
+                v-bind:target="printerService.printer.temperatures.nozzle1.target"
+                >
+              </temperature-menu>
+            </span>
+            <span class="block top">
+              <button class="button block" v-on:click="extrude(0)">Extrude</button>
+              <button class="button block" v-on:click="retract(0)">Retract</button>
+            </span>
+          </div>
+          <div class="temp-menu-wrapper">
+            <span class="block">
+              <temperature-menu 
+                friendly-name="Extruder 2 - Target"
+                temp-id="nozzle2"
+                v-bind:current="printerService.printer.temperatures.nozzle2.target"
+                v-bind:target="printerService.printer.temperatures.nozzle2.target"
+                >
+              </temperature-menu>
+            </span>
+            <span class="block top">
+              <button class="button block" v-on:click="extrude(1)">Extrude</button>
+              <button class="button block" v-on:click="retract(1)">Retract</button>
+            </span>
+          </div>
+          <div class="temp-menu-wrapper">
+            <span class="block">
+              <temperature-menu 
+                friendly-name="Heated Bed - Target"
+                temp-id="bed"
+                v-bind:current="printerService.printer.temperatures.bed.target"
+                v-bind:target="printerService.printer.temperatures.bed.target"
+                >
+              </temperature-menu>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -94,12 +112,14 @@
     <div class="slider-wrapper" v-bind:class="{'is-focus': isMovement}" >
       <div class="full-section">
         <div class="left-col">
+          <h2>move</h2>
           <position-info name="x" v-bind:value="printerService.printer.position.x"></position-info>
           <position-info name="y" v-bind:value="printerService.printer.position.y"></position-info>
           <position-info name="z" v-bind:value="printerService.printer.position.z"></position-info>
           <button class="" v-on:click="setView('movement')">more</button>
         </div>
         <div class="right-col">
+          <div class="top-padding"></div>
           <div id="position-cube">
             <position-control-cube></position-control-cube>
           </div>
@@ -107,22 +127,18 @@
       </div>
     </div>
 
-    <div class="slider-wrapper" v-bind:class="{'is-focus': isTerminal}" >
-      <div class="full-section">
-        <div class="left-col">
-          <button class="" v-on:click="setView('terminal')">more</button>
-        </div>
-        <div class="right-col">
-        </div>
-      </div>
-    </div>
   </section>
 </template>
 
 <style>
-  h2{
+  .top-padding{
+    margin-top:65px;
+  }
+  .left-col h2{
     text-align: center;
-    font-family: 'proxima_novalight';
+    font-family: 'Exo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
   }
   #controls-page{
     min-height: 100%;
@@ -138,14 +154,16 @@
   } 
   .slider-wrapper{
     flex: 0;
+    min-width: 175px;
     transition:all 1s;
+    overflow: hidden;
   }
   .slider-wrapper.is-focus{
     flex: 8;
     /*min-width: 70%;*/
   }
   .full-section{
-    min-height: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -153,14 +171,35 @@
   }
   .left-col{
     padding:10px;
+    min-width:175px;
+    text-align: center;
+  }
+  .full-section.dark{
+    background: #333;
+    color:white;
+  }
+  .full-section.dark h2{
+    color:#ddd;
   }
   .right-col{
     position:relative;
-    width:0;
-    overflow:hidden;
-    transition:all 0.2s;
+    /*width:0;*/
   }
-  .slider-wrapper.is-focus .right-col{
-    width:100%;
+  .callout{
+    padding:0!important;
+  }
+  .button.block{
+    display: block;
+    height: 35px;
+  }
+  .temp-menu-wrapper{
+    position: relative;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+  .top{
+    position: absolute;
+    top:2px;
+    right:-100px;
   }
 </style>

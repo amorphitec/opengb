@@ -60,8 +60,8 @@
         </div>
       </div>
       <div class="face two">
-        <div class="ctrl" id="z-up" v-on:click="jogUpZ()"></div>
         <div class="ctrl" id="z-down" v-on:click="jogDownZ()"></div>
+        <div class="ctrl" id="z-up" v-on:click="jogUpZ()"></div>
       </div>
     </div>
     <div id="cube-resolution">
@@ -108,7 +108,7 @@
 #cube-info{height:50px;position:absolute;bottom:-50px;width:100%;}  
 #cube, #cube .face {
   position: absolute;
-  top: 50%;
+  top: 55px;
   left: 50%;
 }
 .face {

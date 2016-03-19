@@ -152,6 +152,7 @@
         >
       </temperature-menu>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
+      <button class="button rounded" style="width:100%;" v-on:click="homePrinter()">Motors</button>
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
@@ -333,6 +334,12 @@ h2{
 
 #right-column{
   float: left;
+}
+.button{
+  margin-bottom: 7px!important;
+}
+.button.rounded{
+  border-radius:20px;
 }
 
 </style>

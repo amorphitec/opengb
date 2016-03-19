@@ -17,9 +17,9 @@
 </script>
 
 <template>
-  <div class="position-info clear-fix" v-bind:class="{'is-open': isOpen}">
-    <span>{{name}}</span>
-    <span v-bind:class="{'is-heating': isHeating}">{{value}}</span>
+  <div class="temperature-info clear-fix" v-bind:class="{'is-open': isOpen}">
+    <h3>{{name}}</h3>
+    <span v-bind:class="{'is-heating': isHeating}">{{value}}C</span>
   </div>
 </template>
 
@@ -31,7 +31,25 @@
     -ms-animation: beat 5s linear infinite;
     animation: beat 5s linear infinite;
   }
-  
+  .temperature-info{
+    text-align: center;
+    margin-bottom:8px;
+    height: 80px;
+  }
+  .temperature-info h3{
+    color: #aaa;
+    font-family: 'Exo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size:1em;
+    margin-bottom:-8px;
+  }
+  .temperature-info span{
+    font-family: 'Exo', sans-serif;
+    font-weight: 200;
+    text-transform: uppercase;
+    font-size:2.2em;
+  }
   @keyframes beat {
     0% {
       opacity: 0.7;
