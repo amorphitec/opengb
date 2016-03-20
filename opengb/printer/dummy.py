@@ -86,6 +86,12 @@ class Dummy(IPrinter):
                                            'head|{0}, length|{1}, rate|'
                                            '{2}'.format(head, length, rate))
 
+    def enable_steppers(self):
+        self._callbacks.log(logging.DEBUG, 'Steppers enabled'
+
+    def disable_steppers(self):
+        self._callbacks.log(logging.DEBUG, 'Steppers disabled'
+
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
         self._gcode_sequence = gcode_sequence
