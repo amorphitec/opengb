@@ -324,7 +324,7 @@ Sent periodically to provide current and target temperatures of printer componen
 
 Example event: ::
 
-    {"jsonrpc": "2.0", "event": "temp_update", "params": { "bed_current": 205, "bed_target": 0, " "nozzle1_current": 106, nozzle1_target": 0, "nozzle2_current": 101, "nozzle2_target": 0}}
+    {"jsonrpc": "2.0", "event": "temp_update", "params": { "bed_current": 205, "bed_target": 0, "nozzle1_current": 106, "nozzle1_target": 0, "nozzle2_current": 101, "nozzle2_target": 0}}
 
 
 position_update
