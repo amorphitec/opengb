@@ -324,6 +324,52 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
+    def retract_filament(self, head=0, length=0, rate=0):
+        """
+        Retract filament into the print head.
+
+        :param head: Print head to retract (0 or 1).
+        :type head: :class:`int`
+        :param length: Amount of filament to retract in mm.
+        :type length: :class:`float`
+        :param rate: Rate at which to retract in mm/s.
+        :type rate: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
+    def unretract_filament(self, head=0, length=0, rate=0):
+        """
+        Unretract filament from the print head.
+
+        :param head: Print head to unretract (0 or 1).
+        :type head: :class:`int`
+        :param length: Amount of filament to unretract in mm.
+        :type length: :class:`float`
+        :param rate: Rate at which to unretract in mm/s.
+        :type rate: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
+    def enable_steppers(self):
+        """
+        Enable stepper motors.
+
+        Prevents motors and axes from moving freely.
+        """
+        pass
+
+    @abc.abstractmethod
+    def disable_steppers(self):
+        """
+        Enable stepper motors.
+
+        Prevents motors and axes from moving freely.
+        """
+        pass
+
+    @abc.abstractmethod
     def execute_gcode(self, gcode_commands):
         """
         Execute a sequence of gcode commands.
