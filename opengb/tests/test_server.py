@@ -194,6 +194,34 @@ class TestHomeHead(OpengbTestCase):
             json.loads(self.to_printer.get())["params"]["x"], True)
 
 
+class TestEnableSteppers(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+
+    def test_pass_enable_steppers_method_to_printer(self):
+        """Enable steppers adds 'enable_steppers' msg to to_printer queue."""
+        self.message_handler.enable_steppers()
+        self.assertEqual(json.loads(self.to_printer.get())["method"],
+                         "enable_steppers")
+
+
+class TestDisableSteppers(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+
+    def test_pass_disable_steppers_method_to_printer(self):
+        """Disable steppers adds 'disable_steppers' msg to to_printer queue."""
+        self.message_handler.disable_steppers()
+        self.assertEqual(json.loads(self.to_printer.get())["method"],
+                         "disable_steppers")
+
+
 class TestEmergencyStop(OpengbTestCase):
 
     def setUp(self):

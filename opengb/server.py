@@ -194,6 +194,30 @@ class MessageHandler(object):
         }))
         return True
 
+    def enable_steppers(self):
+        """
+        Enable stepper motors.
+        
+        Prevents motors and axes from moving freely.
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'enable_steppers',
+            'params': {}
+        }))
+        return True
+
+    def disable_steppers(self):
+        """
+        Disable stepper motors.
+        
+        Allows motors and axes to moving freely.
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'disable_steppers',
+            'params': {}
+        }))
+        return True
+
     def pause_print(self):
         """
         Pause the current print job.
