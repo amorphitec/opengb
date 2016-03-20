@@ -372,6 +372,12 @@ class Marlin(IPrinter):
     def retract_filament(self, head=0, length=5, rate=300):
         self.unretract_filament(head, -length, rate)
 
+    def enable_steppers(self):
+        self._queue_command(b'M17')
+
+    def disable_steppers(self):
+        self._queue_command(b'M18')
+
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)
         self._gcode_sequence = gcode_sequence
