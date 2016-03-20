@@ -322,6 +322,12 @@ temp_update
 
 Sent periodically to provide current and target temperatures of printer components.
 
+.. note::
+
+    Not all parameters of every `temp_update` will necessarily contain values.
+    If a parameter's value is `null` then the update does not contain any new
+    data for that parameter and its value should be considered *unchanged*.
+
 Example event: ::
 
     {"jsonrpc": "2.0", "event": "temp_update", "params": { "bed_current": 205, "bed_target": 0, "nozzle1_current": 106, "nozzle1_target": 0, "nozzle2_current": 101, "nozzle2_target": 0}}
