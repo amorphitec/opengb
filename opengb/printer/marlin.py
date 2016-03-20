@@ -56,13 +56,18 @@ EVENT_MSG_PATTERNS = [
      lambda g, c: (getattr(c, 'temp_update')(g['btemp'], None,
                                              g['ntemp'], None,
                                              g['ntemp'], None))),
-    # Nozzle heating temperature update.
-    # TODO: call 'temp_update'.
-    (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:(?P<extruded>\d*)\s'
+    # Nozzle 1 heating temperature update.
+    (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:0\s'
                 'W:(?P<countdown>(\?|\d+))$'),
      lambda g, c: (getattr(c, 'temp_update')(None, None,
                                              g['ntemp'], None,
-                                             g['ntemp'], None))),
+                                             None, None))),
+    # Nozzle 2 heating temperature update.
+    (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:1\s'
+                'W:(?P<countdown>(\?|\d+))$'),
+     lambda g, c: (getattr(c, 'temp_update')(None, None,
+                                            None, None,
+                                            g['ntemp'], None))),
 ]
 
 # USB device name patterns.
