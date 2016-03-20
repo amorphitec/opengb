@@ -143,7 +143,7 @@ Example response: ::
     {"jsonrpc":"2.0","id":1,"result":true}
 
 disable_steppers
-===============
+================
 
 .. automethod:: opengb.server.MessageHandler.disable_steppers
 
