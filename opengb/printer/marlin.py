@@ -15,7 +15,7 @@ RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
     (re.compile(r'ok$'),
      lambda g, c: (None)),
-    # Temperature update - single extruder.
+    # Temperature update - single nozzle.
     (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
                 'T0:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
@@ -23,7 +23,7 @@ RESPONSE_MSG_PATTERNS = [
      lambda g, c: (getattr(c, 'temp_update')(g['btemp'], g['btarget'],
                                              g['n1temp'], g['n1target'],
                                              None, None))),
-    # Temperature update - dual extruder.
+    # Temperature update - dual nozzle.
     (re.compile(r'ok T:(?P<alltemp>\d*\.?\d+)\s/(?P<alltarget>\d*\.?\d+)\s'
                 'B:(?P<btemp>\d*\.?\d+)\s/(?P<btarget>\d*\.?\d+)\s'
                 'T0:(?P<n1temp>\d*\.?\d+)\s/(?P<n1target>\d*\.?\d+)\s'
