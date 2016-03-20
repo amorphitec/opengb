@@ -228,7 +228,7 @@ put_gcode_file
 
 Example request: ::
 
-    {"jsonrpc":"2.0","id":1,"method":"put_gcode_file","params":{"name":"test_cube.gco","payload":<gcode>}}
+    {"jsonrpc":"2.0","id":1,"method":"put_gcode_file","params":{"name":"test_cube.gco","payload":"<gcode>"}}
 
 Example response: ::
 
