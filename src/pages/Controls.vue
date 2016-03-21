@@ -41,10 +41,10 @@
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
       extrude: function (nid) {
-        this.printerService.unretractFilament(nid,100,20)
+        this.printerService.unretractFilament(nid,100,5)
       },
       retract: function (nid) {
-        this.printerService.retractFilament(nid,100,20)
+        this.printerService.retractFilament(nid,100,5)
       }
     }
   }
