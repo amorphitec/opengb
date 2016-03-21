@@ -45,6 +45,11 @@
         }
         return s
       },
+      motorStatus: function () {
+        var test = this.printerService.printer.steppers.enabled
+        console.log(this.printerService.printer.steppers)
+        return  test ? 'on' : 'off'
+      },
       isNotPrinting: function () {
         var s = this.printerService.printer.state
         return s != 'EXECUTING' && s != 'PAUSED'
@@ -57,8 +62,12 @@
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
-      disengageMotors: function () {
-        this.printerService.disengageMotors()
+      toggleMotors: function () {
+        if(this.printerService.printer.steppers.enabled) {
+          this.printerService.disengageMotors()
+        } else {
+          this.printerService.engageMotors()
+        }
       },
       deselectFile: function () {
         printerws.deselectFile()
@@ -155,7 +164,7 @@
         >
       </temperature-menu>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
-      <button class="button rounded" style="width:100%;" v-on:click="disengageMotors()">Disengage Motors</button>
+      <button class="button rounded" style="width:100%;" v-on:click="toggleMotors()">Motors {{motorStatus}}</button>
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">

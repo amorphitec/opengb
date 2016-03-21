@@ -6,6 +6,7 @@
     connection: { baseUrl: null, connected: false, printReady: false },
     position: { x: null, y: null, z: null },
     print: { currentLine: null, totalLines: null },
+    steppers: {enabled: null},
     state: null,
     temperatures: {
       bed: { target: null, current: null },
@@ -64,6 +65,12 @@
         'x': !!home.x,
         'y': !!home.y,
         'z': !!home.z
+      }
+      ws.call(method, params)
+    },
+    engageMotors: function () {
+      var method = 'enable_steppers'
+      var params = {
       }
       ws.call(method, params)
     },
@@ -256,6 +263,12 @@
       printer.position.y = params.y
       printer.position.z = params.z
       console.log('position event: ', message)
+    })
+
+    ws.$on('steppers_update', function (message) {
+      var params = message
+      printer.steppers.enabled = params.enabled
+      console.log('stepper event: ', message)
     })
 
     ws.$on('progress_update', function (message) {

@@ -11,6 +11,13 @@
     },
     props: {
     },
+    computed: {
+      motorStatus: function () {
+        var test = this.printerService.printer.steppers.enabled
+        console.log(this.printerService.printer.steppers)
+        return  test ? 'on' : 'off'
+      }
+    },
     methods: {
       jogUpX: function () {
         var displacement = {x: this.resolution}
@@ -42,8 +49,12 @@
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
-      disengageMotors: function () {
-        this.printerService.disengageMotors()
+      toggleMotors: function () {
+        if(this.printerService.printer.steppers.enabled) {
+          this.printerService.disengageMotors()
+        } else {
+          this.printerService.engageMotors()
+        }
       }
     }
   }
@@ -76,7 +87,7 @@
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 10}" v-on:click="setResolution(10)">10mm</button>
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 100}" v-on:click="setResolution(100)">100mm</button>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" >Home All</button>
-      <button class="button rounded" style="width:100%;" v-on:click="disengageMotors()">Disengage Motors</button>
+      <button class="button rounded" style="width:100%;" v-on:click="toggleMotors()">Motors {{motorStatus}}</button>
     </div>
   </div>
 </template>
