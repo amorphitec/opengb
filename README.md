@@ -1,7 +1,5 @@
 # Open Gigabot Controller.
 
-_Not yet ready for production use._
-
 ## Docs
 
 Visit http://opengb.readthedocs.org for all documentation
