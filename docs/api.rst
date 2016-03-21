@@ -35,7 +35,7 @@ Example request (setting target temperatures): ::
 
 Example response: ::
 
-    {"jsonrpc":"2.0","id":1 "result":true}
+    {"jsonrpc":"2.0","id":1,"result":true}
 
 Event
 =====
@@ -254,7 +254,7 @@ get_gcode_files
 
 Example request: ::
  
-    {"jsonrpc":"2.0","id":1,"method":"get_gcode_files","params":{}
+    {"jsonrpc":"2.0","id":1,"method":"get_gcode_files","params":{}}
  
 Example response: ::
 
@@ -284,7 +284,7 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128 "motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
+    {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128,"motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
 
 get_status
 ==========
@@ -297,7 +297,7 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc": "2.0", "id": 4, "result": {"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled":true}}}
+    {"jsonrpc":"2.0","id":4,"result":{"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled":true}}}}
 
 Events
 ^^^^^^
