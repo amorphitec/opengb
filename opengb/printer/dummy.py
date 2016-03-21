@@ -88,9 +88,11 @@ class Dummy(IPrinter):
 
     def enable_steppers(self):
         self._callbacks.log(logging.DEBUG, 'Steppers enabled')
+        self._callbacks.steppers_update(True)
 
     def disable_steppers(self):
         self._callbacks.log(logging.DEBUG, 'Steppers disabled')
+        self._callbacks.steppers_update(False)
 
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)

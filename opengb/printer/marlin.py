@@ -379,9 +379,11 @@ class Marlin(IPrinter):
 
     def enable_steppers(self):
         self._queue_command(b'M17')
+        self._callbacks.steppers_update(True)
 
     def disable_steppers(self):
         self._queue_command(b'M18')
+        self._callbacks.steppers_update(False)
 
     def execute_gcode(self, gcode_sequence):
         self._update_state(State.EXECUTING)

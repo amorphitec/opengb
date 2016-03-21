@@ -121,6 +121,15 @@ class PrinterCallbacks(object):
         """
         pass
 
+    def steppers_update(self, enabled):
+        """
+        Publish a stepper motors update event.
+
+        :param enabled: Whether or not stepper motors are enabled.
+        :type enabled: :class:`bool`
+        """
+        pass
+
     def z_change(self, new_z):
         """
         Publish a Z axis change event.
@@ -214,6 +223,14 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             'params':   {
                 'current_line': current_line,
                 'total_lines':  total_lines,
+            }
+        })
+
+    def steppers_update(self, enabled):
+        self._publish({
+            'event':   'steppers_update',
+            'params':   {
+                'enabled':      enabled,
             }
         })
 

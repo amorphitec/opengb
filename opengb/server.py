@@ -47,6 +47,9 @@ PRINTER = {
         'current':  0,
         'total':    0,
     },
+    'steppers': {
+        'enbabled': True,
+    },
 }
 
 
@@ -464,6 +467,8 @@ def process_event(event):
             PRINTER['position'] = event['params']
         elif event['event'] == 'progress_update':
             PRINTER['progress'] = event['params']
+        elif event['event'] == 'steppers_update':
+            PRINTER['steppers'] = event['params']
         elif event['event'] == 'z_change':
             # TODO: trigger update camera image.
             pass

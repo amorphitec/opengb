@@ -297,7 +297,7 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc": "2.0", "id": 4, "result": {"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}}}}
+    {"jsonrpc": "2.0", "id": 4, "result": {"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled": true}}}
 
 Events
 ^^^^^^
@@ -351,6 +351,16 @@ Sent periodically while printer is executing a gcode sequence.
 Example event: ::
 
     {"jsonrpc": "2.0", "event": "progress_update", "params": { "current_line": 327, "total_lines": 4393}}
+
+steppers_update
+===============
+
+Sent when stepper motors are enabled/disabled.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "steppers_update", "params": { "enabled": true }}
+
 
 .. _`JSON-RPC 2.0`: http://www.jsonrpc.org
 .. _`JSON-RPC 2.0 spec`: http://www.jsonrpc.org/specification
