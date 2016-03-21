@@ -1,14 +1,10 @@
 Installation
 ============
 
-*Note: Instructions are for Debian-based distros. Official packages will be available when OpenGB enters beta.*
-
 Python 3.4
 ^^^^^^^^^^
 
 OpenGB requires Python 3.4 or greater. 
-
-_Note: Debian Wheezy only supports Python 3.2. If you are using a Beaglebone Black you should upgrade to Debian Jessie before installing OpenGB._
 
 Install Python3.4:
 
@@ -41,16 +37,44 @@ Switch to the new virtualenv:
 Install package
 ^^^^^^^^^^^^^^^
 
-*Note: OpenGB will be available from* `PyPI`_ *when OpenGB enters beta.*
+To install OpenGB from scratch:
+
+PyPI
+----
+
+::
+
+    pip install opengb
+
+Github
+------
 
 ::
 
     pip install -e git+git://github.com/re-3D/opengb@master#egg=opengb
 
+Update package
+^^^^^^^^^^^^^^
+
+To update OpenGB from a previous version:
+
+PyPI
+----
+
+::
+
+    pip install -U opengb
+
+Github
+------
+
+::
+
+    cd ~/virtualenvs/opengb/src/opengb
+    git pull
+
 Create data directories
 ^^^^^^^^^^^^^^^^^^^^^^^
-
-*Note: this will happen automatically when OpenGB is distributed as a package.*
 
 ::
 
@@ -62,8 +86,6 @@ Create data directories
 Create log directory
 ^^^^^^^^^^^^^^^^^^^^
 
-*Note: this will happen automatically when OpenGB is distributed as a package.*
-
 ::
 
     sudo mkdir /var/log/opengb
@@ -72,24 +94,13 @@ Create log directory
 Deploy config file
 ^^^^^^^^^^^^^^^^^^
 
-*Note: this will happen automatically when openGB is distributed as a package.*
+Once deployed edit the config file to set the appropriate parameters for your system.
 
 ::
 
     sudo mkdir /etc/opengb
     sudo chown <your_user>:<your_group> /etc/opengb
     sudo cp ~/virtualenvs/opengb/src/opengb/opengb/etc/opengb.conf /etc/opengb/
-
-Once deployed, edit this file to set the appropriate parameters for your system.
-
-Add user to dialout
-^^^^^^^^^^^^^^^^^^^
-
-Your user must be a member of the group :code:`dialout` for serial port access:
-
-::
-
-    sudo adduser <your_user> dialout
 
 Start
 ^^^^^
