@@ -44,7 +44,7 @@
 
 <template>
   
-  <div class="temperature-menu clear-fix is-open" v-bind:class="{'is-on':isOn}">
+  <div class="temperature-menu-adv clear-fix is-open" v-bind:class="{'is-on':isOn}">
     <div class="temperature-wrap">
       <span class="block float-left">
         <button class="button temp-select" v-bind:class="{'is-selected': target == 50}" v-if="tempId == 'bed'" v-on:click="setTemperature(50)">PLA</button>
@@ -71,7 +71,7 @@
     display:inline-block;
     margin:0 10px;
   }
-  .temperature-menu{
+  .temperature-menu-adv{
     margin-bottom:8px;
     border-radius:5px;
     padding:5px 0px;
@@ -85,8 +85,8 @@
     font-weight: 200;
     height: 80px;
   }
-  .temperature-menu.is-open{
-    width:300px;
+  .temperature-menu-adv.is-open{
+    width:275px;
   }
   .temperature-menu-heading{
     width:300px;    
@@ -101,8 +101,8 @@
     font-weight: 700;
     text-transform: uppercase;
   }
-  .temperature-wrap{
-    width:300px;
+  .temperature-menu-adv .temperature-wrap{
+    width:100%;
     text-align: center;
   }
   .current-temp{
@@ -115,7 +115,7 @@
     width:auto;
     text-align: center;
   }
-  .button.temp-select{
+  .temperature-menu-adv .button.temp-select{
     margin: 0px;
     padding: 0.5em 1em;
     background: #ddd;

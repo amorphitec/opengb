@@ -67,6 +67,12 @@
       }
       ws.call(method, params)
     },
+    disengageMotors: function () {
+      var method = 'disable_steppers'
+      var params = {
+      }
+      ws.call(method, params)
+    },
     retractFilament: function (head, length, rate) {
       var method = 'retract_filament'
       var params = {
@@ -236,12 +242,12 @@
 
     ws.$on('temp_update', function (message) {
       var params = message
-      printer.temperatures.bed.current = params.bed_current
-      printer.temperatures.bed.target = params.bed_target
-      printer.temperatures.nozzle1.current = params.nozzle1_current
-      printer.temperatures.nozzle1.target = params.nozzle1_target
-      printer.temperatures.nozzle2.current = params.nozzle2_current
-      printer.temperatures.nozzle2.target = params.nozzle2_target
+      printer.temperatures.bed.current = params.bed_current != null ? params.bed_current : printer.temperatures.bed.current
+      printer.temperatures.bed.target = params.bed_target != null ? params.bed_target : printer.temperatures.bed.target
+      printer.temperatures.nozzle1.current = params.nozzle1_current != null ? params.nozzle1_current : printer.temperatures.nozzle1.current
+      printer.temperatures.nozzle1.target = params.nozzle1_target != null ? params.nozzle1_target : printer.temperatures.nozzle1.target
+      printer.temperatures.nozzle2.current = params.nozzle2_current != null ? params.nozzle2_current : printer.temperatures.nozzle2.current
+      printer.temperatures.nozzle2.target = params.nozzle2_target != null ? params.nozzle2_target : printer.temperatures.nozzle2.target
     })
 
     ws.$on('position_update', function (message) {

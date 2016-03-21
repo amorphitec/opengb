@@ -57,6 +57,9 @@
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
+      disengageMotors: function () {
+        this.printerService.disengageMotors()
+      },
       deselectFile: function () {
         printerws.deselectFile()
       },
@@ -128,7 +131,7 @@
   <section id="home-page">
 
     <div id="temperature-wrapper">
-      <div style="width:100%;height:100px;">
+      <div style="width:100%;height:75px;">
       </div>
       <temperature-menu 
         friendly-name="Heated Bed"
@@ -152,11 +155,11 @@
         >
       </temperature-menu>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
-      <button class="button rounded" style="width:100%;" v-on:click="homePrinter()">Motors</button>
+      <button class="button rounded" style="width:100%;" v-on:click="disengageMotors()">Disengage Motors</button>
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
-      <div style="height:100px;">
+      <div style="height:75px;">
       <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
         Upload a File
       </button>
@@ -247,6 +250,7 @@ h2{
   flex-direction: row;
   justify-content: flex-start;
   align-content: center;
+  padding: 0 1rem;
 } 
 #temperature-wrapper{
   flex: 0;

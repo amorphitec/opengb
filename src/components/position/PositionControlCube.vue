@@ -38,6 +38,12 @@
       },
       setResolution: function (res) {
         this.resolution = res
+      },
+      homePrinter: function () {
+        this.printerService.homePrintHead({x:true,y:true,z:true})
+      },
+      disengageMotors: function () {
+        this.printerService.disengageMotors()
       }
     }
   }
@@ -69,6 +75,8 @@
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 1}" v-on:click="setResolution(1)">1mm</button>
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 10}" v-on:click="setResolution(10)">10mm</button>
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 100}" v-on:click="setResolution(100)">100mm</button>
+      <button class="button" style="width:100%;" v-on:click="homePrinter()" >Home All</button>
+      <button class="button rounded" style="width:100%;" v-on:click="disengageMotors()">Disengage Motors</button>
     </div>
   </div>
 </template>
@@ -108,7 +116,7 @@
 #cube-info{height:50px;position:absolute;bottom:-50px;width:100%;}  
 #cube, #cube .face {
   position: absolute;
-  top: 55px;
+  top: 55px ;
   left: 50%;
 }
 .face {
