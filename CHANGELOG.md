@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.12.0] - 2016-03-22
+### Added
+- Enable/disable steppers functions
+- UI improvements
+
 ## [0.11.0] - 2016-03-21
 ### Fixed
 - Distinguish between nozzle 1 and 2 temps when heating for prints
