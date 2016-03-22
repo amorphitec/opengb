@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.12.0] - 2016-03-22
+## [0.12.1] - 2016-03-22
 ### Fixed
 - Frontend directory missing from package
 
