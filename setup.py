@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='opengb',
-    version='0.12.0',
+    version='0.12.1',
     author='re:3D',
     author_email='support@re3D.org',
     description='OpenGB printer control.',

@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ## [0.12.0] - 2016-03-22
+### Fixed
+- Frontend directory missing from package
+
+## [0.12.0] - 2016-03-22
 ### Added
 - Enable/disable steppers functions
 - UI improvements
