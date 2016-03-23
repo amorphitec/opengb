@@ -80,6 +80,7 @@ To disable the mouse pointer:
 
 ::
 
+    sudo apt-get install unclutter
     echo "unclutter -idle 5" >> ~/.config/lxsession/LXDE-pi/autostart
  
 
