@@ -23,7 +23,7 @@ To start the OpenGB service automatically upon boot:
 
 ::
 
-    sudo sed -i -e 's|exit 0|/home/pi/virtualenvs/opengb/bin/opengb \&\n\nexit 0|g' /etc/rc.local
+    sudo sed -i -e 's|exit 0|/home/pi/virtualenvs/opengb/bin/opengb \&\n\nexit 0|1' /etc/rc.local
 
 OpenGB Web Interface
 ====================
