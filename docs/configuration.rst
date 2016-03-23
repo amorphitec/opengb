@@ -35,7 +35,7 @@ To start Iceweasel running the OpenGB web interface fullscreen automatically on 
     sudo apt-get install iceweasel xdotool
 
     cat << EOF >> ~/.config/lxsession/LXDE-pi/autostart
-    @iceweasel http://opengb.local
+    @iceweasel http://opengb.local:8000
     @sleep 10
     @xdotool key --clearmodifiers F11 
     EOF
