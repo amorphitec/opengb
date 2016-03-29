@@ -470,7 +470,16 @@ class Marlin(IPrinter):
         Runs as a separate thread.
         """
         while True:
-            if not self._state == State.DISCONNECTED:
+            if self._state == State.DISCONNECTED:
+                try:
+                    self._connect()
+                except ConnectionError:
+                    self._callbacks.log(logging.ERROR, 'Unable to '
+                                          'connect to serial '
+                                          'port: ' + str(err))
+                    # Will try again on next iteration
+                    time.sleep(1)
+            else:
                 msg_from_printer = self._get_message_from_printer()
                 if msg_from_printer:
                     self._process_message_from_printer(msg_from_printer)
