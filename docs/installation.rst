@@ -39,39 +39,18 @@ Install package
 
 To install OpenGB from scratch:
 
-PyPI
-----
-
 ::
 
     pip install opengb
-
-Github
-------
-
-::
-
-    pip install -e git+git://github.com/re-3D/opengb@master#egg=opengb
 
 Update package
 ^^^^^^^^^^^^^^
 
 To update OpenGB from a previous version:
 
-PyPI
-----
-
 ::
 
     pip install -U opengb
-
-Github
-------
-
-::
-
-    cd ~/virtualenvs/opengb/src/opengb
-    git pull
 
 Create data directories
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -100,7 +79,7 @@ Once deployed edit the config file to set the appropriate parameters for your sy
 
     sudo mkdir /etc/opengb
     sudo chown <your_user>:<your_group> /etc/opengb
-    sudo cp ~/virtualenvs/opengb/src/opengb/opengb/etc/opengb.conf /etc/opengb/
+    sudo cp ~/virtualenvs/opengb/lib/python3.4/site-packages/opengb/etc/opengb.conf /etc/opengb/
 
 Start
 ^^^^^
