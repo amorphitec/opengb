@@ -40,12 +40,9 @@ RESPONSE_MSG_PATTERNS = [
                 'Z:(?P<zsteps>\d*\.?\d+).*?$'),
      lambda g, c: (getattr(c, 'position_update')(g['xpos'], g['ypos'],
                                                  g['zpos']))),
-    # Error.
-    (re.compile(r'Error:(?P<error>.*)$'),
-     lambda g, c: (getattr(c, 'log')(logging.ERROR, g['error']))),
 ]
 
-# Event message patterns mapped to callbacks
+# Event message patterns mapped to callbacks.
 EVENT_MSG_PATTERNS = [
     # Standard 'echo' message.
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
@@ -68,6 +65,12 @@ EVENT_MSG_PATTERNS = [
      lambda g, c: (getattr(c, 'temp_update')(None, None,
                                             None, None,
                                             g['ntemp'], None))),
+]
+
+# Error message patterns.
+ERROR_MSG_PATTERNS = [
+    # Catch all standard-format errors.
+    re.compile(r'Error:(?P<error>.*)$'),
 ]
 
 # USB device name patterns.
@@ -249,6 +252,10 @@ class Marlin(IPrinter):
             return False
         return True
 
+    def _reset_printer(self):
+        self._callbacks.log(logging.DEBUG, 'Resetting printer')
+        self._queue_command(b'M999', deduplicate=True)
+
     def _request_printer_temperature(self):
         """
         Request a temperature update from the printer.
@@ -319,6 +326,11 @@ class Marlin(IPrinter):
                                     'Parsed event: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
                 return
+        for each in ERROR_MSG_PATTERNS:
+            matched = each.match(message)
+            if matched:
+                self._callbacks.log(logging.ERROR, message)
+                self._update_state(State.ERROR)
         self._callbacks.log(logging.ERROR, 'Unparsed message: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
         # multiple lines and thus did not match a regex. This should not
@@ -476,6 +488,10 @@ class Marlin(IPrinter):
         Loop forever collecting messages from the printer and converting
         them to `self._callbacks`.
 
+        Also attempts to recover when printer enters a DISCONNECTED or ERROR
+        state. If an attempt to recover fails the loops waits an arbitrary 1
+        second before attempting to recover once again.
+
         Runs as a separate thread.
         """
         while True:
@@ -486,8 +502,11 @@ class Marlin(IPrinter):
                     self._callbacks.log(logging.ERROR, 'Unable to '
                                         'connect to serial '
                                         'port: ' + str(err.args[0]))
-                    # Will try again on next iteration
                     time.sleep(1)
+            elif self._state == State.ERROR:
+                self._reset_printer()
+                self._update_state(State.READY)
+                time.sleep(1)
             else:
                 msg_from_printer = self._get_message_from_printer()
                 if msg_from_printer:
