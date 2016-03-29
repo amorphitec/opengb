@@ -228,19 +228,19 @@ class Marlin(IPrinter):
                 try:
                     self._serial.write(command + b'\n')
                     self._serial_buffer.put(command)
-                except serial.SerialException:
-                    self._callbacks.log, (logging.WARN, 'Error writing to '
-                                          'serial port - reconnecting')
+                except (serial.SerialException, IOError):
+                    self._callbacks.log(logging.WARN, 'Error writing to '
+                                        'serial port - reconnecting')
                     try:
                         self._connect()
                         self._serial.write(command)
                     except ConnectionError as err:
-                        self._callbacks.log, (logging.ERROR, 'unable to '
-                                              'connect to serial '
-                                              'port: ' + str(err.args[0]))
+                        self._callbacks.log(logging.ERROR, 'Unable to '
+                                            'connect to serial '
+                                            'port: ' + str(err.args[0]))
                         return False
         except IOError:
-            self._callbacks.log, (logging.WARN, 'unable to lock serial port')
+            self._callbacks.log(logging.DEBUG, 'Unable to lock serial port')
             return False
         return True
 
@@ -267,13 +267,13 @@ class Marlin(IPrinter):
             with self._serial_lock:
                 try:
                     message = self._serial.readline()
-                except serial.SerialException:
-                    self._callbacks.log, (logging.WARN, 'Error reading from '
+                except (serial.SerialException, IOError, TypeError):
+                    self._callbacks.log(logging.WARN, 'Error reading from '
                                           'serial port - reconnecting')
                     try:
                         self._connect()
                     except ConnectionError as err:
-                        self._callbacks.log, (logging.ERROR, 'unable to '
+                        self._callbacks.log(logging.ERROR, 'Unable to '
                                               'connect to serial '
                                               'port: ' + str(err))
                     finally:
@@ -282,12 +282,12 @@ class Marlin(IPrinter):
                     # Occasionally we encounter a BlockingIOError when reading
                     # from the serial port. This is not neccessarily a problem
                     # so log and continue.
-                    self._callbacks.log, (logging.WARN, 'Blocking IO while '
+                    self._callbacks.log(logging.DEBUG, 'Blocking IO while '
                                           'reading from serial port')
                     return False
         except IOError:
             # Unable to lock the serial port.
-            self._callbacks.log, (logging.WARN, 'Unable to lock serial port '
+            self._callbacks.log(logging.WARN, 'Unable to lock serial port '
                                   'for reading')
             return False
         return message
