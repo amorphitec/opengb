@@ -278,13 +278,6 @@ class Marlin(IPrinter):
                                               'port: ' + str(err))
                     finally:
                         return None
-                except TypeError:
-                    # Occasionally we encounter a BlockingIOError when reading
-                    # from the serial port. This is not neccessarily a problem
-                    # so log and continue.
-                    self._callbacks.log(logging.DEBUG, 'Blocking IO while '
-                                          'reading from serial port')
-                    return False
         except IOError:
             # Unable to lock the serial port.
             self._callbacks.log(logging.WARN, 'Unable to lock serial port '
