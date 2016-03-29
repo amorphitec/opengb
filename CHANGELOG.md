@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.13.0] - 2016-03-29
+### Fixed
+- Reconnect to printer when USB unplugged during execution
+- Reset printer when hardware powered off during execution
+
 ## [0.12.1] - 2016-03-22
 ### Fixed
 - Frontend directory missing from package
