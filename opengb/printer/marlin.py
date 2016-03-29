@@ -473,10 +473,10 @@ class Marlin(IPrinter):
             if self._state == State.DISCONNECTED:
                 try:
                     self._connect()
-                except ConnectionError:
+                except ConnectionError as err:
                     self._callbacks.log(logging.ERROR, 'Unable to '
-                                          'connect to serial '
-                                          'port: ' + str(err))
+                                        'connect to serial '
+                                        'port: ' + str(err.args[0]))
                     # Will try again on next iteration
                     time.sleep(1)
             else:
