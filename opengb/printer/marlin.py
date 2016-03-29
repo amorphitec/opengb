@@ -525,6 +525,11 @@ class Marlin(IPrinter):
         Runs as a separate thread.
         """
         while True:
+            # If the printer is in an unhealthy state wait for the _reader
+            # thread to take care of it.
+            if self._state in [State.ERROR, State.DISCONNECTED]:
+                time.sleep(self._write_loop_delay_sec)
+                continue
             # Request a metric update if the requisite interval has passed.
             try:
                 metric_interval = time.time() - self._temp_update_time
@@ -537,7 +542,7 @@ class Marlin(IPrinter):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
             except BufferFullException:
-                # Wait until next time.
+                # Buffer is full so wait until next time.
                 pass
             # Process a message from the to_printer queue.
             if not self._to_printer.empty():
