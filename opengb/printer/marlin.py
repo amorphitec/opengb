@@ -208,6 +208,9 @@ class Marlin(IPrinter):
         Send a command to the serial port, attempting to re-connect if
         necessary.
 
+        TODO: consider renaming this method such that it is analagous to
+        get_message_from_printer (send_message_to_printer?)
+
         :param command: Command to send to the serial port.
         :type command: :class:`bytes`
         :param buffer: Only send command if space exists in the buffer.
@@ -231,6 +234,8 @@ class Marlin(IPrinter):
                 except (serial.SerialException, IOError):
                     self._callbacks.log(logging.WARN, 'Error writing to '
                                         'serial port - reconnecting')
+                    # TODO: consider just updating state to DISCONNECTED
+                    # and letting the main read thread reconnect.
                     try:
                         self._connect()
                         self._serial.write(command)
@@ -262,6 +267,8 @@ class Marlin(IPrinter):
         """
         Read a message from the serial port, attempting to re-connect if
         neccessary.
+
+        TODO: tidy returns/exceptions and document.
         """
         try:
             with self._serial_lock:
@@ -270,6 +277,8 @@ class Marlin(IPrinter):
                 except (serial.SerialException, IOError, TypeError):
                     self._callbacks.log(logging.WARN, 'Error reading from '
                                           'serial port - reconnecting')
+                    # TODO: consider just updating state to DISCONNECTED
+                    # and letting the main read thread reconnect.
                     try:
                         self._connect()
                     except ConnectionError as err:
