@@ -504,8 +504,7 @@ class Marlin(IPrinter):
                     metric_interval > self._temp_poll_execute_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
-                elif (self._state in [State.READY, State.PAUSED,
-                                      State.DISCONNECTED] and
+                elif (self._state in [State.READY, State.PAUSED] and
                     metric_interval > self._temp_poll_ready_sec):
                     self._request_printer_temperature()
                     self._temp_update_time = time.time()
