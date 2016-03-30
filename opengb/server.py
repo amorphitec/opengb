@@ -270,7 +270,8 @@ class MessageHandler(object):
 
     def put_gcode_file(self, payload, name, print_material='',
                        print_quality='', print_extruders='', print_time_sec=0,
-                       print_filament_mm=0, print_material_gm=0):
+                       print_filament_mm=0, print_material_gm=0,
+                       thumbnail_png_base64=''):
         """
         Upload a gcode file.
 
@@ -291,6 +292,9 @@ class MessageHandler(object):
         :type print_filament_mm: :class:`int`
         :param print_material_gm: Estimated print material weight in grams.
         :type print_material_gm: :class:`int`
+        :param thumbnail_png_base64: Thumbnail image.
+        :type thumbnail_png_base64: :class:`str` representing a base64-encoded
+            png file
         """
 
         # TODO: Validate gcode. Could use gctools for this if it is
@@ -306,6 +310,7 @@ class MessageHandler(object):
             print_time_sec = print_time_sec,
             print_filament_mm = print_filament_mm,
             print_material_gm = print_material_gm,
+            thumbnail_png_base64 = thumbnail_png_base64,
         )
         destination = os.path.join(options.gcode_dir, str(gcode_file.id))
         with open(destination, "wb") as gcode_file_out:
@@ -325,6 +330,7 @@ class MessageHandler(object):
             'print_time_sec': print_time_sec,
             'print_filament_mm': print_filament_mm,
             'print_material_gm': print_material_gm,
+            'thumbnail_png_base64': thumbnail_png_base64,
         }
 
     def get_gcode_file(self, id, content=False):
@@ -350,6 +356,7 @@ class MessageHandler(object):
                 'print_time_sec': result.print_time_sec,
                 'print_filament_mm': result.print_filament_mm,
                 'print_material_gm': result.print_material_gm,
+                'thumbnail_png_base64': result.thumbnail_png_base64,
             }
         except OGD.GCodeFile.DoesNotExist:
             raise IndexError('No gcode file found with id {0}'.format(id))
@@ -378,6 +385,7 @@ class MessageHandler(object):
                 'print_time_sec': g.print_time_sec,
                 'print_filament_mm': g.print_filament_mm,
                 'print_material_gm': g.print_material_gm,
+                'thumbnail_png_base64': g.thumbnail_png_base64,
             }
             for g in OGD.GCodeFile.select()]}
 

@@ -286,8 +286,15 @@ class TestPutGCodeFile(OpengbTestCase):
                 r = self.message_handler.put_gcode_file(self.gcode,
                     'test_name', print_material='PLA', print_quality='High',
                     print_extruders='Both', print_time_sec=56743,
-                    print_filament_mm=9876, print_material_gm=40)
-        self.assertEqual(r['name'], 'test_name')
+                    print_filament_mm=9876, print_material_gm=40,
+                    thumbnail_png_base64='mock base64 data')
+        self.assertEqual(r['print_material'], 'PLA')
+        self.assertEqual(r['print_quality'], 'High')
+        self.assertEqual(r['print_extruders'], 'Both')
+        self.assertEqual(r['print_time_sec'], 56743)
+        self.assertEqual(r['print_filament_mm'], 9876)
+        self.assertEqual(r['print_material_gm'], 40)
+        self.assertEqual(r['thumbnail_png_base64'], 'mock base64 data')
 
 class TestGetGCodeFile(OpengbTestCase):
 
@@ -304,7 +311,8 @@ class TestGetGCodeFile(OpengbTestCase):
             g = GCodeFile.create(name='test_file', size='777',
                                  print_material='PLA', print_quality='High',
                                  print_extruders='Both', print_time_sec=56743,
-                                 print_filament_mm=9876, print_material_gm=40)
+                                 print_filament_mm=9876, print_material_gm=40,
+                                 thumbnail_png_base64='mock base64 data')
             r = self.message_handler.get_gcode_file(g.id)
             self.assertEqual(r['name'], g.name)
 
@@ -314,7 +322,8 @@ class TestGetGCodeFile(OpengbTestCase):
             g = GCodeFile.create(name='test_file', size='777',
                                  print_material='PLA', print_quality='High',
                                  print_extruders='Both', print_time_sec=56743,
-                                 print_filament_mm=9876, print_material_gm=40)
+                                 print_filament_mm=9876, print_material_gm=40,
+                                 thumbnail_png_base64='mock base64 data')
             gcode_dir = tempfile.mkdtemp()
             with open(os.path.join(gcode_dir, str(g.id)), 'wb') as p:
                 p.write(self.gcode.encode())
@@ -339,15 +348,18 @@ class TestGetGCodeFiles(OpengbTestCase):
             GCodeFile.create(name='test_file_1', size=777,
                              print_material='PLA', print_quality='High',
                              print_extruders='Both', print_time_sec=56743,
-                             print_filament_mm=9876, print_material_gm=40)
+                             print_filament_mm=9876, print_material_gm=40,
+                             thumbnail_png_base64='xyz123')
             GCodeFile.create(name='test_file_2', size=888,
                              print_material='PLA', print_quality='Low',
                              print_extruders='Left', print_time_sec=12523,
-                             print_filament_mm=3376, print_material_gm=22)
+                             print_filament_mm=3376, print_material_gm=22,
+                             thumbnail_png_base64='abc456')
             GCodeFile.create(name='test_file_3', size=999,
                              print_material='ABS', print_quality='Medium',
                              print_extruders='Right', print_time_sec=87893,
-                             print_filament_mm=10239, print_material_gm=76)
+                             print_filament_mm=10239, print_material_gm=76,
+                             thumbnail_png_base64='qrs789')
             r = self.message_handler.get_gcode_files()
         self.assertListEqual(r['gcode_files'], [
             {
@@ -360,6 +372,7 @@ class TestGetGCodeFiles(OpengbTestCase):
                 'print_time_sec':       56743,
                 'print_filament_mm':    9876,
                 'print_material_gm':    40,
+                'thumbnail_png_base64': 'xyz123',
             },
             {
                 'name': 'test_file_2',
@@ -371,6 +384,7 @@ class TestGetGCodeFiles(OpengbTestCase):
                 'print_time_sec':       12523,
                 'print_filament_mm':    3376,
                 'print_material_gm':    22,
+                'thumbnail_png_base64': 'abc456',
             },
             {
                 'name': 'test_file_3',
@@ -382,6 +396,7 @@ class TestGetGCodeFiles(OpengbTestCase):
                 'print_time_sec':       87893,
                 'print_filament_mm':    10239,
                 'print_material_gm':    76,
+                'thumbnail_png_base64': 'qrs789',
             },
         ])
 

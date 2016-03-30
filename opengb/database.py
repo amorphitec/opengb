@@ -38,6 +38,7 @@ class GCodeFile(BaseModel):
     print_time_sec = IntegerField()
     print_filament_mm = IntegerField()
     print_material_gm = IntegerField()
+    thumbnail_png_base64 = CharField() 
 
 
 class Counter(BaseModel):

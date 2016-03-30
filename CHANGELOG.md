@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ## Added
 - Metadata parameters to gcode files
+- Thumbnail parameter to gcode files
 
 ## [0.13.0] - 2016-03-29
 ### Fixed
