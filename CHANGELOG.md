@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.14.0] - 2016-03-30
 ## Added
 - Metadata parameters to gcode files
 - Thumbnail parameter to gcode files
