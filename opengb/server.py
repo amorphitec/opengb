@@ -268,7 +268,9 @@ class MessageHandler(object):
         }))
         return True
 
-    def put_gcode_file(self, payload, name):
+    def put_gcode_file(self, payload, name, print_material='',
+                       print_quality='', print_extruders='', print_time_sec=0,
+                       print_filament_mm=0, print_material_gm=0):
         """
         Upload a gcode file.
 
@@ -276,12 +278,35 @@ class MessageHandler(object):
         :type payload: :class:`str`
         :param name: Gcode file name.
         :type name: :class:`str`
+        :param print_material: Intended print material (e.g. "PLA").
+        :type print_material: :class:`str`
+        :param print_quality: Intended print quality (e.g. "High").
+        :type print_quality: :class:`str`
+        :param print_extruders: Extruders utilised (e.g. "Both").
+        :type print_extruders: :class:`str`
+        :param print_time_sec: Estimated print time in seconds.
+        :type print_time_sec: :class:`int`
+        :param print_filament_mm: Estimated print filament length in
+            millimeters.
+        :type print_filament_mm: :class:`int`
+        :param print_material_gm: Estimated print material weight in grams.
+        :type print_material_gm: :class:`int`
         """
+
         # TODO: Validate gcode. Could use gctools for this if it is
         # ever uploaded to PyPI https://github.com/thegaragelab/gctools
         payload_bytes = payload.encode()
         payload_size = len(payload_bytes)
-        gcode_file = OGD.GCodeFile.create(name=name, size=payload_size)
+        gcode_file = OGD.GCodeFile.create(
+            name=name,
+            size=payload_size,
+            print_material = print_material,
+            print_quality = print_quality,
+            print_extruders = print_extruders,
+            print_time_sec = print_time_sec,
+            print_filament_mm = print_filament_mm,
+            print_material_gm = print_material_gm,
+        )
         destination = os.path.join(options.gcode_dir, str(gcode_file.id))
         with open(destination, "wb") as gcode_file_out:
             try:
@@ -290,7 +315,17 @@ class MessageHandler(object):
                 LOGGER.error('Error writing gcode file {0}: '
                              '{1}'.format(destination, e))
                 raise IOError('Unable to save gcode file.')
-        return {'id': gcode_file.id, 'name': name, 'size': payload_size}
+        return {
+            'id': gcode_file.id,
+            'name': name,
+            'size': payload_size,
+            'print_material': print_material,
+            'print_quality': print_quality,
+            'print_extruders': print_extruders,
+            'print_time_sec': print_time_sec,
+            'print_filament_mm': print_filament_mm,
+            'print_material_gm': print_material_gm,
+        }
 
     def get_gcode_file(self, id, content=False):
         """
@@ -309,6 +344,12 @@ class MessageHandler(object):
                 'id':   result.id,
                 'name': result.name,
                 'size': result.size,
+                'print_material': result.print_material,
+                'print_quality': result.print_quality,
+                'print_extruders': result.print_extruders,
+                'print_time_sec': result.print_time_sec,
+                'print_filament_mm': result.print_filament_mm,
+                'print_material_gm': result.print_material_gm,
             }
         except OGD.GCodeFile.DoesNotExist:
             raise IndexError('No gcode file found with id {0}'.format(id))
@@ -331,6 +372,12 @@ class MessageHandler(object):
                 'id': g.id,
                 'name': g.name,
                 'size': g.size,
+                'print_material': g.print_material,
+                'print_quality': g.print_quality,
+                'print_extruders': g.print_extruders,
+                'print_time_sec': g.print_time_sec,
+                'print_filament_mm': g.print_filament_mm,
+                'print_material_gm': g.print_material_gm,
             }
             for g in OGD.GCodeFile.select()]}
 

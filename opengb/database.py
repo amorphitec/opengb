@@ -32,6 +32,12 @@ class PrintJob(BaseModel):
 class GCodeFile(BaseModel):
     name = CharField()
     size = IntegerField()
+    print_material = CharField()
+    print_quality = CharField()
+    print_extruders = CharField()
+    print_time_sec = IntegerField()
+    print_filament_mm = IntegerField()
+    print_material_gm = IntegerField()
 
 
 class Counter(BaseModel):

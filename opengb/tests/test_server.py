@@ -277,6 +277,17 @@ class TestPutGCodeFile(OpengbTestCase):
                                                            'test_name')
         self.assertEqual(r['name'], 'test_name')
 
+    def test_gcode_file_metadata_in_db(self):
+        """Uploaded gcode file metadata is correct in the database."""
+        with test_database(self.db, [GCodeFile], create_tables=True):
+            gcode_dir = tempfile.mkdtemp()
+            with patch.object(server.options.mockable(), 'gcode_dir',
+                              gcode_dir):
+                r = self.message_handler.put_gcode_file(self.gcode,
+                    'test_name', print_material='PLA', print_quality='High',
+                    print_extruders='Both', print_time_sec=56743,
+                    print_filament_mm=9876, print_material_gm=40)
+        self.assertEqual(r['name'], 'test_name')
 
 class TestGetGCodeFile(OpengbTestCase):
 
@@ -290,14 +301,20 @@ class TestGetGCodeFile(OpengbTestCase):
     def test_gcode_file_returned(self):
         """Gcode file with given id is returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
-            g = GCodeFile.create(name='test_file', size='777')
+            g = GCodeFile.create(name='test_file', size='777',
+                                 print_material='PLA', print_quality='High',
+                                 print_extruders='Both', print_time_sec=56743,
+                                 print_filament_mm=9876, print_material_gm=40)
             r = self.message_handler.get_gcode_file(g.id)
             self.assertEqual(r['name'], g.name)
 
     def test_gcode_file_content_returned(self):
         """Content of gcode file with given id is returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
-            g = GCodeFile.create(name='test_file', size='777')
+            g = GCodeFile.create(name='test_file', size='777',
+                                 print_material='PLA', print_quality='High',
+                                 print_extruders='Both', print_time_sec=56743,
+                                 print_filament_mm=9876, print_material_gm=40)
             gcode_dir = tempfile.mkdtemp()
             with open(os.path.join(gcode_dir, str(g.id)), 'wb') as p:
                 p.write(self.gcode.encode())
@@ -319,25 +336,52 @@ class TestGetGCodeFiles(OpengbTestCase):
     def test_all_gcode_files_returned(self):
         """All gcode files are returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
-            GCodeFile.create(name='test_file_1', size='777')
-            GCodeFile.create(name='test_file_2', size='888')
-            GCodeFile.create(name='test_file_3', size='999')
+            GCodeFile.create(name='test_file_1', size=777,
+                             print_material='PLA', print_quality='High',
+                             print_extruders='Both', print_time_sec=56743,
+                             print_filament_mm=9876, print_material_gm=40)
+            GCodeFile.create(name='test_file_2', size=888,
+                             print_material='PLA', print_quality='Low',
+                             print_extruders='Left', print_time_sec=12523,
+                             print_filament_mm=3376, print_material_gm=22)
+            GCodeFile.create(name='test_file_3', size=999,
+                             print_material='ABS', print_quality='Medium',
+                             print_extruders='Right', print_time_sec=87893,
+                             print_filament_mm=10239, print_material_gm=76)
             r = self.message_handler.get_gcode_files()
         self.assertListEqual(r['gcode_files'], [
             {
-                'name': 'test_file_1',
-                'size': 777,
-                'id':   1,
+                'name':                 'test_file_1',
+                'size':                 777,
+                'id':                   1,
+                'print_material':       'PLA',
+                'print_quality':        'High',
+                'print_extruders':      'Both',
+                'print_time_sec':       56743,
+                'print_filament_mm':    9876,
+                'print_material_gm':    40,
             },
             {
                 'name': 'test_file_2',
                 'size': 888,
                 'id':   2,
+                'print_material':       'PLA',
+                'print_quality':        'Low',
+                'print_extruders':      'Left',
+                'print_time_sec':       12523,
+                'print_filament_mm':    3376,
+                'print_material_gm':    22,
             },
             {
                 'name': 'test_file_3',
                 'size': 999,
                 'id':   3,
+                'print_material':       'ABS',
+                'print_quality':        'Medium',
+                'print_extruders':      'Right',
+                'print_time_sec':       87893,
+                'print_filament_mm':    10239,
+                'print_material_gm':    76,
             },
         ])
 
