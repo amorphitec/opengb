@@ -310,7 +310,7 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc":"2.0","id":4,"result":{"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled":true}}}}
+    {"jsonrpc":"2.0","id":4,"result":{"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled": true}, "extrude_override": {"percent": 100}}}
 
 Events
 ^^^^^^
