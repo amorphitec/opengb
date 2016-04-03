@@ -77,6 +77,15 @@ class PrinterCallbacks(object):
         """
         pass
 
+    def extrude_override_change(self, percentage): 
+        """
+        Publish an extrude override percentage change event.
+
+        :param percent: Percentage by which extrusion should be overridden. 
+        :type percent: :class:`float`
+        """
+        pass
+
     def temp_update(self, bed_current, bed_target, nozzle1_current,
                     nozzle1_target, nozzle2_current, nozzle2_target):
         """
@@ -190,6 +199,14 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             'params':   {
                 'old':      old.name,
                 'new':      new.name,
+            }
+        })
+
+    def extrude_override_change(self, percent):
+     self._publish({
+            'event':   'extrude_override_change',
+            'params':   {
+                'percent':      percent,
             }
         })
 
@@ -365,6 +382,16 @@ class IPrinter(multiprocessing.Process):
         :type length: :class:`float`
         :param rate: Rate at which to unretract in mm/s.
         :type rate: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
+    def set_extrude_override(self, percent):
+        """
+        Set percentage override applied to extrusion commands.
+
+        :param percent: Percentage by which extrusion should be overridden.
+        :type percent: :class:`float`
         """
         pass
 

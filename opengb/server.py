@@ -50,6 +50,9 @@ PRINTER = {
     'steppers': {
         'enbabled': True,
     },
+    'extrude_override': {
+        'percent':  100,
+    },
 }
 
 
@@ -197,10 +200,25 @@ class MessageHandler(object):
         }))
         return True
 
+    def set_extrude_override(self, percent):
+        """
+        Set percentage override applied to extrusion commands.
+
+        :param percent: Percentage by which extrusion should be overridden.
+        :type percent: :class:`float`
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'set_extrude_override_percent',
+            'params': {
+                'percent':     percent,
+            }
+        }))
+        return True
+
     def enable_steppers(self):
         """
         Enable stepper motors.
-        
+
         Prevents motors and axes from moving freely.
         """
         self._to_printer.put(json.dumps({
@@ -212,7 +230,7 @@ class MessageHandler(object):
     def disable_steppers(self):
         """
         Disable stepper motors.
-        
+
         Allows motors and axes to moving freely.
         """
         self._to_printer.put(json.dumps({
@@ -404,7 +422,7 @@ class MessageHandler(object):
             raise IndexError('Error deleting gcode file with '
                              'id {0}'.format(id)) from None
         return True
- 
+
     def print_gcode_file(self, id):
         """
         Print gcode file with given `id`.
@@ -436,15 +454,15 @@ class MessageHandler(object):
     def get_status(self):
         """
         Get current printer status.
-        
+
         .. note::
 
             This method should only be used to determine baseline printer
             status. To maintain a view of current printer status listen for
             the various `jsonrpc` events.
         """
-        # Enums don't serialise so replace with name. 
-        printer = PRINTER.copy() 
+        # Enums don't serialise so replace with name.
+        printer = PRINTER.copy()
         printer['state'] = printer['state'].name
         return {'status': printer}
 
@@ -516,6 +534,8 @@ def process_event(event):
         if event['event'] == 'state_change':
             # TODO: if state changes from printing to ready, reset progress.
             PRINTER['state'] = opengb.printer.State[event['params']['new']]
+        elif event['event'] == 'extrude_override_change':
+            PRINTER['extrude_override'] = event['params']
         elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params']
         elif event['event'] == 'position_update':

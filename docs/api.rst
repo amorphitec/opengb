@@ -129,6 +129,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+set_extrude_override
+====================
+
+.. automethod:: opengb.server.MessageHandler.set_extrude_override
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"set_extrude_override","params":{"percent":120}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 enable_steppers
 ===============
 
@@ -316,6 +329,15 @@ Sent when the printer status changes. Valid states are:
 Example event: ::
 
     {"jsonrpc": "2.0", "event": "state_change", "params": { "old": "READY", "new": "EXECUTING"}}
+
+extrude_override_change
+=======================
+
+Sent when the extrude override percentage changes.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "extrude_override_change", "params": { "percent": 120}}
 
 temp_update
 ===========

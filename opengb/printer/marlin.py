@@ -391,6 +391,10 @@ class Marlin(IPrinter):
     def retract_filament(self, head=0, length=5, rate=300):
         self.unretract_filament(head, -length, rate)
 
+    def set_extrude_override(self, percent):
+        self._queue_command('M221 S{0}'.format(percent).encode())
+        self._callbacks.extrude_override_change(percent)
+
     def enable_steppers(self):
         self._queue_command(b'M17')
         self._callbacks.steppers_update(True)

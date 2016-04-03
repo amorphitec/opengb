@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## Added
+- API method set_extrude_override
+- API event extrude_override_change
 
 ## [0.14.0] - 2016-03-30
 ## Added
