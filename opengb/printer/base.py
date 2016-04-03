@@ -81,7 +81,16 @@ class PrinterCallbacks(object):
         """
         Publish an extrude override percentage change event.
 
-        :param percent: Percentage by which extrusion should be overridden. 
+        :param percent: Percentage by which extrusion will be overridden. 
+        :type percent: :class:`float`
+        """
+        pass
+
+    def speed_override_change(self, percentage):
+        """
+        Publish an extrude override percentage change event.
+
+        :param percent: Percentage by which movement speed will be overridden.
         :type percent: :class:`float`
         """
         pass
@@ -199,6 +208,14 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
             'params':   {
                 'old':      old.name,
                 'new':      new.name,
+            }
+        })
+
+    def speed_override_change(self, percent):
+     self._publish({
+            'event':   'speed_override_change',
+            'params':   {
+                'percent':      percent,
             }
         })
 
@@ -391,6 +408,16 @@ class IPrinter(multiprocessing.Process):
         Set percentage override applied to extrusion commands.
 
         :param percent: Percentage by which extrusion should be overridden.
+        :type percent: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
+    def set_speed_override(self, percent):
+        """
+        Set speed percentage override applied to movement commands.
+
+        :param percent: Percentage by which movement speed should be overridden.
         :type percent: :class:`float`
         """
         pass

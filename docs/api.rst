@@ -142,6 +142,19 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+set_speed_override
+====================
+
+.. automethod:: opengb.server.MessageHandler.set_speed_override
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"set_speed_override","params":{"percent":120}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 enable_steppers
 ===============
 
@@ -338,6 +351,15 @@ Sent when the extrude override percentage changes.
 Example event: ::
 
     {"jsonrpc": "2.0", "event": "extrude_override_change", "params": { "percent": 120}}
+
+speed_override_change
+=======================
+
+Sent when the movement speed override percentage changes.
+
+Example event: ::
+
+    {"jsonrpc": "2.0", "event": "speed_override_change", "params": { "percent": 120}}
 
 temp_update
 ===========

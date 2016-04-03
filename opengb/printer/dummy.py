@@ -91,6 +91,11 @@ class Dummy(IPrinter):
                                            '{0} percent'.format(percent))
         self._callbacks.extrude_override_change(percent)
 
+    def set_speed_override(self, percent):
+        self._callbacks.log(logging.DEBUG, 'Movement speed override set to '
+                                           '{0} percent'.format(percent))
+        self._callbacks.speed_override_change(percent)
+
     def enable_steppers(self):
         self._callbacks.log(logging.DEBUG, 'Steppers enabled')
         self._callbacks.steppers_update(True)

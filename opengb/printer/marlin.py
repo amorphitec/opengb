@@ -395,6 +395,10 @@ class Marlin(IPrinter):
         self._queue_command('M221 S{0}'.format(percent).encode())
         self._callbacks.extrude_override_change(percent)
 
+    def set_speed_override(self, percent):
+        self._queue_command('M220 S{0}'.format(percent).encode())
+        self._callbacks.speed_override_change(percent)
+
     def enable_steppers(self):
         self._queue_command(b'M17')
         self._callbacks.steppers_update(True)

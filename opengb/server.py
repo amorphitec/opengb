@@ -53,6 +53,9 @@ PRINTER = {
     'extrude_override': {
         'percent':  100,
     },
+    'speed_override': {
+        'percent':  100,
+    },
 }
 
 
@@ -209,6 +212,21 @@ class MessageHandler(object):
         """
         self._to_printer.put(json.dumps({
             'method':   'set_extrude_override_percent',
+            'params': {
+                'percent':     percent,
+            }
+        }))
+        return True
+
+    def set_speed_override(self, percent):
+        """
+        Set speed percentage override applied to movement commands.
+
+        :param percent: Percentage by which movement speed should be overridden.
+        :type percent: :class:`float`
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'set_speed_override_percent',
             'params': {
                 'percent':     percent,
             }
@@ -536,6 +554,8 @@ def process_event(event):
             PRINTER['state'] = opengb.printer.State[event['params']['new']]
         elif event['event'] == 'extrude_override_change':
             PRINTER['extrude_override'] = event['params']
+        elif event['event'] == 'speed_override_change':
+            PRINTER['speed_override'] = event['params']
         elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params']
         elif event['event'] == 'position_update':

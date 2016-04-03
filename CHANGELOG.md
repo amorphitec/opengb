@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## Added
 - API method set_extrude_override
 - API event extrude_override_change
+- API method set_speed_override
+- API event speed_override_change
 
 ## [0.14.0] - 2016-03-30
 ## Added
