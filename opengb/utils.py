@@ -50,7 +50,7 @@ def delete_gcode_file(id):
         gcode_instance.delete_instance()
     except OGD.GCodeFile.DoesNotExist:
         raise IOError('No gcode entry in database with id '
-                      '{0}'.format(id)) from None 
+                      '{0}'.format(id)) from None
 
 
 def prepare_gcode(gcode, remove_comments=True):
