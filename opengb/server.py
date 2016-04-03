@@ -56,6 +56,11 @@ PRINTER = {
     'speed_override': {
         'percent':  100,
     },
+    'fan_speed': {
+        0:          100,
+        1:          100,
+        2:          100,
+    },
 }
 
 
@@ -210,6 +215,8 @@ class MessageHandler(object):
         :param percent: Percentage by which extrusion should be overridden.
         :type percent: :class:`float`
         """
+        if percent not in range(0,101):
+            raise IndexError('Percent must be 0-100')
         self._to_printer.put(json.dumps({
             'method':   'set_extrude_override_percent',
             'params': {
@@ -225,6 +232,8 @@ class MessageHandler(object):
         :param percent: Percentage by which movement speed should be overridden.
         :type percent: :class:`float`
         """
+        if percent not in range(0,101):
+            raise IndexError('Percent must be 0-100')
         self._to_printer.put(json.dumps({
             'method':   'set_speed_override_percent',
             'params': {
@@ -232,6 +241,28 @@ class MessageHandler(object):
             }
         }))
         return True
+
+    def set_fan_speed(self, fan, percent):
+        """
+        Set fan speed.
+
+        :param fan: Number of fan for which to set speed.
+        :type fan: class:`int` (0-2)
+        :param percent: Percentage of maximum speed to set.
+        :type percent: :class:`float`
+        """
+        if fan not in range(0, 2):
+            raise IndexError('Fan must be 0-2')
+        if percent not in range(0,101):
+            raise IndexError('Percent must be 0-100')
+        self._to_printer.put(json.dumps({
+            'method':   'set_fan_speed',
+            'params': {
+                'fan':         fan,
+                'percent':     percent,
+            }
+        }))
+
 
     def enable_steppers(self):
         """
@@ -556,6 +587,8 @@ def process_event(event):
             PRINTER['extrude_override'] = event['params']
         elif event['event'] == 'speed_override_change':
             PRINTER['speed_override'] = event['params']
+        elif event['event'] == 'fan_speed_change':
+            PRINTER['fan_speed'][event['params']['fan']] = event['params']['percent']
         elif event['event'] == 'temp_update':
             PRINTER['temp'] = event['params']
         elif event['event'] == 'position_update':

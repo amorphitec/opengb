@@ -399,6 +399,11 @@ class Marlin(IPrinter):
         self._queue_command('M220 S{0}'.format(percent).encode())
         self._callbacks.speed_override_change(percent)
 
+    def set_fan_speed(self, fan, percent):
+        speed = int(percent / 100 * 255)
+        self._queue_command('M106 P{0} S{1}'.format(fan, speed).encode())
+        self._callbacks.fan_speed_change(fan, percent)
+
     def enable_steppers(self):
         self._queue_command(b'M17')
         self._callbacks.steppers_update(True)

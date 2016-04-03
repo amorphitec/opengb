@@ -77,7 +77,7 @@ class PrinterCallbacks(object):
         """
         pass
 
-    def extrude_override_change(self, percentage): 
+    def extrude_override_change(self, percent): 
         """
         Publish an extrude override percentage change event.
 
@@ -86,11 +86,22 @@ class PrinterCallbacks(object):
         """
         pass
 
-    def speed_override_change(self, percentage):
+    def speed_override_change(self, percent):
         """
         Publish an extrude override percentage change event.
 
         :param percent: Percentage by which movement speed will be overridden.
+        :type percent: :class:`float`
+        """
+        pass
+
+    def fan_speed_change(self, fan, percent):
+        """
+        Publish a fan speed change event.
+
+        :param fan: Number of fan for which speed was set.
+        :type fan: class:`int` (0-2)
+        :param percent: Percentage of maximum speed to which fan was set.
         :type percent: :class:`float`
         """
         pass
@@ -223,6 +234,15 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
      self._publish({
             'event':   'extrude_override_change',
             'params':   {
+                'percent':      percent,
+            }
+        })
+
+    def fan_speed_change(self, fan, percent):
+        self._publish({
+            'event':   'fan_speed_change',
+            'params':   {
+                'fan':          fan,
                 'percent':      percent,
             }
         })
@@ -418,6 +438,18 @@ class IPrinter(multiprocessing.Process):
         Set speed percentage override applied to movement commands.
 
         :param percent: Percentage by which movement speed should be overridden.
+        :type percent: :class:`float`
+        """
+        pass
+
+    @abc.abstractmethod
+    def set_fan_speed(self, fan, percent):
+        """
+        Set fan speed.
+
+        :param fan: Number of fan for which to set speed.
+        :type fan: class:`int` (0-2)
+        :param percent: Percentage of maximum speed to set.
         :type percent: :class:`float`
         """
         pass

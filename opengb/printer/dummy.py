@@ -96,6 +96,11 @@ class Dummy(IPrinter):
                                            '{0} percent'.format(percent))
         self._callbacks.speed_override_change(percent)
 
+    def set_fan_speed(self, fan, percent):
+        self._callbacks.log(logging.DEBUG, 'Setting speed of fan {0} to {1} '
+                                           'percent'.format(fan, percent))
+        self._callbacks.fan_speed_change(fan, percent)
+
     def enable_steppers(self):
         self._callbacks.log(logging.DEBUG, 'Steppers enabled')
         self._callbacks.steppers_update(True)

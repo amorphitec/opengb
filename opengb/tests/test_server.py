@@ -6,6 +6,8 @@ TODO:
     * Add print-related API method tests
     * Add retract/unretract tests
     * Add extrude override tests
+    * Add speed override tests
+    * Add fan speed tests
 """
 
 import os
