@@ -168,6 +168,32 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":1,"result":true}
 
+filament_swap_begin
+===================
+
+.. automethod:: opengb.server.MessageHandler.filament_swap_begin
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"filament_swap_begin","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
+filament_swap_complete
+======================
+
+.. automethod:: opengb.server.MessageHandler.filament_swap_complete
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":1,"method":"filament_swap_complete","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":1,"result":true}
+
 enable_steppers
 ===============
 
