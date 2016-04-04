@@ -8,6 +8,7 @@ TODO:
     * Add extrude override tests
     * Add speed override tests
     * Add fan speed tests
+    * Add filament swap tests
 """
 
 import os

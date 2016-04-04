@@ -242,6 +242,41 @@ class MessageHandler(object):
         }))
         return True
 
+    def filament_swap_begin(self):
+        """
+        Begin filament swap procedure.
+
+        Normally this will pause an ongoing print, move the print head/bed and
+        retract filament ready to be swapped.
+
+        Once filament swap is complete :meth:`filament_swap_complete` should
+        be called to return print head to previous position and continue
+        printing.
+
+        ..note::
+
+            This is an experimental method and may be implemented differently
+            for various printer + firmware combinations.
+
+            This method may be called internally as the result of a filament
+            detection script being triggered.
+        """
+        self._to_printer.put(json.dumps({
+            'method':   'filament_swap_begin',
+            'params': {}
+        }))
+
+    def filament_swap_complete(self):
+        """
+        Complete filament swap procedure.
+        """
+        if self.PRINTER['state'] != opengb.printer.State.FILAMENT_SWAP:
+            raise IndexError('Printer must be in FILAMENT_SWAP state')
+        self._to_printer.put(json.dumps({
+            'method':   'filament_swap_complete',
+            'params': {}
+        }))
+
     def set_fan_speed(self, fan, percent):
         """
         Set fan speed.
@@ -262,7 +297,6 @@ class MessageHandler(object):
                 'percent':     percent,
             }
         }))
-
 
     def enable_steppers(self):
         """

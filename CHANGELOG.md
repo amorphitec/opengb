@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ## Added
 - FILAMENT_SWAP state triggered by M600 from Marlin
+- API method filament_swap_begin
+- API method filament_swap_complete
 
 ## [0.15.0] - 2016-04-04
 ## Added

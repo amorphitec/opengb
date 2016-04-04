@@ -411,6 +411,16 @@ class Marlin(IPrinter):
         self._queue_command('M106 P{0} S{1}'.format(fan, speed).encode())
         self._callbacks.fan_speed_change(fan, percent)
 
+    def filament_swap_begin(self):
+        self._callbacks.log(logging.DEBUG, 'Beginning filament swap')
+        self._update_state(State.FILAMENT_SWAP)
+        self._queue_command(b'M600')
+
+    def filament_swap_complete(self):
+        self._callbacks.log(logging.DEBUG, 'Completing filament swap')
+        self._update_state(State.EXECUTING)
+        # TODO: trigger a GPIO pin to simulate an lcd button press.
+
     def enable_steppers(self):
         self._queue_command(b'M17')
         self._callbacks.steppers_update(True)

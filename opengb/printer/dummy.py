@@ -101,6 +101,14 @@ class Dummy(IPrinter):
                                            'percent'.format(fan, percent))
         self._callbacks.fan_speed_change(fan, percent)
 
+    def filament_swap_begin(self):
+        self._callbacks.log(logging.DEBUG, 'Beginning filament swap')
+        self._update_state(State.FILAMENT_SWAP)
+        
+    def filament_swap_complete(self):
+        self._callbacks.log(logging.DEBUG, 'Completing filament swap')
+        self._update_state(State.EXECUTING)
+
     def enable_steppers(self):
         self._callbacks.log(logging.DEBUG, 'Steppers enabled')
         self._callbacks.steppers_update(True)

@@ -444,6 +444,33 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
+    def filament_swap_begin(self):
+        """
+        Begin filament swap procedure.
+
+        ..note::
+
+            This doesn't sit neatly within the paradigm used by the various
+            other printer methods. This is due to the Marlin functionality
+            upon which it is based being somewhat unusual.
+
+            Ultimately all aspects of automated filament swap should be
+            implemented in OpenGB using generic gcode commands to ensure
+            consistency. But for now we are leveraging what Marlin provides for
+            free.
+        """
+        pass
+
+    @abc.abstractmethod
+    def filament_swap_complete(self):
+        """
+        Begin filament swap procedure.
+
+        See note in :meth:`filament swap_begin`.
+        """
+        pass
+
+    @abc.abstractmethod
     def set_fan_speed(self, fan, percent):
         """
         Set fan speed.
