@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## Added
+- FILAMENT_SWAP state triggered by M600 from Marlin
 
 ## [0.15.0] - 2016-04-04
 ## Added
