@@ -25,6 +25,7 @@ class State(enum.Enum):
     READY = 20
     EXECUTING = 30
     PAUSED = 40
+    FILAMENT_SWAP = 50
     ERROR = 100
 
 

@@ -67,10 +67,17 @@ EVENT_MSG_PATTERNS = [
                                             g['ntemp'], None))),
 ]
 
-# Error message patterns.
-ERROR_MSG_PATTERNS = [
-    # Catch all standard-format errors.
-    re.compile(r'Error:(?P<error>.*)$'),
+# State-change message patterns mapped to log level and new state.
+STATE_CHANGE_MSG_PATTERNS = [
+    # Filament swap.
+    # If Marlin is configured with a `FILAMENT_RUNOUT_SENSOR` then an M600
+    # message is generally sent when it is triggered. However an M600 is
+    # also appended to Marlin's *incoming* command queue and if
+    # `FILAMENTCHANGEENABLE` is configured Marlin will enter its filament
+    # swap script.
+    re.compile(r'M600', logging.INFO, State.FILAMENT_SWAP),
+    # Error.
+    re.compile(r'Error:(?P<error>.*)$', logging.ERROR, State.ERROR),
 ]
 
 # USB device name patterns.
@@ -326,11 +333,11 @@ class Marlin(IPrinter):
                                     'Parsed event: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
                 return
-        for each in ERROR_MSG_PATTERNS:
-            matched = each.match(message)
+        for each in STATE_CHANGE_MSG_PATTERNS:
+            matched = each[0].match(message)
             if matched:
-                self._callbacks.log(logging.ERROR, message)
-                self._update_state(State.ERROR)
+                self._callbacks.log(each[1], message)
+                self._update_state(each[2])
         self._callbacks.log(logging.ERROR, 'Unparsed message: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
         # multiple lines and thus did not match a regex. This should not

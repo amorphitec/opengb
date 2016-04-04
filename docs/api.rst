@@ -350,6 +350,7 @@ Sent when the printer status changes. Valid states are:
 #. ``READY``
 #. ``EXECUTING``
 #. ``PAUSED``
+#. ``FILAMENT_SWAP``
 #. ``ERROR``
 
 Example event: ::
