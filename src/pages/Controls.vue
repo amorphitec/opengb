@@ -15,7 +15,8 @@
     data () {
       return {
         printerService: printerws,
-        view: 'movement'
+        view: 'movement',
+        extrudeLength: 100
       }
     },
     computed: {
@@ -40,11 +41,19 @@
       homePrinter: function () {
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
-      extrude: function (nid) {
-        this.printerService.unretractFilament(nid,100,5)
+      extrude: function (nid, length) {
+        this.printerService.unretractFilament(nid,length,5)
       },
-      retract: function (nid) {
-        this.printerService.retractFilament(nid,100,5)
+      retract: function (nid, length) {
+        this.printerService.retractFilament(nid,length,5)
+      },
+      increaseExtrudeLength: function () {
+        console.log('increasing el')
+        this.extrudeLength += 10
+      },
+      decreaseExtrudeLength: function () {
+        console.log('decreasing el')
+        this.extrudeLength = this.extrudeLength < 10 ? 0 : this.extrudeLength - 10
       }
     }
   }
@@ -63,7 +72,13 @@
           <button class="" v-on:click="setView('temperature')">more</button>
         </div>
         <div class="right-col">
-          <div class="top-padding"></div>
+          <div class="extrude-length">
+            <span>extrude <input v-model="extrudeLength" />mm</span>
+            <span class="block float-right" style="margin-top:20px;">
+              <button class="button temp-select" v-on:click="increaseExtrudeLength">+</button>
+              <button class="button temp-select" v-on:click="decreaseExtrudeLength">-</button>
+            </span>
+          </div>
           <div class="temp-menu-wrapper">
             <span class="block">
               <temperature-menu 
@@ -75,8 +90,8 @@
               </temperature-menu>
             </span>
             <span class="block top">
-              <button class="button block" v-on:click="extrude(0)">Extrude</button>
-              <button class="button block" v-on:click="retract(0)">Retract</button>
+              <button class="button block" v-on:click="extrude(0, extrudeLength)">Extrude</button>
+              <button class="button block" v-on:click="retract(0, extrudeLength)">Retract</button>
             </span>
           </div>
           <div class="temp-menu-wrapper">
@@ -90,8 +105,8 @@
               </temperature-menu>
             </span>
             <span class="block top">
-              <button class="button block" v-on:click="extrude(1)">Extrude</button>
-              <button class="button block" v-on:click="retract(1)">Retract</button>
+              <button class="button block" v-on:click="extrude(1, extrudeLength)">Extrude</button>
+              <button class="button block" v-on:click="retract(1, extrudeLength)">Retract</button>
             </span>
           </div>
           <div class="temp-menu-wrapper">
@@ -131,8 +146,25 @@
 </template>
 
 <style>
-  .top-padding{
-    margin-top:65px;
+  .extrude-length{
+    width:275px;
+    margin: 0 10px;
+    text-align: right;
+    font-family: 'Exo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .extrude-length input{
+    line-height: 65px;
+    padding: 0 5px;
+    width: 90px;
+    background: transparent;
+    color: white;
+    border: 0;
+    text-align: right;
+    font-size: 2em;
+    font-family: 'Exo', sans-serif;
+    font-weight: 200;  
   }
   .left-col h2{
     text-align: center;

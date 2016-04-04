@@ -25,8 +25,14 @@
           obj[this.tempId] = temp
         } else {
           obj[this.tempId] = 1
-      }
+        }
         this.printerService.setTemperatures(obj)
+      },
+      increaseTemperature: function  () {
+        this.setTemperature(this.target + 1)
+      },
+      decreaseTemperature: function () {
+        this.setTemperature(this.target - 1)
       }
     },
     computed:{
@@ -57,8 +63,8 @@
         <div class="current-temp" v-on:click="toggleOpen">{{current}}°C</div>
       </span>
       <span class="block float-right">
-        <button class="button temp-select" v-on:click="">+</button>
-        <button class="button temp-select" v-on:click="">-</button>
+        <button class="button temp-select" v-on:click="increaseTemperature">+</button>
+        <button class="button temp-select" v-on:click="decreaseTemperature">-</button>
       </span>
     </div>
   </div>
