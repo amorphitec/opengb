@@ -1,6 +1,11 @@
 <script>
   require('../../services/printer-service.js')
+  import SlideSwitch from '../../components/slideSwitch/SlideSwitch.vue'
+
   export default {
+    components: {
+      SlideSwitch
+    },
     data () {
       return {
         isMoving: false,
@@ -87,7 +92,7 @@
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 10}" v-on:click="setResolution(10)">10mm</button>
       <button class="button resolution-select" v-bind:class="{'selected': resolution == 100}" v-on:click="setResolution(100)">100mm</button>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" >Home All</button>
-      <button class="button rounded" style="width:100%;" v-on:click="toggleMotors()">Motors {{motorStatus}}</button>
+      <slide-switch v-on:click="toggleMotors()" v-bind:is-on="motorStatus == 'on'" label-text="motors"></slide-switch>
     </div>
   </div>
 </template>

@@ -7,6 +7,7 @@
     position: { x: null, y: null, z: null },
     print: { currentLine: null, totalLines: null },
     steppers: {enabled: null},
+    fans: { 1: {percent: null}, 2: {precent: null} },
     state: null,
     temperatures: {
       bed: { target: null, current: null },
@@ -77,6 +78,14 @@
     disengageMotors: function () {
       var method = 'disable_steppers'
       var params = {
+      }
+      ws.call(method, params)
+    },
+    setFanSpeed: function (fan, percent) {
+      var method = 'set_fan_speed'
+      var params = {
+        fan: fan,
+        percent: percent
       }
       ws.call(method, params)
     },
@@ -268,6 +277,12 @@
     ws.$on('steppers_update', function (message) {
       var params = message
       printer.steppers.enabled = params.enabled
+      console.log('stepper event: ', message)
+    })
+
+    ws.$on('fan_speed_change', function (message) {
+      var params = message
+      printer.fans[params.fan] = {percent: params.percent}
       console.log('stepper event: ', message)
     })
 

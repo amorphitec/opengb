@@ -141,7 +141,7 @@
     background: #900!important;
   }
 
-  .temperature-menu.is-on {
+  .temperature-menu-adv.is-on {
     background: #c60f13;
   }
 

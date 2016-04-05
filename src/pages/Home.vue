@@ -4,12 +4,14 @@
   import PrintStatusCircle from '../components/print/PrintStatusCircle.vue'
   import TemperatureMenu from '../components/temperature/TemperatureMenu.vue'
   import SearchList from '../components/files/SearchList.vue'
+  import SlideSwitch from '../components/slideSwitch/SlideSwitch.vue'
 
   export default {
     components: {
       PrintStatusCircle,
       TemperatureMenu,
-      SearchList
+      SearchList,
+      SlideSwitch
     },
     data () {
       return {
@@ -164,7 +166,7 @@
         >
       </temperature-menu>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
-      <button class="button rounded" style="width:100%;" v-on:click="toggleMotors()">Motors {{motorStatus}}</button>
+      <slide-switch v-on:click="toggleMotors()" v-bind:is-on="motorStatus == 'on'" label-text="motors"></slide-switch>
     </div>
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">

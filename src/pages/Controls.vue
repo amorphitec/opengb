@@ -4,13 +4,15 @@
   import TemperatureInfo from '../components/temperature/TemperatureInfo.vue'
   import PositionControlCube from '../components/position/PositionControlCube.vue'
   import TemperatureMenu from '../components/temperature/TemperatureMenuAdv.vue'
+  import SlideSwitch from '../components/slideSwitch/SlideSwitch.vue'
 
   export default {
     components: {
       PositionInfo,
       TemperatureInfo,
       PositionControlCube,
-      TemperatureMenu
+      TemperatureMenu,
+      SlideSwitch
     },
     data () {
       return {
@@ -32,6 +34,10 @@
       isNotPrinting: function () {
         var s = this.printerService.printer.state
         return s != 'EXECUTING' && s != 'PAUSED'
+      },
+      fanStatus: function () {
+        var test = this.printerService.printer.fans[1].percent
+        return  test ? 'on' : 'off'
       }
     },
     methods: {
@@ -54,6 +60,13 @@
       decreaseExtrudeLength: function () {
         console.log('decreasing el')
         this.extrudeLength = this.extrudeLength < 10 ? 0 : this.extrudeLength - 10
+      },
+      toggleFans: function () {
+        if(this.fanStatus == 'on'){
+          this.printerService.setFanSpeed(1,0)
+        }else{
+          this.printerService.setFanSpeed(1,100)
+        }
       }
     }
   }
@@ -64,12 +77,12 @@
 
     <div class="slider-wrapper" v-bind:class="{'is-focus': isTemperature}">
       <div class="full-section dark">
-        <div class="left-col">
+        <div class="left-col" v-on:click="setView('temperature')">
           <h2>heat</h2>
           <temperature-info name="extruder 1" v-bind:value="printerService.printer.temperatures.nozzle1.current"></temperature-info>
           <temperature-info name="extruder 2" v-bind:value="printerService.printer.temperatures.nozzle2.current"></temperature-info>
           <temperature-info name="bed" v-bind:value="printerService.printer.temperatures.bed.current"></temperature-info>
-          <button class="" v-on:click="setView('temperature')">more</button>
+          <button class="" v-if="!isTemperature">expand</button>
         </div>
         <div class="right-col">
           <div class="extrude-length">
@@ -120,18 +133,25 @@
               </temperature-menu>
             </span>
           </div>
+
+          <div class="temp-menu-wrapper">
+            <span class="block">
+              <slide-switch v-on:click="toggleFans()" v-bind:is-on="fanStatus == 'on'" label-text="fans"></slide-switch>
+            </span>
+          </div>
+
         </div>
       </div>
     </div>
 
     <div class="slider-wrapper" v-bind:class="{'is-focus': isMovement}" >
       <div class="full-section">
-        <div class="left-col">
+        <div class="left-col" v-on:click="setView('movement')">
           <h2>move</h2>
           <position-info name="x" v-bind:value="printerService.printer.position.x"></position-info>
           <position-info name="y" v-bind:value="printerService.printer.position.y"></position-info>
           <position-info name="z" v-bind:value="printerService.printer.position.z"></position-info>
-          <button class="" v-on:click="setView('movement')">more</button>
+          <button v-if="!isMovement">expand</button>
         </div>
         <div class="right-col">
           <div class="top-padding"></div>
@@ -146,6 +166,9 @@
 </template>
 
 <style>
+  .top-padding{
+    padding-top:65px;
+  }
   .extrude-length{
     width:275px;
     margin: 0 10px;
@@ -157,7 +180,7 @@
   .extrude-length input{
     line-height: 65px;
     padding: 0 5px;
-    width: 90px;
+    width: 75px;
     background: transparent;
     color: white;
     border: 0;
@@ -166,7 +189,10 @@
     font-family: 'Exo', sans-serif;
     font-weight: 200;  
   }
-  .left-col h2{
+  .extrude-length input:focus{
+    outline:none;
+  }
+  .left-col h2, .left-col button{
     text-align: center;
     font-family: 'Exo', sans-serif;
     font-weight: 700;
