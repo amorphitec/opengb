@@ -4,10 +4,18 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.16.1] - 2016-04-09
+## Fixed
+- Syntax error in Marlin printer
+
+## [0.16.0] - 2016-04-09
 ## Added
 - FILAMENT_SWAP state triggered by M600 from Marlin
 - API method filament_swap_begin
 - API method filament_swap_complete
+- Frontend motors enable/disable slider
+- Frontend fans enable/disable slider
 
 ## [0.15.0] - 2016-04-04
 ## Added

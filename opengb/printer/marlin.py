@@ -75,9 +75,9 @@ STATE_CHANGE_MSG_PATTERNS = [
     # also appended to Marlin's *incoming* command queue and if
     # `FILAMENTCHANGEENABLE` is configured Marlin will enter its filament
     # swap script.
-    re.compile(r'M600', logging.INFO, State.FILAMENT_SWAP),
+    (re.compile(r'M600'), logging.INFO, State.FILAMENT_SWAP),
     # Error.
-    re.compile(r'Error:(?P<error>.*)$', logging.ERROR, State.ERROR),
+    (re.compile(r'Error:(?P<error>.*)$'), logging.ERROR, State.ERROR),
 ]
 
 # USB device name patterns.
