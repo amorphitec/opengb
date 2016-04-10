@@ -1,6 +1,7 @@
 <script>
   // libs and services
   require('../services/printer-service.js')
+  require('../services/gcode-service.js')
   import PrintStatusCircle from '../components/print/PrintStatusCircle.vue'
   import TemperatureMenu from '../components/temperature/TemperatureMenu.vue'
   import SearchList from '../components/files/SearchList.vue'
@@ -107,6 +108,8 @@
               'image': null,
               'meta': {}
             }
+            var gcm = gcodeService.init(contents)
+            file.meta = gcm.meta
             vm.saveFile(file);
             e.target.files = null
           }

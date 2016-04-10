@@ -154,7 +154,12 @@
       var method = 'put_gcode_file'
       var params = {
         'name': file.name,
-        'payload': file.contents
+        'payload': file.contents,
+        'print_material': file.meta.printMaterial,
+        'print_quality': file.meta.printQuality,
+        'print_time_sec': parseInt(file.meta.buildTime),
+        'print_filament_mm': parseInt(file.meta.filamentLength),
+        'print_material_gm': parseInt(file.meta.plasticWeight)
         // 'image': file.image,
         // 'meta': file.meta
       }
