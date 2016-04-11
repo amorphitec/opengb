@@ -310,7 +310,7 @@ Example request: ::
  
 Example response: ::
  
-    {"id": 1, "jsonrpc": "2.0", "result": {"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode"}}
+    {"id": 1, "jsonrpc": "2.0", "result": {"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode","uploaded": "2016-04-11 19:54:31.929633"}}
 
 get_gcode_files
 ===============
@@ -323,7 +323,7 @@ Example request: ::
  
 Example response: ::
 
-    {"jsonrpc": "2.0", "id": 1, "result": {"gcode_files": [{"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode"}, {"size": 24356, "id": 2, "name": "10mm_Test_Cube.gcode"}]}} 
+    {"jsonrpc": "2.0", "id": 1, "result": {"gcode_files": [{"size": 2914599, "id": 1, "name": "FE_Drakkar_Bow.gcode", "uploaded": "2016-04-11 19:54:31.929633"}, {"size": 24356, "id": 2, "name": "10mm_Test_Cube.gcode", "uploaded": "2016-04-12 13:24:15.345623" }]}}
  
 delete_gcode_file
 =================

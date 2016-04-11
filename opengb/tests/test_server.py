@@ -17,6 +17,7 @@ import json
 import tempfile
 import shutil
 from mock import patch
+from datetime import datetime
 
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
@@ -308,14 +309,16 @@ class TestGetGCodeFile(OpengbTestCase):
         self.message_handler = server.MessageHandler(
             to_printer=self.to_printer)
         self.gcode = GCODE
+        self.uploaded = datetime.now()
 
     def test_gcode_file_returned(self):
         """Gcode file with given id is returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
             g = GCodeFile.create(name='test_file', size='777',
-                                 print_material='PLA', print_quality='High',
-                                 print_extruders='Both', print_time_sec=56743,
-                                 print_filament_mm=9876, print_material_gm=40,
+                                 uploaded=self.uploaded, print_material='PLA',
+                                 print_quality='High', print_extruders='Both',
+                                 print_time_sec=56743, print_filament_mm=9876,
+                                 print_material_gm=40,
                                  thumbnail_png_base64='mock base64 data')
             r = self.message_handler.get_gcode_file(g.id)
             self.assertEqual(r['name'], g.name)
@@ -324,9 +327,10 @@ class TestGetGCodeFile(OpengbTestCase):
         """Content of gcode file with given id is returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
             g = GCodeFile.create(name='test_file', size='777',
-                                 print_material='PLA', print_quality='High',
-                                 print_extruders='Both', print_time_sec=56743,
-                                 print_filament_mm=9876, print_material_gm=40,
+                                 uploaded=self.uploaded, print_material='PLA',
+                                 print_quality='High', print_extruders='Both',
+                                 print_time_sec=56743, print_filament_mm=9876,
+                                 print_material_gm=40,
                                  thumbnail_png_base64='mock base64 data')
             gcode_dir = tempfile.mkdtemp()
             with open(os.path.join(gcode_dir, str(g.id)), 'wb') as p:
@@ -345,30 +349,36 @@ class TestGetGCodeFiles(OpengbTestCase):
         self.to_printer = Queue()
         self.message_handler = server.MessageHandler(
             to_printer=self.to_printer)
+        self.uploaded = datetime.now()
 
     def test_all_gcode_files_returned(self):
         """All gcode files are returned."""
         with test_database(self.db, [GCodeFile], create_tables=True):
             GCodeFile.create(name='test_file_1', size=777,
-                             print_material='PLA', print_quality='High',
-                             print_extruders='Both', print_time_sec=56743,
-                             print_filament_mm=9876, print_material_gm=40,
+                             uploaded=self.uploaded, print_material='PLA',
+                             print_quality='High', print_extruders='Both',
+                             print_time_sec=56743, print_filament_mm=9876,
+                             print_material_gm=40,
                              thumbnail_png_base64='xyz123')
             GCodeFile.create(name='test_file_2', size=888,
-                             print_material='PLA', print_quality='Low',
-                             print_extruders='Left', print_time_sec=12523,
-                             print_filament_mm=3376, print_material_gm=22,
+                             uploaded=self.uploaded,print_material='PLA',
+                             print_quality='Low', print_extruders='Left',
+                             print_time_sec=12523, print_filament_mm=3376,
+                             print_material_gm=22,
                              thumbnail_png_base64='abc456')
             GCodeFile.create(name='test_file_3', size=999,
-                             print_material='ABS', print_quality='Medium',
-                             print_extruders='Right', print_time_sec=87893,
-                             print_filament_mm=10239, print_material_gm=76,
+                             uploaded=self.uploaded, print_material='ABS',
+                             print_quality='Medium', print_extruders='Right',
+                             print_time_sec=87893, print_filament_mm=10239,
+                             print_material_gm=76,
                              thumbnail_png_base64='qrs789')
             r = self.message_handler.get_gcode_files()
+        self.maxDiff = None
         self.assertListEqual(r['gcode_files'], [
             {
                 'name':                 'test_file_1',
                 'size':                 777,
+                'uploaded':             self.uploaded,
                 'id':                   1,
                 'print_material':       'PLA',
                 'print_quality':        'High',
@@ -381,6 +391,7 @@ class TestGetGCodeFiles(OpengbTestCase):
             {
                 'name': 'test_file_2',
                 'size': 888,
+                'uploaded':             self.uploaded,
                 'id':   2,
                 'print_material':       'PLA',
                 'print_quality':        'Low',
@@ -393,6 +404,7 @@ class TestGetGCodeFiles(OpengbTestCase):
             {
                 'name': 'test_file_3',
                 'size': 999,
+                'uploaded':             self.uploaded,
                 'id':   3,
                 'print_material':       'ABS',
                 'print_quality':        'Medium',
@@ -492,7 +504,6 @@ class TestGetStatus(OpengbTestCase):
                 2:          50,
             },
         }
-        self.maxDiff = None
 
     def test_get_status_returns_correct_values(self):
         """Correct status values are returned."""

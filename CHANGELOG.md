@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ## Added
 - API method get_filesystem_utilization
+- Automatically-generated uploaded parameter to gcode files
 
 ## [0.16.1] - 2016-04-09
 ## Fixed

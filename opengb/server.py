@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import multiprocessing
+import datetime
 from pkg_resources import Requirement, resource_filename
 
 import tornado.httpserver
@@ -402,9 +403,11 @@ class MessageHandler(object):
         # ever uploaded to PyPI https://github.com/thegaragelab/gctools
         payload_bytes = payload.encode()
         payload_size = len(payload_bytes)
+        uploaded = datetime.datetime.now()
         gcode_file = OGD.GCodeFile.create(
             name=name,
             size=payload_size,
+            uploaded=uploaded,
             print_material = print_material,
             print_quality = print_quality,
             print_extruders = print_extruders,
@@ -425,6 +428,7 @@ class MessageHandler(object):
             'id': gcode_file.id,
             'name': name,
             'size': payload_size,
+            'uploaded': uploaded,
             'print_material': print_material,
             'print_quality': print_quality,
             'print_extruders': print_extruders,
@@ -451,6 +455,7 @@ class MessageHandler(object):
                 'id':   result.id,
                 'name': result.name,
                 'size': result.size,
+                'uploaded': result.uploaded,
                 'print_material': result.print_material,
                 'print_quality': result.print_quality,
                 'print_extruders': result.print_extruders,
@@ -480,6 +485,7 @@ class MessageHandler(object):
                 'id': g.id,
                 'name': g.name,
                 'size': g.size,
+                'uploaded': g.uploaded,
                 'print_material': g.print_material,
                 'print_quality': g.print_quality,
                 'print_extruders': g.print_extruders,

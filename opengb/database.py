@@ -32,6 +32,7 @@ class PrintJob(BaseModel):
 class GCodeFile(BaseModel):
     name = CharField()
     size = IntegerField()
+    uploaded = DateTimeField()
     print_material = CharField()
     print_quality = CharField()
     print_extruders = CharField()
