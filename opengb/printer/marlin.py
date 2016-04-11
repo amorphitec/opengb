@@ -10,6 +10,29 @@ import json
 from opengb.printer import IPrinter
 from opengb.printer import State
 
+# If FILAMENT_RUNOUT_SENSOR is enabled in the Marlin config and the filament
+# sensor is triggered, an M600 command is:
+#
+# 1. echoed to the serial connection
+# 2. placed on the internal queue of commands for marlin to process.
+#
+# If FILAMENTCHANGEENABLE is enabled in the Marlin config the internally-
+# queued M600 triggers Marlin's built-in filament detection script. This
+# script relies on an lcd button press to indicate that the user has completed
+# the filament change.
+#
+# Without an LCD we are forced to use a RasPi GPIO pin to simulate this LCD
+# button press. In future we will mandate FILAMENTCHANGEENABLE be *disabled*
+# and opengb will take care of performing a similar filament change process
+# when the filament sensor is triggered.
+RASPI = True
+try:
+    from RPi import GPIO
+except RuntimeError:
+    # This means we are not running on a RasPi and so cannot perform the GPIO
+    # lcd button press.
+    RASPI = False
+
 # Response message patterns mapped to callbacks.
 RESPONSE_MSG_PATTERNS = [
     # Standard 'ok' message.
@@ -151,6 +174,11 @@ class Marlin(IPrinter):
         self._gcode_command_queue = []
         self._gcode_sequence = []
         self._gcode_sequence_position = 0
+        # GPIO
+        self._lcd_gpio_pin = kwargs['lcd_gpio_pin']
+        if RASPI and self._lcd_gpio_pin is not None:
+            GPIO.setup(self.lcd_gpio_pin, GPIO.OUT)
+            GPIO.output(self._lcd_gpio_pin, False)
         super().__init__(*args, **kwargs)
 
     def _connect(self):
@@ -417,9 +445,17 @@ class Marlin(IPrinter):
         self._queue_command(b'M600')
 
     def filament_swap_complete(self):
+        # Note: this is a hack to tell Marlin's internal filament replacement
+        # script that the filament has been changed by faking an LCD button
+        # press using a RasPi GPIO pin. When filament replacement is
+        # completely controlled by opengb this will no longer be
+        # necessary.
+        if RASPI and self._lcd_gpio_pin is not None:
+            GPIO.output(self._lcd_gpio_pin, True)
+            time.sleep(0.1)
+            GPIO.output(self._lcd_gpio_pin, False)
         self._callbacks.log(logging.DEBUG, 'Completing filament swap')
         self._update_state(State.EXECUTING)
-        # TODO: trigger a GPIO pin to simulate an lcd button press.
 
     def enable_steppers(self):
         self._queue_command(b'M17')

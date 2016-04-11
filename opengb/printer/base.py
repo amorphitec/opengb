@@ -313,7 +313,7 @@ class IPrinter(multiprocessing.Process):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, to_printer, printer_callbacks=None, baud_rate=None,
-                 port=None):
+                 port=None, lcd_gpio_pin=None):
         # Configuration.
         self._state = State.DISCONNECTED
         # Print queue.

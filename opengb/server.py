@@ -740,7 +740,8 @@ def main():
     printer_type = getattr(opengb.printer, options.printer)
     printer = printer_type(to_printer, printer_callbacks,
                            baud_rate=options.baud_rate,
-                           port=options.serial_port)
+                           port=options.serial_port,
+                           lcd_gpio_pin=options.lcd_gpio_pin)
     printer.daemon = True
     printer.start()
 
