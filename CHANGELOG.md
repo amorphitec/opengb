@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.18.0] - 2016-04-11
+## Added
+- Parse and store gcode meta data
+
+## Fixed
+- Confirm file delete
+- Confirm print stop
+
 ## [0.17.0] - 2016-04-11
 ## Added
 - API method get_filesystem_utilization
