@@ -154,15 +154,32 @@
       var method = 'put_gcode_file'
       var params = {
         'name': file.name,
-        'payload': file.contents,
-        'print_material': file.meta.printMaterial,
-        'print_quality': file.meta.printQuality,
-        'print_time_sec': parseInt(file.meta.buildTime),
-        'print_filament_mm': parseInt(file.meta.filamentLength),
-        'print_material_gm': parseInt(file.meta.plasticWeight)
-        // 'image': file.image,
-        // 'meta': file.meta
+        'payload': file.contents
+        // 'image': file.image
+    }
+
+    if (file.image) {
+      params.image = file.image
+    }
+
+    if (file.meta) {
+      if (file.meta.printMaterial) {
+        params['print_material'] = file.meta.printMaterial
       }
+      if (file.meta.printQuality) {
+        params['print_quality'] = file.meta.printQuality
+      }
+      if (file.meta.buildTime) {
+        params['print_time_sec'] = parseInt(file.meta.buildTime)
+      }
+      if (file.meta.filamentLength) {
+        params['print_filament_mm'] = parseInt(file.meta.filamentLength)
+      }
+      if (file.meta.plasticWeight) {
+        params['print_material_gm'] = parseInt(file.meta.plasticWeight)
+      }
+    }
+
       ws.call(method, params, suc, err)
     },
     deleteFile: function (fid) {

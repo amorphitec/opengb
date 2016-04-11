@@ -255,7 +255,15 @@
                       gcm.meta = gcm.meta || {};
                       gcm.meta[args.tag] = args.val.split(' ')[0];
                     } else if ('buildTime' == args.tag){
-                      gcm.meta['buildTime'] = '30000';
+                      var t = args.val.split(' ')
+                      var s = 0
+                      if (t[1] == 'hours' || t[1] == 'hour') {
+                        s += parseInt(t[0]) * 3600
+                      }
+                      if (t[3] == 'minutes' || t[3] == 'minute') {
+                        s += parseInt(t[2]) * 60
+                      }
+                      gcm.meta['buildTime'] = s;
                     } else if ('temperatureName' == args.tag){
                       gcm.meta['temperatureName1'] = args.val;
                       gcm.meta['temperatureName2'] = args.val2;
