@@ -477,10 +477,24 @@ class TestGetStatus(OpengbTestCase):
                 'current':  2386,
                 'total':    9945,
             },
+            'steppers': {
+                'enbabled': True,
+            },
+            'extrude_override': {
+                'percent':  50,
+            },
+            'speed_override': {
+                'percent':  120,
+            },
+            'fan_speed': {
+                0:          90,
+                1:          0,
+                2:          50,
+            },
         }
+        self.maxDiff = None
 
-    @patch('opengb.server.PRINTER')
-    def test_get_status_returns_correct_values(self, m_printer_status):
+    def test_get_status_returns_correct_values(self):
         """Correct status values are returned."""
         with patch.dict(server.PRINTER, self.test_status):
             mhs = self.message_handler.get_status()['status']
