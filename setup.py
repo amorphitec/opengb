@@ -21,6 +21,7 @@ setup(
         'tornado>=4.2.1,<5',
         'peewee>=2.6.3,<3',
         'json-rpc>=1.10.2,<2',
+        'psutil>=4.1,<5',
     ],
     tests_require=[
         'mock>-1.8.1,<2',

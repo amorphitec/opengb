@@ -351,6 +351,32 @@ Example response: ::
 
     {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128,"motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
 
+get_filesystem_utilization
+==========================
+
+.. automethod:: opengb.server.MessageHandler.get_filesystem_utilization
+
+Example request: ::
+
+    {"jsonrpc":"2.0","id":3,"method":"get_filesystem_utilization","params":{}}
+
+Example response: ::
+
+    {"jsonrpc":"2.0","id":3,"result":{
+        '/': {
+            'free_bytes': 183485939712,
+            'total_bytes': 243515678720,
+            'utilized_bytes': 47636201472,
+            'utilized_percent': 19.6
+        },
+        '/boot': {
+            'free_bytes': 110014464,
+            'total_bytes': 246755328,
+            'utilized_bytes': 124001280,
+            'utilized_percent': 50.3
+        }
+    }
+
 get_status
 ==========
 

@@ -482,5 +482,44 @@ class TestGetStatus(OpengbTestCase):
     @patch('opengb.server.PRINTER')
     def test_get_status_returns_correct_values(self, m_printer_status):
         """Correct status values are returned."""
-        m_printer_status = self.test_status
-        mh = self.message_handler.get_status
+        with patch.dict(server.PRINTER, self.test_status):
+            mhs = self.message_handler.get_status()['status']
+            self.assertEqual(mhs['state'], self.test_status['state'].name)
+            self.assertDictEqual(mhs['temp'], self.test_status['temp'])
+            self.assertDictEqual(mhs['position'], self.test_status['position'])
+            self.assertDictEqual(mhs['progress'], self.test_status['progress'])
+            self.assertDictEqual(mhs['steppers'], self.test_status['steppers'])
+            self.assertDictEqual(mhs['extrude_override'],
+                                 self.test_status['extrude_override'])
+            self.assertDictEqual(mhs['speed_override'],
+                                 self.test_status['speed_override'])
+            self.assertDictEqual(mhs['fan_speed'], self.test_status['fan_speed'])
+
+
+class TestGetFilesystemUtilization(OpengbTestCase):
+
+    def setUp(self):
+        self.to_printer = Queue()
+        self.message_handler = server.MessageHandler(
+            to_printer=self.to_printer)
+        self.fs_utilization = {
+            '/': {
+                'free_bytes': 183485939712,
+                'total_bytes': 243515678720,
+                'utilized_bytes': 47636201472,
+                'utilized_percent': 19.6,
+            },
+            '/boot': {
+                'free_bytes': 110014464,
+                'total_bytes': 246755328,
+                'utilized_bytes': 124001280,
+                'utilized_percent': 50.3,
+            }
+        }
+
+    @patch('opengb.utils.get_filesystem_utilization')
+    def test_get_filesystem_utilization_returns_correct_values(self, m_fs_util):
+        """Correct filesystem utilization value are returned."""
+        m_fs_util.return_value = self.fs_utilization
+        self.assertDictEqual(self.message_handler.get_filesystem_utilization(),
+                             self.fs_utilization)

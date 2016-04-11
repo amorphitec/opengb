@@ -534,6 +534,17 @@ class MessageHandler(object):
         }))
         return True
 
+    def get_filesystem_utilization(self):
+        """
+        Get current filesystem utilization.
+        """
+        try:
+            return OGU.get_filesystem_utilization()
+        except IOError as err:
+            LOGGER.error('Error determining filesystem utilization: '
+                         '{1}'.format(err))
+            raise IndexError('Error determining filesystem utilization')
+
     def get_status(self):
         """
         Get current printer status.

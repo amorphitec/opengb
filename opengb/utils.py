@@ -6,6 +6,7 @@ Various utilities and helper functions used by OpenGB.
 import os
 
 from tornado.options import options
+import psutil
 
 import opengb.database as OGD
 
@@ -61,11 +62,37 @@ def prepare_gcode(gcode, remove_comments=True):
 
     Optionally remove comments.
 
+    :param gcode: A string contianing gcode commands separated by newlines.
+    :rtype gcode: :class:`str`
     :param remove_comments: Remove lines representing comments.
-    :type remove_comments: :class:`bool`
+    :rtype remove_comments: :class:`bool`
+    :returns: Individual gcode commands.
+    :rtype: :class:`iter` of :class:`str`
     """
     gcode_list = [g.strip() for g in gcode.split('\n') if g != '']
     if remove_comments:
         return [g.split(';', 1)[0] for g in gcode_list
                 if not g.startswith(';')]
     return gcode_list
+
+def get_filesystem_utilization():
+    """
+    Get current filesystem utilization.
+
+    :returns: Filesystem names mapped to utilization metrics.
+    :rtype: :class:`dict of :class:`dict`
+    :raises: `IOError` on all errors.
+    """
+    all_fs_utilization = {}
+    try:
+        for each in psutil.disk_partitions():
+            utilization = psutil.disk_usage(each.mountpoint)
+            all_fs_utilization[each.mountpoint] = {
+                'total_bytes':      utilization.total,
+                'utilized_bytes':   utilization.used,
+                'utilized_percent': utilization.percent,
+                'free_bytes':       utilization.free,
+            }
+    except psutil.Error as err:
+        raise IOError(err.args[0])    
+    return all_fs_utilization

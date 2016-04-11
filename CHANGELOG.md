@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## Added
+- API method get_filesystem_utilization
 
 ## [0.16.1] - 2016-04-09
 ## Fixed
