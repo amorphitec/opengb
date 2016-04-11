@@ -47,12 +47,7 @@ h2{
   border: 0;
   border-bottom: 5px #ddd solid;
 }
-#home-page{
-  min-height: 100%;
-  display:flex;
-  flex-direction:row;
-  justify-content:flex-start;
-  align-content:center;
+#settings-page{
 } 
 </style>
 

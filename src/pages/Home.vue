@@ -21,7 +21,9 @@
         selectedFile: printerws.selectedFile,
         uploadFile:{},
         view: 'file-selection',
-        fileInfoWidth: ''
+        fileInfoWidth: '',
+        cancel: false,
+        del: false
       }
     },
     ready: function () {
@@ -87,7 +89,15 @@
         printerws.resumePrint()
       },
       cancelPrint: function () {
-        printerws.cancelPrint()
+        console.log(this.cancel)
+        if (this.cancel) {
+          printerws.cancelPrint()
+          this.cancel = false
+        } else {
+          this.cancel = true
+          var self = this
+          setTimeout(function () { self.cancel = false }, 3000)
+        }
       },
       initFileSelect: function () {
         document.getElementById('uploadFile').click();
@@ -122,7 +132,15 @@
         printerws.putFile(file)
       },
       deleteSelectedFile: function () {
-        printerws.deleteFile(this.printerService.selectedFile[0].id)
+        console.log('delete file',this.del)
+        if (this.del) {
+          printerws.deleteFile(this.printerService.selectedFile[0].id)
+          this.del = false
+        } else {
+          this.del = true
+          var self = this
+          setTimeout(function () { self.del = false }, 3000)
+        }
       }
     },
     watch: {
@@ -145,29 +163,29 @@
   <section id="home-page">
 
     <div id="temperature-wrapper">
-      <div style="width:100%;height:75px;">
+      <div class="temperature-menus">
+        <temperature-menu 
+          friendly-name="Heated Bed"
+          temp-id="bed"
+          v-bind:current="printerService.printer.temperatures.bed.current"
+          v-bind:target="printerService.printer.temperatures.bed.target"
+          >
+        </temperature-menu>
+        <temperature-menu 
+          friendly-name="Extruder 1"
+          temp-id="nozzle1"
+          v-bind:current="printerService.printer.temperatures.nozzle1.current"
+          v-bind:target="printerService.printer.temperatures.nozzle1.target"
+          >
+        </temperature-menu>
+        <temperature-menu 
+          friendly-name="Extruder 2"
+          temp-id="nozzle2"
+          v-bind:current="printerService.printer.temperatures.nozzle2.current"
+          v-bind:target="printerService.printer.temperatures.nozzle2.target"
+          >
+        </temperature-menu>
       </div>
-      <temperature-menu 
-        friendly-name="Heated Bed"
-        temp-id="bed"
-        v-bind:current="printerService.printer.temperatures.bed.current"
-        v-bind:target="printerService.printer.temperatures.bed.target"
-        >
-      </temperature-menu>
-      <temperature-menu 
-        friendly-name="Extruder 1"
-        temp-id="nozzle1"
-        v-bind:current="printerService.printer.temperatures.nozzle1.current"
-        v-bind:target="printerService.printer.temperatures.nozzle1.target"
-        >
-      </temperature-menu>
-      <temperature-menu 
-        friendly-name="Extruder 2"
-        temp-id="nozzle2"
-        v-bind:current="printerService.printer.temperatures.nozzle2.current"
-        v-bind:target="printerService.printer.temperatures.nozzle2.target"
-        >
-      </temperature-menu>
       <button class="button" style="width:100%;" v-on:click="homePrinter()" v-if="isNotPrinting">Home All</button>
       <slide-switch v-on:click="toggleMotors()" v-bind:is-on="motorStatus == 'on'" label-text="motors"></slide-switch>
     </div>
@@ -229,7 +247,7 @@
           v-on:click="cancelPrint()" 
           v-bind:class="{hide: (printerService.printer.state != 'EXECUTING') }" 
           class="button">
-          Stop
+          {{cancel ? 'Confirm' :'Stop' }}
         </button>
 
         <div>{{printerService.printer.state}}</div>
@@ -244,7 +262,7 @@
         type="button" 
         v-on:click="deleteSelectedFile()" 
         class="button alert">
-        Delete File
+        {{del ? 'Confirm' :'Delete File' }}
       </button>
 
     </div>
@@ -268,6 +286,11 @@ h2{
 } 
 #temperature-wrapper{
   flex: 0;
+}
+.temperature-menus{
+  display: flex;
+  flex-direction: column;
+  padding-top: 75px;
 }
 #file-upload{
   margin: 0px 20px;
@@ -359,6 +382,17 @@ h2{
 .button.rounded{
   border-radius:20px;
 }
+
+/*@media screen and (max-width: 40em){
+  #home-page{
+    padding: 0;
+  }
+  .temperature-menus{
+    padding-top: 0 !important;
+    flex-direction: row;
+  }
+}
+*/
 
 </style>
 

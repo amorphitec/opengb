@@ -75,7 +75,9 @@
   .off-canvas-content .off-canvas-content{
     box-shadow: none;
   }
-  #main-container{min-height: 100vh;}
+  #main-container{
+    min-height: 100vh;
+  }
   #side-nav{
     min-height: 100vh;
     z-index: 100;
@@ -98,6 +100,17 @@
       width: 50px;
   }
   .callout{height: 100vh!important;margin: 0!important;border: 0!important;}
+  #error{
+    width: 100%;
+    height: 50px;
+    color:white;
+    text-align: center;
+    line-height: 40px;
+    position: fixed;
+    bottom:0;
+    background:#c60f13;
+  }
+
   .off-canvas.position-left {
     left: -50px!important;
     top: 0;
@@ -108,6 +121,7 @@
     -ms-transform: translateX(50px)!important;
     transform: translateX(50px)!important;
   }
+  
   @media screen and (min-width: 40em){
    .position-left.reveal-for-medium ~ .off-canvas-content {
       margin-left: 50px!important; 
@@ -120,16 +134,6 @@
     }
     .off-canvas.position-left.is-open {
       left: -50px!important;
-    }
-    #error{
-      width: 100%;
-      height: 50px;
-      color:white;
-      text-align: center;
-      line-height: 40px;
-      position: fixed;
-      bottom:0;
-      background:#c60f13;
     }
   }
 </style>
