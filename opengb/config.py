@@ -17,4 +17,7 @@ define('printer', default='Dummy', help='Printer type')
 define('baud_rate', default=115200, help='Printer baud rate')
 define('serial_port', default=None,
        help='Printer serial port (use "None" for auto)')
+define('lcd_raspi_gpio_pi', default=None,
+       help='RasPi GPIO pin used to simulate an lcd button press (use "None" '
+             'to disable')
 define('frontend', default='opengb', help='Frontend (use "None" to disable)')
