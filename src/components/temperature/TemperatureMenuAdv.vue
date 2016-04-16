@@ -29,10 +29,19 @@
         this.printerService.setTemperatures(obj)
       },
       increaseTemperature: function  () {
-        this.setTemperature(this.target + 1)
+        this.setTemperature( parseInt(this.target) + 1 )
       },
       decreaseTemperature: function () {
-        this.setTemperature(this.target - 1)
+        this.setTemperature( parseInt(this.target) - 1 )
+      },
+      getPresetName: function (i) {
+        return this.printerService.printer.settings.presets[this.tempId][i].name
+      },
+      getPresetTemp: function (i) {
+        return this.printerService.printer.settings.presets[this.tempId][i].value
+      },
+      isTargetTemp: function (i) {
+        return this.target == this.getPresetTemp(i)
       }
     },
     computed:{
@@ -43,6 +52,10 @@
       isOn: function () {
         var test = parseFloat(this.target) > 40
         return test
+      },
+      currentText: function () {
+        var text = this.current > 30 ? parseInt(this.current) + '°C' : 'OFF'
+        return text
       }
     }
   }
@@ -53,14 +66,12 @@
   <div class="temperature-menu-adv clear-fix is-open" v-bind:class="{'is-on':isOn}">
     <div class="temperature-wrap">
       <span class="block float-left">
-        <button class="button temp-select" v-bind:class="{'is-selected': target == 50}" v-if="tempId == 'bed'" v-on:click="setTemperature(50)">PLA</button>
-        <button class="button temp-select" v-bind:class="{'is-selected': target == 60}" v-if="tempId == 'bed'" v-on:click="setTemperature(60)">ABS</button>
-        <button class="button temp-select" v-bind:class="{'is-selected': target == 180}" v-if="tempId != 'bed'" v-on:click="setTemperature(180)">PLA</button>
-        <button class="button temp-select" v-bind:class="{'is-selected': target == 210}" v-if="tempId != 'bed'" v-on:click="setTemperature(210)">ABS</button>
+        <button class="button temp-select" v-bind:class="{'is-selected': isTargetTemp(0)}" v-on:click="setTemperature(getPresetTemp(0))">{{getPresetName(0)}}</button>
+        <button class="button temp-select" v-bind:class="{'is-selected': isTargetTemp(1)}" v-on:click="setTemperature(getPresetTemp(1))">{{getPresetName(1)}}</button>
       </span>
       <span class="target-temp block">
         <h3 class="label">target</h3>
-        <div class="current-temp" v-on:click="toggleOpen">{{current}}°C</div>
+        <div class="current-temp" v-on:click="toggleOpen">{{currentText}}</div>
       </span>
       <span class="block float-right">
         <button class="button temp-select" v-on:click="increaseTemperature">+</button>

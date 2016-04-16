@@ -10,6 +10,13 @@
                 </a>
               </li>
             </ul>
+            <ul class="property-nav bottom">
+              <li class="row column">
+                <a class="item" v-on:click="toggleEmStop()">
+                  <i class="fi-prohibited"></i>
+                </a>
+              </li>
+            </ul>
         </div>
       </div>
       <div id="full-col" class="off-canvas-content" v-bind:class="{'is-open': showSideNav}" data-off-canvas-content>
@@ -24,6 +31,9 @@
         </div>
       </div>
     </div>
+    <div id="full-screen" v-if="emStop">
+      <div class="huge-button" v-on:click="emergencyStop()">Emergency Stop</div>
+    </div>
     <div id="error" v-if="hasNoWsConnection">Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
     <div id="error" v-if="hasNoPrinterConnection">Error, printer is not connected to raspberry pi</div>
   </div>
@@ -37,6 +47,12 @@
     methods: {
       toggleSideNav: function () {
         this.showSideNav = !this.showSideNav
+      },
+      toggleEmStop: function () {
+        this.emStop = !this.emStop
+      },
+      emergencyStop: function () {
+        this.printerService.emergencyStop()
       }
     },
     computed:{
@@ -51,6 +67,7 @@
       return {
         printerService : printerws,
         showSideNav: false,
+        emStop: false,
         pages: {
           home: {name: 'my openGB', url: 'home', icon: 'fi-home'},
           controls: {name: 'controls', url: 'controls', icon: 'fi-layout'},
@@ -102,6 +119,10 @@
   .property-nav li a{
     color: #aaa;
   }
+  .property-nav.bottom{
+    position:absolute;
+    bottom:0;
+  }
   .callout{height: 100vh!important;margin: 0!important;border: 0!important;}
   #error{
     width: 100%;
@@ -125,6 +146,27 @@
     transform: translateX(50px)!important;
   }
   
+  #full-screen{
+    position:fixed;
+    background: rgba(0,0,0,.9);
+    top:0;
+    left:0;
+    width:100vw;
+    height: 100vh;
+  }
+
+  .huge-button{
+    margin:10%;
+    text-align: center;
+    background:#ccc;
+    line-height: 50vh;
+    font-size: 2em;
+    cursor: pointer;
+  }
+  .huge-button:hover{
+    background:#aaa;
+  }
+
   @media screen and (min-width: 40em){
    .position-left.reveal-for-medium ~ .off-canvas-content {
       margin-left: 50px!important; 

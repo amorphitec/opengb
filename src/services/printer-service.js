@@ -3,6 +3,14 @@
   'use strict'
   var ws
   var printer = {
+    settings: { 
+      presets:{
+        bed: [{name:'PLA',value:'40'},{name:'ABS',value:'40'}],
+        nozzle1: [{name:'PLA',value:'190'},{name:'ABS',value:'210'}],
+        nozzle2: [{name:'PLA',value:'190'},{name:'ABS',value:'210'}],
+        extrudeRate: '2'
+      }
+    },
     connection: { baseUrl: null, connected: false, printReady: false },
     position: { x: null, y: null, z: null },
     print: { currentLine: null, totalLines: null },

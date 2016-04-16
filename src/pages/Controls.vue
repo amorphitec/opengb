@@ -48,18 +48,18 @@
         this.printerService.homePrintHead({x:true,y:true,z:true})
       },
       extrude: function (nid, length) {
-        this.printerService.unretractFilament(nid,length,5)
+        var rate = parseInt(this.printerService.printer.settings.presets.extrudeRate)
+        this.printerService.unretractFilament(nid,length,rate)
       },
       retract: function (nid, length) {
-        this.printerService.retractFilament(nid,length,5)
+        var rate = parseInt(this.printerService.printer.settings.presets.extrudeRate)
+        this.printerService.retractFilament(nid,length,rate)
       },
       increaseExtrudeLength: function () {
-        console.log('increasing el')
         this.extrudeLength += 10
       },
       decreaseExtrudeLength: function () {
-        console.log('decreasing el')
-        this.extrudeLength = this.extrudeLength < 10 ? 0 : this.extrudeLength - 10
+        this.extrudeLength = this.extrudeLength < 10 ? 0 : parseInt(this.extrudeLength) - 10
       },
       toggleFans: function () {
         if(this.fanStatus == 'on'){
