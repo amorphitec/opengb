@@ -121,8 +121,8 @@
 #y-up{width:90%;height:40%;position:absolute;top:7%;left:5%;border-radius:0 0 15px 15px;background: #000;}
 #y-down{width:90%;height:40%;position:absolute;bottom:7%;left:5%;border-radius:15px 15px 0 0;background: #000;}
 #x-up{width:80%;height:90%;position:absolute;top:5%;right:20%;border-radius:15px 0 0 15px;background: #000;}
-#z-up{width:90%;height:42%;position:absolute;top:5%;left:5%;border-radius:0 0 15px 15px;background: #000;}
-#z-down{width:90%;height:42%;position:absolute;bottom:5%;left:5%;border-radius:15px 15px 0 0;background: #000;}
+#z-down{width:90%;height:42%;position:absolute;top:5%;left:5%;border-radius:0 0 15px 15px;background: #000;}
+#z-up{width:90%;height:42%;position:absolute;bottom:5%;left:5%;border-radius:15px 15px 0 0;background: #000;}
 .position-status{transition:all 1s;}
 #cube-wrapper{
   height:350px;

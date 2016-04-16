@@ -61,6 +61,12 @@
         <input class="preset-input" placeholder="bed preset2 value" v-model="presets.bed[1].value" v-on:blur="">
       </div>
     </div>
+    <h3>extrusion rate</h3>
+    <div>
+      <div>
+        <input class="preset-input" placeholder="extrude rate" v-model="presets.extrudeRate" v-on:blur="">
+      </div>
+    </div>
 
   </section>
 </template>

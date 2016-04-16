@@ -36,6 +36,7 @@
     </div>
     <div id="error" v-if="hasNoWsConnection">Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
     <div id="error" v-if="hasNoPrinterConnection">Error, printer is not connected to raspberry pi</div>
+    <div id="error" v-if="hasPrinterError">Error, please restart opengb on raspberry pi</div>
   </div>
 </template>
 
@@ -61,6 +62,9 @@
       },
       hasNoPrinterConnection: function () {
         return this.printerService.printer.state === 'DISCONNECTED'
+      },
+      hasPrinterError: function () {
+        return this.printerService.printer.state === 'ERROR'
       }
     },
     data () {
