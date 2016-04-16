@@ -99,6 +99,9 @@
       text-align: center;
       width: 50px;
   }
+  .property-nav li a{
+    color: #aaa;
+  }
   .callout{height: 100vh!important;margin: 0!important;border: 0!important;}
   #error{
     width: 100%;

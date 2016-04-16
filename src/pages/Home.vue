@@ -37,11 +37,17 @@
       isFileInfo: function () {
         return this.view === 'file-info'
       },
+      isPrintInfo: function () {
+        return this.view === 'print-info'
+      },
       showFileInfo: function () {
         var isPrinting = this.printerService.printer.state != 'READY' && this.printerService.printer.state != 'ERROR'
         var hasFile = this.printerService.selectedFile.length > 0 && this.printerService.selectedFile[0] != null
-        console.log('tests',[isPrinting, hasFile, this.printerService.selectedFile])
         return isPrinting || hasFile
+      },
+      showPrintInfo: function () {
+        var isPrinting = this.printerService.printer.state != 'READY' && this.printerService.printer.state != 'ERROR'
+        return isPrinting
       },
       statusState: function () {
         var s = this.printerService.printer.state
@@ -141,6 +147,15 @@
           var self = this
           setTimeout(function () { self.del = false }, 3000)
         }
+      },
+      calcTime: function (seconds) {
+        var hours = parseInt( seconds / 3600 ) % 24;
+        var minutes = parseInt( seconds / 60 ) % 60;
+        var seconds = seconds % 60;
+        hours = hours < 10 ? "0" + hours : hours
+        minutes = minutes < 10 ? "0" + minutes : minutes
+        seconds = seconds < 10 ? "0" + seconds : seconds
+        return hours + ':' + minutes + ':' + seconds
       }
     },
     watch: {
@@ -192,15 +207,15 @@
 
     <div id="file-selection" v-bind:class="{'is-focus': isFileSelection}" v-if="isNotPrinting" v-on:click="setView('file-selection')">
       <div style="height:75px;">
-      <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
-        Upload a File
-      </button>
-      <input 
-        id="uploadFile" 
-        class="hide"
-        type="file"
-        accept=".gcode"
-        v-on:change="onFileChange"/>
+        <button id="file-upload" class="button" type="button" v-on:click="initFileSelect">
+          Upload a File
+        </button>
+        <input 
+          id="uploadFile" 
+          class="hide"
+          type="file"
+          accept=".gcode"
+          v-on:change="onFileChange"/>
       </div>
 
       <search-list></search-list>
@@ -212,12 +227,24 @@
         
         <h2>{{printerService.selectedFile[0]!=null ? printerService.selectedFile[0].name : ''}}</h2>
 
-        <print-status-circle 
-          v-bind:state="statusState"
-          v-bind:size="250" 
-          v-bind:value="printerService.printer.print.currentLine" 
-          v-bind:goal="printerService.printer.print.totalLines">
-        </print-status-circle>
+        <div id="file-meta-data">
+          <div>
+            <span>Material: </span>
+            <span>{{selectedFile[0]['print_material']}}</span>
+          </div>
+          <div>
+            <span>Quality: </span>
+            <span>{{selectedFile[0]['print_quality']}}</span>
+          </div>
+          <div>
+            <span>Time: </span>
+            <span>{{calcTime(selectedFile[0]['print_time_sec'])}}</span>
+          </div>
+          <div>
+            <span>Filament Length: </span>
+            <span>{{selectedFile[0]['print_material_gm']}} gm</span>
+          </div>
+        </div>
 
         <button 
           type="button" 
@@ -249,21 +276,29 @@
           class="button">
           {{cancel ? 'Confirm' :'Stop' }}
         </button>
-
-        <div>{{printerService.printer.state}}</div>
  
       </span>
-
-      <div>
-        details
-      </div>
 
       <button 
         type="button" 
         v-on:click="deleteSelectedFile()" 
-        class="button alert">
+        class="button alert"
+        v-if="isNotPrinting">
         {{del ? 'Confirm' :'Delete File' }}
       </button>
+
+    </div>
+
+    <div id="print-info" v-if="showPrintInfo" v-bind:class="{'is-focus': isPrintInfo}" v-on:click="setView('print-info')">
+
+      <span id="file-image" v-bind:class="{hide: selectedFile[0]===null}">
+        
+        <print-status-circle 
+          v-bind:state="statusState"
+          v-bind:size="250" 
+          v-bind:value="printerService.printer.print.currentLine" 
+          v-bind:goal="printerService.printer.print.totalLines">
+        </print-status-circle>
 
     </div>
 
@@ -303,16 +338,26 @@ h2{
   transition: all .5s;
 }
 #file-selection.is-focus{
-  flex: 8;
+  flex: 1;
   min-width: 70%;
 }
 #file-info{
+  padding-top:75px;
   text-align: center;
   flex: 1;
   transition: all .5s;
 }
 #file-info.is-focus{
-  flex: 8;
+  flex: 1;
+}
+#print-info{
+  padding-top:75px;
+  text-align: center;
+  flex: 1;
+  transition: all .5s;
+}
+#print-info.is-focus{
+  flex: 1;
 }
 #file-image{
   margin: 20px auto;
@@ -334,6 +379,10 @@ h2{
 }
 #file-image i{
   font-size: 0px;
+}
+#file-meta-data{
+  font-size: 1.2em;
+  margin: 40px 0;
 }
 .drop-box {
   background: #F8F8F8;

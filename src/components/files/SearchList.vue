@@ -81,7 +81,9 @@
         </span>
         <span class="file-info file-name">{{file.name}}</span>
         <span class="file-info center small">{{(file.size/1000).toFixed(2)}}kB</span>
-        <span class="file-info center small">3/11/16</span>
+        <span class="file-info center small">
+          {{new Date(file.uploaded).getDay()}}/{{new Date(file.uploaded).getMonth()}}/{{new Date(file.uploaded).getFullYear() - 2000}}
+        </span>
       </div>
     </div>
     <div>
