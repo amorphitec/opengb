@@ -378,7 +378,7 @@ class TestGetGCodeFiles(OpengbTestCase):
             {
                 'name':                 'test_file_1',
                 'size':                 777,
-                'uploaded':             self.uploaded,
+                'uploaded':             str(self.uploaded),
                 'id':                   1,
                 'print_material':       'PLA',
                 'print_quality':        'High',
@@ -391,7 +391,7 @@ class TestGetGCodeFiles(OpengbTestCase):
             {
                 'name': 'test_file_2',
                 'size': 888,
-                'uploaded':             self.uploaded,
+                'uploaded':             str(self.uploaded),
                 'id':   2,
                 'print_material':       'PLA',
                 'print_quality':        'Low',
@@ -404,7 +404,7 @@ class TestGetGCodeFiles(OpengbTestCase):
             {
                 'name': 'test_file_3',
                 'size': 999,
-                'uploaded':             self.uploaded,
+                'uploaded':             str(self.uploaded),
                 'id':   3,
                 'print_material':       'ABS',
                 'print_quality':        'Medium',
