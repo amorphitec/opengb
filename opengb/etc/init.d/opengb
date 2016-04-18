@@ -1,0 +1,47 @@
+#!/bin/sh
+# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
+if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
+    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
+fi
+### BEGIN INIT INFO
+# Provides:          opengb 
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Example initscript
+# Description:       OpenGB 3D printer control software
+### END INIT INFO
+
+# Author: re3D <support@re3d.com>
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="OpenGB 3D printer control software"
+DAEMON_PATH=/usr/share/python3/opengb/opengb/bin
+DAEMON=opengb
+USER=opengb
+
+case "$1" in
+    start)
+            log_daemon_msg "Starting $DESC"
+            start-stop-daemon -c $USER -b -x $DAEMON_PATH/$DAEMON --start
+            log_end_msg $?
+            ;;
+    stop)
+            log_daemon_msg "Stopping $DESC"
+            # OpenGB spawns sub-processes which currently are unaware if the parent dies.
+            # So we use a sledgehammer.
+            pkill -u $USER -f /usr/share/python3/opengb/opengb/bin/opengb
+            log_end_msg $?
+            ;;
+    restart)
+            log_daemon_msg "Restarting $DESC"
+            pkill -u $USER -f /usr/share/python3/opengb/opengb/bin/opengb
+            sleep 1
+            start-stop-daemon -u $USER -m -b -x $DAEMON_PATH/$DAEMON --start
+            log_end_msg $?
+            ;;
+    *)
+            echo "Usage: $DAEMON {start|stop|restart}" >&2
+            exit 3
+            ;;
+esac

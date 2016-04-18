@@ -1,0 +1,34 @@
+if [ -z "$2" ]; then
+    # First install setup
+
+    # OpenGb user
+    echo "Creating opengb user"
+    useradd -m -c 'OpenGB' opengb
+ 
+    # Data dirs
+    echo "Creating data directories in /var/opengb"
+    mkdir -p /var/opengb/db
+    mkdir -p /var/opengb/gcode
+    chown -R opengb:opengb /var/opengb
+
+    # Log dir
+    echo "Creating log directory in /var/log/opengb"
+    mkdir -p /var/log/opengb
+    chown opengb:opengb /var/log/opengb
+
+    # Config
+    echo "Creating default config in /etc/opengb"
+    mkdir -p /etc/opengb
+    cp /usr/share/python3/opengb/opengb/lib/python3.4/site-packages/opengb/etc/opengb.conf /etc/opengb/opengb.conf
+    chown -R opengb:opengb /etc/opengb
+
+    # Init.d
+    echo "Creating service in /etc/init.d/opengb"
+    cp /usr/share/python3/opengb/opengb/lib/python3.4/site-packages/opengb/etc/init.d/opengb /etc/init.d/opengb
+    update-rc.d opengb defaults
+    update-rc.d opengb enable
+fi
+
+
+
+exit 0

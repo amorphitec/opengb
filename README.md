@@ -24,3 +24,13 @@ git rm -rf opengb/frontend/opengb
 git read-tree --prefix=opengb/frontend/opengb -u opengb-web/master:dist
 git commit
 ```
+
+## Packaging
+
+Debian packages are created using [dh-virtualenv](https://dh-virtualenv.readthedocs.org):
+
+```
+dpkg-buildpackage -us -uc
+```
+
+*Note: packages are currently stored in `/pkg` until a proper repo is set up.*

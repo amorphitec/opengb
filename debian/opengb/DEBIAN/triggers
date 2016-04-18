@@ -1,0 +1,5 @@
+interest-noawait /usr/bin/python3.4
+interest-noawait /usr/bin/python3.5
+
+# Symbolic trigger for all dh-virtualenv packages
+interest dh-virtualenv-interpreter-update
