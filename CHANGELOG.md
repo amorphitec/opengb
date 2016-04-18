@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.19.0] - 2016-04-18
+## Added
+- Settings page
+- Emergency stop button
+
 ## [0.18.0] - 2016-04-11
 ## Added
 - Parse and store gcode meta data
