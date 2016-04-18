@@ -5,7 +5,7 @@ OpenGB configuration.
 from tornado.options import define
 
 
-# TODO: deploy a default config file via package manager and/or on startup.
+# TODO: prompt to deploy a default config file on startup.
 CONFIG_FILE = "/etc/opengb/opengb.conf"
 
 
@@ -17,7 +17,7 @@ define('printer', default='Dummy', help='Printer type')
 define('baud_rate', default=115200, help='Printer baud rate')
 define('serial_port', default=None,
        help='Printer serial port (use "None" for auto)')
-define('lcd_gpio_pin', default=None,
+define('lcd_gpio_pin', default=None, type=int,
        help='RasPi GPIO pin used to simulate an lcd button press (use "None" '
-             'to disable')
+             'to disable)')
 define('frontend', default='opengb', help='Frontend (use "None" to disable)')
