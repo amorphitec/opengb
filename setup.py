@@ -25,7 +25,6 @@ setup(
         'RPi.GPIO>=0.6.2,<0.7',
     ],
     tests_require=[
-        'mock>-1.8.1,<2',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
