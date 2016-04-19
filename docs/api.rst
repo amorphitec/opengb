@@ -349,7 +349,22 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc":"2.0","id":2,"result":{"counters":{"nozzle_2_up_mins":128,"motor_x1_up_mins":128,"motor_x2_up_mins":128,"motor_y2_up_mins":128,"nozzle_1_up_mins":128,"motor_z2_up_mins":128,"motor_z1_up_mins":128,"printer_up_mins":128,"printer_print_mins":46,"bed_up_mins":128,"motor_y1_up_mins":128,"printer_up_mins_session":32}}}
+    {"jsonrpc":"2.0","id":2,"result":{
+        "counters": {
+            "nozzle_2_up_mins":128,
+            "motor_x1_up_mins":128,
+            "motor_x2_up_mins":128,
+            "motor_y2_up_mins":128,
+            "nozzle_1_up_mins":128,
+            "motor_z2_up_mins":128,
+            "motor_z1_up_mins":128,
+            "printer_up_mins":128,
+            "printer_print_mins":46,
+            "bed_up_mins":128,
+            "motor_y1_up_mins":128,
+            "printer_up_mins_session":32
+        }
+    }}
 
 get_filesystem_utilization
 ==========================
@@ -375,7 +390,7 @@ Example response: ::
             'utilized_bytes': 124001280,
             'utilized_percent': 50.3
         }
-    }
+    }}
 
 get_status
 ==========
@@ -388,7 +403,42 @@ Example request: ::
 
 Example response: ::
 
-    {"jsonrpc":"2.0","id":4,"result":{"status": {"progress": {"current": 0, "total": 0}, "state": 20, "position": {"z": 0, "y": 0, "x": 0}, "temp": {"bed_current": 100, "nozzle2_target": 0, "bed_target": 0, "nozzle1_target": 0, "nozzle2_current": 209, "nozzle1_current": 205}, "steppers": {"enabled": true}, "extrude_override": {"percent": 100}, "speed_override": {"percent": 120"}, "fan_speed": {0: 100, 1:75, 2:0}}}}
+    {"jsonrpc":"2.0","id":4,"result":{
+        "status": {
+            "progress": {
+                "current": 0, 
+                "total": 0
+            },
+            "state": 20,
+            "position": {
+                "z": 0,
+                "y": 0,
+                "x": 0
+            }, 
+            "temp": {
+                "bed_current": 100,
+                "nozzle2_target": 0,
+                "bed_target": 0,
+                "nozzle1_target": 0,
+                "nozzle2_current": 209,
+                "nozzle1_current": 205
+            },
+            "steppers": {
+                "enabled": true
+            },
+            "extrude_override": {
+                "percent": 100
+            },
+            "speed_override": {
+                "percent": 120"
+            },
+            "fan_speed":  {
+                0: 100,
+                1:75,
+                2:0
+            }
+        }
+    }}
 
 Events
 ^^^^^^
