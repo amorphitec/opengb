@@ -1,3 +1,9 @@
+opengb (0.20.0) stable; urgency=medium
+
+  * Add graphical interface configuration script.
+
+ -- James Stewart <jstewart101@gmail.com>  Wed, 20 Apr 2016 23:31:48 +1000
+
 opengb (0.19.0) stable; urgency=medium
 
   * Initial release.
