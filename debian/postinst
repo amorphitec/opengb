@@ -27,6 +27,11 @@ if [ -z "$2" ]; then
     cp /usr/share/python3/opengb/opengb/lib/python3.4/site-packages/opengb/etc/init.d/opengb /etc/init.d/opengb
     update-rc.d opengb defaults
     update-rc.d opengb enable
+
+    # Interface setup
+    ln -sf /usr/share/python3/opengb/opengb/lib/python3.4/site-packages/opengb/etc/opengb-interface-setup.sh /usr/local/bin/opengb-interface-setup
+    echo "To setup the OpenGB graphical interface on this host run 'opengb-interface-setup'" 
+    
 fi
 
 #DEBHELPER#

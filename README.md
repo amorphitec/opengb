@@ -33,4 +33,4 @@ Debian packages are created using [dh-virtualenv](https://dh-virtualenv.readthed
 dpkg-buildpackage -us -uc
 ```
 
-*Note: packages are currently stored in `/pkg` until a proper repo is set up.*
+*Note: packages are currently stored in `/packages` until a proper repo is set up.*
