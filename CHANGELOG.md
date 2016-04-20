@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## Fixed
+- Redundant flag in init.d restart
 
 ## [0.20.0] - 2016-04-18
 ## Added

@@ -37,7 +37,7 @@ case "$1" in
             log_daemon_msg "Restarting $DESC"
             pkill -u $USER -f /usr/share/python3/opengb/opengb/bin/opengb
             sleep 1
-            start-stop-daemon -u $USER -m -b -x $DAEMON_PATH/$DAEMON --start
+            start-stop-daemon -u $USER -b -x $DAEMON_PATH/$DAEMON --start
             log_end_msg $?
             ;;
     *)
