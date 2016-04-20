@@ -16,7 +16,7 @@ from multiprocessing import Queue
 import json
 import tempfile
 import shutil
-from mock import patch
+from unittest.mock import patch
 from datetime import datetime
 
 from peewee import SqliteDatabase

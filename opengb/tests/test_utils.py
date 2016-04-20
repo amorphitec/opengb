@@ -5,7 +5,7 @@ import os
 import tempfile
 import shutil
 import builtins
-from mock import patch, mock_open
+from unittest.mock import patch, mock_open
 
 from opengb.tests import OpengbTestCase
 from opengb import utils

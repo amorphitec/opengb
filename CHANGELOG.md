@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.20.0] - 2016-04-18
+## Added
+- Interface setup script
+
+## Fixed
+- Incorrect mock import in tests
+
 ## [0.19.0] - 2016-04-18
 ## Added
 - Settings page
