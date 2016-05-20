@@ -197,7 +197,7 @@
     font-family: 'Exo', sans-serif;
     font-weight: 800;
     text-transform: uppercase;
-    font-size:.8em;
+    /*font-size:.8em;*/
   }
   #controls-page{
     min-height: 100%;
