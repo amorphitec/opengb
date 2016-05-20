@@ -31,12 +31,23 @@
         </div>
       </div>
     </div>
+    
     <div id="full-screen" v-if="emStop">
       <div class="huge-button" v-on:click="emergencyStop()">Emergency Stop</div>
     </div>
-    <div id="error" v-if="hasNoWsConnection">Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi</div>
-    <div id="error" v-if="hasNoPrinterConnection">Error, printer is not connected to raspberry pi</div>
-    <div id="error" v-if="hasPrinterError">Error, please restart opengb on raspberry pi</div>
+    
+    <div id="error" v-if="hasNoWsConnection">
+      Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi
+    </div>
+    
+    <div id="error" v-if="hasNoPrinterConnection">
+      Error, printer is not connected to raspberry pi, please connect and <span v-on:click="reloadPage()"><a>reload the page</a></span> 
+    </div>
+    
+    <div id="error" v-if="hasPrinterError">
+      Error, please restart opengb on raspberry pi
+    </div>
+
   </div>
 </template>
 
@@ -54,6 +65,9 @@
       },
       emergencyStop: function () {
         this.printerService.emergencyStop()
+      },
+      reloadPage: function () {
+        location.reload(true);
       }
     },
     computed:{

@@ -43,7 +43,7 @@
         <div class="settings-section two-col">
 
           <div class="half-width">
-            <h3>heat pre-settings</h3>
+            <h3>heat pre-settings <span>Celsius</span></h3>
 
             <div class="heat-setting">
               <h4>Extruder 1</h4>
@@ -88,8 +88,8 @@
             </div>
           </div>
 
-          <div class="half-width">
-            <h3>heat pre-settings</h3>
+          <div class="half-width extrusion-settings">
+            <h3>extrusion settings <span>mm/sec</span></h3>
 
             <div class="extrusion-setting">
               <h4>Extrusion Rate</h4>
@@ -160,6 +160,15 @@
   color:#000;
   font-size:1em;
   margin:0;
+  position:relative;
+}
+.settings-section h3 span{
+  position:absolute;
+  right:27%;
+  color:#ccc;
+}
+.heat-setting{
+  margin-bottom:20px;
 }
 .heat-setting, .extrusion-setting{
   min-height: 100%;
@@ -183,6 +192,11 @@
 .heat-setting h4, .extrusion-setting h4{
   width:66%;
   line-height: 2em;
+}
+.extrusion-settings h3 span{
+  position:absolute;
+  right:33%;
+  color:#ccc;
 }
 .heat-setting-inputs{
   min-height: 100%;
