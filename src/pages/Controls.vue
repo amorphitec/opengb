@@ -195,8 +195,9 @@
   .left-col h2, .left-col button{
     text-align: center;
     font-family: 'Exo', sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
+    font-size:.8em;
   }
   #controls-page{
     min-height: 100%;
