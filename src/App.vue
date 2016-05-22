@@ -36,6 +36,10 @@
       <div class="huge-button" v-on:click="emergencyStop()">Emergency Stop</div>
     </div>
     
+    <div id="full-screen" v-if="filamentSwap">
+      <filament-swap></filament-swap>
+    </div>
+    
     <div id="error" v-if="hasNoWsConnection">
       Error, websocket connection is disconnected go to <a v-link="'settings'">Settings</a> to fix or check raspberry pi
     </div>
@@ -52,9 +56,13 @@
 </template>
 
 <script>
+
+  import FilamentSwap from './pages/modals/FilamentSwap.vue'
   require('./services/printer-service.js')
+
   export default {
     components: {
+      FilamentSwap
     },
     methods: {
       toggleSideNav: function () {
@@ -79,6 +87,9 @@
       },
       hasPrinterError: function () {
         return this.printerService.printer.state === 'ERROR'
+      },
+      filamentSwap: function () {
+        return this.printerService.printer.state === 'FILAMENT_SWAP'
       }
     },
     data () {

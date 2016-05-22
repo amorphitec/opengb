@@ -17,11 +17,6 @@
     props: {
     },
     computed: {
-      motorStatus: function () {
-        var test = this.printerService.printer.steppers.enabled
-        console.log(this.printerService.printer.steppers)
-        return  test ? 'on' : 'off'
-      }
     },
     methods: {
       jogUpX: function () {
@@ -50,16 +45,6 @@
       },
       setResolution: function (res) {
         this.resolution = res
-      },
-      homePrinter: function () {
-        this.printerService.homePrintHead({x:true,y:true,z:true})
-      },
-      toggleMotors: function () {
-        if(this.printerService.printer.steppers.enabled) {
-          this.printerService.disengageMotors()
-        } else {
-          this.printerService.engageMotors()
-        }
       }
     }
   }
@@ -87,12 +72,18 @@
       </div>
     </div>
     <div id="cube-resolution">
-      <button class="button resolution-select" v-bind:class="{'selected': resolution == 0.1}" v-on:click="setResolution(0.1)">0.1mm</button>
-      <button class="button resolution-select" v-bind:class="{'selected': resolution == 1}" v-on:click="setResolution(1)">1mm</button>
-      <button class="button resolution-select" v-bind:class="{'selected': resolution == 10}" v-on:click="setResolution(10)">10mm</button>
-      <button class="button resolution-select" v-bind:class="{'selected': resolution == 100}" v-on:click="setResolution(100)">100mm</button>
-      <button class="button" style="width:100%;" v-on:click="homePrinter()" >Home All</button>
-      <slide-switch v-on:click="toggleMotors()" v-bind:is-on="motorStatus == 'on'" label-text="motors"></slide-switch>
+      <div class="resolution-select" v-bind:class="{'selected': resolution == 0.1}">
+        <button class="button" v-on:click="setResolution(0.1)">0.1mm</button>
+      </div>
+      <div class="resolution-select" v-bind:class="{'selected': resolution == 1}">
+        <button class="button" v-on:click="setResolution(1)">1mm</button>
+      </div>
+      <div class="resolution-select" v-bind:class="{'selected': resolution == 10}">
+        <button class="button" v-on:click="setResolution(10)">10mm</button>
+      </div>
+      <div class="resolution-select" v-bind:class="{'selected': resolution == 100}">
+        <button class="button" v-on:click="setResolution(100)">100mm</button>
+      </div>
     </div>
   </div>
 </template>
@@ -102,16 +93,16 @@
 
 /*   BEGIN CUBE DEFINITION   */
 #cube-resolution{
-    min-height: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-content: center;  
-    width:100px;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center; 
+    margin-top:15px; 
 }
 .resolution-select{
    opacity:0.6;
    color:#444!important;
+   margin: 0px 5px;
 }
 .resolution-select.selected{
    opacity:1;
@@ -132,7 +123,7 @@
 #cube-info{height:50px;position:absolute;bottom:-50px;width:100%;}  
 #cube, #cube .face {
   position: absolute;
-  top: 55px ;
+  top: 90px ;
   left: 50%;
 }
 .face {

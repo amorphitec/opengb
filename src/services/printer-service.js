@@ -34,7 +34,8 @@
   var counters = []
   var selectedFile = []
 
-  printer.connection.baseUrl = printer.connection.baseUrl || 'ws://' + location.hostname + ':' + location.port + '/ws'
+  // printer.connection.baseUrl = printer.connection.baseUrl || 'ws://' + location.hostname + ':' + location.port + '/ws'
+  printer.connection.baseUrl = printer.connection.baseUrl || 'ws://' + location.hostname + ':8000' + '/ws'
 
   exports.printerws = {
     printer: printer,

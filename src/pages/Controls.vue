@@ -1,6 +1,7 @@
 <script>
   require('../services/printer-service.js')
   import PositionInfo from '../components/position/PositionInfo.vue'
+  import PositionHome from '../components/position/PositionHome.vue'
   import TemperatureInfo from '../components/temperature/TemperatureInfo.vue'
   import PositionControlCube from '../components/position/PositionControlCube.vue'
   import TemperatureMenu from '../components/temperature/TemperatureMenuAdv.vue'
@@ -9,6 +10,7 @@
   export default {
     components: {
       PositionInfo,
+      PositionHome,
       TemperatureInfo,
       PositionControlCube,
       TemperatureMenu,
@@ -37,6 +39,11 @@
       },
       fanStatus: function () {
         var test = this.printerService.printer.fans[1].percent
+        return  test ? 'on' : 'off'
+      },
+      motorStatus: function () {
+        var test = this.printerService.printer.steppers.enabled
+        console.log(this.printerService.printer.steppers)
         return  test ? 'on' : 'off'
       }
     },
@@ -67,6 +74,26 @@
         }else{
           this.printerService.setFanSpeed(1,100)
         }
+      },
+      toggleMotors: function () {
+        if(this.printerService.printer.steppers.enabled) {
+          this.printerService.disengageMotors()
+        } else {
+          this.printerService.engageMotors()
+        }
+      },
+      homePrinter: function (axis) {
+        var home = {x:false,y:false,z:false}
+        if (axis == 'x' || axis == 'all'){
+          home.x = true
+        }
+        if (axis == 'y' || axis == 'all'){
+          home.y = true
+        }
+        if (axis == 'z' || axis == 'all'){
+          home.z = true
+        }
+        this.printerService.homePrintHead(home)
       }
     }
   }
@@ -151,10 +178,17 @@
           <position-info name="x" v-bind:value="printerService.printer.position.x"></position-info>
           <position-info name="y" v-bind:value="printerService.printer.position.y"></position-info>
           <position-info name="z" v-bind:value="printerService.printer.position.z"></position-info>
+          <slide-switch v-on:click="toggleMotors()" v-bind:is-on="motorStatus == 'on'" label-text="motors"></slide-switch>
           <button v-if="!isMovement">expand</button>
         </div>
-        <div class="right-col">
+        <div class="right-col position">
           <div class="top-padding"></div>
+          <div id="position-home">
+            <position-home v-on:click="homePrinter('all')" name="all"></position-home>
+            <position-home v-on:click="homePrinter('x')" name="x"></position-home>
+            <position-home v-on:click="homePrinter('y')" name="y"></position-home>
+            <position-home v-on:click="homePrinter('z')" name="z"></position-home>
+          </div>
           <div id="position-cube">
             <position-control-cube></position-control-cube>
           </div>
@@ -166,9 +200,6 @@
 </template>
 
 <style>
-  .top-padding{
-    padding-top:65px;
-  }
   .extrude-length{
     width:275px;
     margin: 0 10px;
@@ -211,6 +242,11 @@
     width:500px;
     height:500px;
   } 
+  #position-home{
+    position: relative;
+    padding-top:15px;
+    width:100px;
+  } 
   .slider-wrapper{
     flex: 0;
     min-width: 175px;
@@ -242,6 +278,14 @@
   }
   .right-col{
     position:relative;
+    z-index: 0;
+    /*width:0;*/
+  }
+  .right-col.position{
+    position:relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: row;
     /*width:0;*/
   }
   .callout{
