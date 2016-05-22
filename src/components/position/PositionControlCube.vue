@@ -102,7 +102,7 @@
 .resolution-select{
    opacity:0.6;
    color:#444!important;
-   margin: 0px 5px;
+   margin: 0px 2px;
 }
 .resolution-select.selected{
    opacity:1;

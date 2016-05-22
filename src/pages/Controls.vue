@@ -239,7 +239,7 @@
   }
   #position-cube{
     position: relative;
-    width:500px;
+    width:300px;
     height:500px;
   } 
   #position-home{
