@@ -1,3 +1,14 @@
+opengb (0.21.0) stable; urgency=medium
+
+  * Add filament swap
+  * Add home x,y,z
+  * Change settings page layout
+  * Change controls page layout
+  * Fix redundant flag in init.d restart
+  * Fix default pi user not added to dialout group
+
+ -- James <james@orkus>  Tue, 24 May 2016 01:40:59 +1000
+
 opengb (0.20.0) stable; urgency=medium
 
   * Add graphical interface configuration script.
