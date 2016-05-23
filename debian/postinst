@@ -3,7 +3,7 @@ if [ -z "$2" ]; then
 
     # OpenGb user
     echo "Creating opengb user"
-    useradd -m -c 'OpenGB' opengb
+    useradd -m -c 'OpenGB' -G dialout opengb
  
     # Data dirs
     echo "Creating data directories in /var/opengb"

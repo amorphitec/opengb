@@ -4,8 +4,19 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.21.0] - 2016-05-24
+## Added
+- Filament swap 
+- Home x,y,z
+
+## Changed:
+- Settings page layout
+- Controls page layout
+
 ## Fixed
 - Redundant flag in init.d restart
+- Default pi user not added to dialout group
 
 ## [0.20.0] - 2016-04-18
 ## Added
