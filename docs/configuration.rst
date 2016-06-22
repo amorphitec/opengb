@@ -36,6 +36,9 @@ Multicast DNS
 
 `Multicast DNS`_ (also known as "mDNS" or "ZeroConf") allows a host to be accessed by name rather than IP addresss. Raspbian provides mDNS services via the `avahi-daemon` which is enabled by default.
 
+Change hostname to OpenGB
+=========================
+
 To change the Raspbian hostname from the default `raspberrypi` to `opengb`:
 
 ::
@@ -47,7 +50,36 @@ To change the Raspbian hostname from the default `raspberrypi` to `opengb`:
 Upon reboot you should be able to navigate to opengb via http://opengb.local:8000.
 
 .. image:: ../images/mdns_01.png
- 
+
+Multiple OpenGB Instances
+=========================
+
+If you are running multiple instances of OpenGB on the same network simply choose a different hostname for each instance. E.g.:
+
+OpenGB instance #1:
+
+::
+
+    sudo sed -i -e 's/opengb/opengb1/g' /etc/hosts
+    sudo sed -i -e 's/opengb/opengb1/g' /etc/hostname
+    sudo reboot
+
+OpenGB instance #2:
+
+::
+
+    sudo sed -i -e 's/opengb/opengb2/g' /etc/hosts
+    sudo sed -i -e 's/opengb/opengb2/g' /etc/hostname
+    sudo reboot
+
+OpenGB instance #3:
+
+::
+
+    sudo sed -i -e 's/opengb/opengb3/g' /etc/hosts
+    sudo sed -i -e 's/opengb/opengb3/g' /etc/hostname
+    sudo reboot
+
 Touchscreen
 ^^^^^^^^^^^
 
