@@ -254,7 +254,7 @@ class MessageHandler(object):
         be called to return print head to previous position and continue
         printing.
 
-        ..note::
+        .. note::
 
             This is an experimental method and may be implemented differently
             for various printer + firmware combinations.
