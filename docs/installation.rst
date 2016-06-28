@@ -111,7 +111,7 @@ Install package
     pip install opengb
 
 Update package
-^^^^^^^^^^^^^^
+--------------
 
 To update OpenGB from a previous version:
 
