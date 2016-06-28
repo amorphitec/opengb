@@ -37,6 +37,7 @@ Post-Install
 The OpenGB apt package will offer to perform a number of post-installation steps depending on your platform and requirements:
 
 ::
+
     $ sudo apt-get install opengb
 
     ...
