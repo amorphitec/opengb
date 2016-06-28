@@ -5,6 +5,12 @@ Configuration
 
 .. note::
 
+    The various configuration steps below are only necessary if installing
+    from scratch via pip. The OpenGB apt package performs these steps
+    automatically post-install.
+
+.. note::
+
     OpenGB is tested with and designed to run on the `Raspberry Pi Model 3B`_
     with a `Raspberry Pi Touch Display`_, the `Raspbian`_ operating system
     and the `Iceweasel`_ web browser.
