@@ -740,7 +740,7 @@ Example response: ::
                     "percent": 100
                 },
                 "speed_override": {
-                    "percent": 120"
+                    "percent": 120
                 },
                 "fan_speed": {
                     0: 100,
