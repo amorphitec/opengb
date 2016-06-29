@@ -18,7 +18,7 @@ OpenGB is written in Python and hosted in the Github repository `re-3D/opengb`_.
 OpenGB Web
 ==========
 
-The OpenGB web frontend is written in `Vue.js`_, a Javascript framework. It is hosted separately in the Github repository `re-3D/opengb-web`.
+The OpenGB web frontend is written in `Vue.js`_, a Javascript framework. It is hosted separately in the Github repository `re-3D/opengb-web`_.
 
 Changes to the frontend trigger a build which outputs to `re-3D/opengb-web/dist`_. This directory is periodically pulled into the OpenGB repo using ``git read-tree`` as described in the `OpenGB README`_.
 

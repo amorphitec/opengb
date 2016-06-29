@@ -56,7 +56,7 @@ Graphical Interface
 
 After installing OpenGB you may run `opengb-interface-setup` to set up the local machine as a graphical frontend to OpenGB. This will present options to:
 
-* Change hostname to `opengb`.
+* Change hostname to ``opengb``.
 * Install the **Iceweasel** browser.
 * Start the browser on boot.
 * Install a Fullscreen browser extension.
