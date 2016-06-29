@@ -572,7 +572,7 @@ Example request: ::
         "jsonrpc": "2.0",
         "id": 1,
         "method": "get_gcode_files",
-        "params":{}
+        "params": {}
     }
  
 Example response: ::
@@ -581,17 +581,20 @@ Example response: ::
         "jsonrpc": "2.0",
         "id": 1,
         "result": {
-            "gcode_files": [{
-                "size": 2914599,
-                "id": 1,
-                "name": "FE_Drakkar_Bow.gcode"
-                "uploaded": "2016-04-11 19:54:31.929633"
-            }, {
-                "size": 24356,
-                "id": 2,
-                "name": "10mm_Test_Cube.gcode",
-                "uploaded": "2016-04-12 13:24:15.345623"
-            }]
+            "gcode_files": [
+                {
+                    "size": 2914599,
+                    "id": 1,
+                    "name": "FE_Drakkar_Bow.gcode"
+                    "uploaded": "2016-04-11 19:54:31.929633"
+                },
+                {
+                    "size": 24356,
+                    "id": 2,
+                    "name": "10mm_Test_Cube.gcode",
+                    "uploaded": "2016-04-12 13:24:15.345623"
+                }
+            ]
         }
     }
  
@@ -741,8 +744,8 @@ Example response: ::
                 },
                 "fan_speed":  {
                     0: 100,
-                    1:75,
-                    2:0
+                    1: 75,
+                    2: 0
                 }
             }
         }
