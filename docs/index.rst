@@ -20,6 +20,7 @@ OpenGB is designed for the `Open Gigabot`_ open-source 3D printer designed and b
 
     architecture
     api
+    contributing
 
 Indices and tables
 ==================
