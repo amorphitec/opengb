@@ -620,7 +620,10 @@ class StatusHandler(RequestHandler):
 def broadcast_message(message):
     """
     Broadcast message to websocket clients.
+
+    Adds 'jsonrpc' field required to satisfy the JSON-RPC 2.0 spec.
     """
+    message['jsonrpc'] = '2.0'
     for each in CLIENTS:
         each.write_message(message)
 
@@ -667,7 +670,7 @@ def process_printer_events(from_printer):
     """
     if not from_printer.empty():
         try:
-            event = json.loads(from_printer.get())
+            event = from_printer.get()
             if event['event'] == 'log':
                 LOGGER.log(event['params']['level'], event['params']['msg'])
             else:
