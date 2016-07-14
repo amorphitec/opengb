@@ -5,7 +5,6 @@ import multiprocessing
 import threading
 import logging
 import re
-import json
 
 from opengb.printer import IPrinter
 from opengb.printer import State
