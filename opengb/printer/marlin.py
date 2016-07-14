@@ -666,3 +666,5 @@ class Marlin(IPrinter):
         # NotReadyException and log error?
         if 'method' and 'params' in message.keys():
             getattr(self, message['method'])(**message['params'])
+        else:
+            raise KeyError('Message does not contain `method` and `params`')
