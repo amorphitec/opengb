@@ -602,19 +602,15 @@ class Marlin(IPrinter):
                 time.sleep(self._write_loop_delay_sec)
                 continue
             # Request a metric update if the requisite interval has passed.
-            try:
-                metric_interval = time.time() - self._temp_update_time
-                if (self._state == State.EXECUTING and
-                    metric_interval > self._temp_poll_execute_sec):
-                    self._request_printer_temperature()
-                    self._temp_update_time = time.time()
-                elif (self._state in [State.READY, State.PAUSED] and
-                    metric_interval > self._temp_poll_ready_sec):
-                    self._request_printer_temperature()
-                    self._temp_update_time = time.time()
-            except BufferFullException:
-                # Buffer is full so wait until next time.
-                pass
+            metric_interval = time.time() - self._temp_update_time
+            if (self._state == State.EXECUTING and
+                metric_interval > self._temp_poll_execute_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
+            elif (self._state in [State.READY, State.PAUSED] and
+                metric_interval > self._temp_poll_ready_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
             # Process a message from the to_printer queue.
             if not self._to_printer.empty():
                 message = self._to_printer.get()
