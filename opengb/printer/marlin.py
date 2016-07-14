@@ -614,7 +614,7 @@ class Marlin(IPrinter):
             if not self._to_printer.empty():
                 message = self._to_printer.get()
                 try:
-                    self._process_message_to_printer(json.loads(message))
+                    self._process_message_to_printer(message)
                 except KeyError as err:
                     self._callbacks.log(logging.ERROR,
                                         'Malformed message sent to '

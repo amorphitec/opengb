@@ -172,18 +172,21 @@ class PrinterCallbacks(object):
 
 class QueuedPrinterCallbacks(PrinterCallbacks):
     """
-    Printer callbacks that place
-    `JSON-RPC 2.0 <http://www.jsonrpc.org/specification>`_ event objects on a
-    :class:`multiprocessing.Queue`. E.g.
+    Printer callbacks that place event dictionary objects on a
+    :class:`multiprocessing.Queue`. These events have a similar structure
+    to that defined by
+    `JSON-RPC 2.0 <http://www.jsonrpc.org/specification>`_ . E.g.
 
         {
-            'jsonrpc':  '2.0',
             'event':   '<event_nanme>',
             'params':   {
                 'param1':   '<value_1>',
                 'param2':   '<value_2>',
             }
         }
+
+    This allows them to be easily converted into JSON-RPC 2.0 messages ready
+    to be forwarded to a websocket-based event listener.
 
     :param from_printer: A queue upon which to place callback messages.
     :type from_printer: :class:`multiprocessing.Queue`
@@ -196,14 +199,10 @@ class QueuedPrinterCallbacks(PrinterCallbacks):
         """
         Publish an event from the printer to the `_from_printer` queue.
 
-        Adds the `'jsonrpc': '2.0'` key/value to maintain compatibility with
-        the JSON-RPC 2.0 spec.
-
         :param event: Event to be placed on the queue.
         :type event: :class:`dict`
         """
-        event['jsonrpc'] = '2.0'
-        self._from_printer.put(json.dumps(event))
+        self._from_printer.put(event)
 
     def log(self, level, message):
         self._publish({

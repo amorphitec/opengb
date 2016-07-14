@@ -89,14 +89,14 @@ class MessageHandler(object):
         :param nozzle2: Nozzle2 target temperature.
         :type nozzle2: :class:`float`
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'set_temp',
             'params': {
                 'bed':      bed,
                 'nozzle1':  nozzle1,
                 'nozzle2':  nozzle2,
             }
-        }))
+        })
         return True
 
     def move_head_relative(self, x=0, y=0, z=0):
@@ -111,14 +111,14 @@ class MessageHandler(object):
         :param z: Millimeters to move along the Z axis.
         :type z: :class:`float`
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'move_head_relative',
             'params': {
                 'x':    x,
                 'y':    y,
                 'z':    z,
             }
-        }))
+        })
         return True
 
     def move_head_absolute(self, x=0, y=0, z=0):
@@ -132,14 +132,14 @@ class MessageHandler(object):
         :param z: Position to move to along the Z axis.
         :type z: :class:`float`
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'move_head_absolute',
             'params': {
                 'x':    x,
                 'y':    y,
                 'z':    z,
             }
-        }))
+        })
         return True
 
     def home_head(self, x=True, y=True, z=True):
@@ -153,14 +153,14 @@ class MessageHandler(object):
         :param z: Whether or not to home the Z axis.
         :type z: :class:`bool`
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'home_head',
             'params': {
                 'x':    x,
                 'y':    y,
                 'z':    z,
             }
-        }))
+        })
         return True
 
     def retract_filament(self, head, length, rate):
@@ -176,14 +176,14 @@ class MessageHandler(object):
         """
         if head not in [0, 1]:
             raise IndexError('Head must be either 0 or 1')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'retract_filament',
             'params': {
                 'head':     head,
                 'length':   length,
                 'rate':     rate,
             }
-        }))
+        })
         return True
 
     def unretract_filament(self, head, length, rate):
@@ -199,14 +199,14 @@ class MessageHandler(object):
         """
         if head not in [0, 1]:
             raise IndexError('Head must be either 0 or 1')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'unretract_filament',
             'params': {
                 'head':     head,
                 'length':   length,
                 'rate':     rate,
             }
-        }))
+        })
         return True
 
     def set_extrude_override(self, percent):
@@ -218,12 +218,12 @@ class MessageHandler(object):
         """
         if percent not in range(0,101):
             raise IndexError('Percent must be 0-100')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'set_extrude_override_percent',
             'params': {
                 'percent':     percent,
             }
-        }))
+        })
         return True
 
     def set_speed_override(self, percent):
@@ -235,12 +235,12 @@ class MessageHandler(object):
         """
         if percent not in range(0,101):
             raise IndexError('Percent must be 0-100')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'set_speed_override_percent',
             'params': {
                 'percent':     percent,
             }
-        }))
+        })
         return True
 
     def filament_swap_begin(self):
@@ -262,10 +262,10 @@ class MessageHandler(object):
             This method may be called internally as the result of a filament
             detection script being triggered.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'filament_swap_begin',
             'params': {}
-        }))
+        })
 
     def filament_swap_complete(self):
         """
@@ -273,10 +273,10 @@ class MessageHandler(object):
         """
         if self.PRINTER['state'] != opengb.printer.State.FILAMENT_SWAP:
             raise IndexError('Printer must be in FILAMENT_SWAP state')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'filament_swap_complete',
             'params': {}
-        }))
+        })
 
     def set_fan_speed(self, fan, percent):
         """
@@ -291,13 +291,13 @@ class MessageHandler(object):
             raise IndexError('Fan must be 0-2')
         if percent not in range(0,101):
             raise IndexError('Percent must be 0-100')
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'set_fan_speed',
             'params': {
                 'fan':         fan,
                 'percent':     percent,
             }
-        }))
+        })
 
     def enable_steppers(self):
         """
@@ -305,10 +305,10 @@ class MessageHandler(object):
 
         Prevents motors and axes from moving freely.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'enable_steppers',
             'params': {}
-        }))
+        })
         return True
 
     def disable_steppers(self):
@@ -317,30 +317,30 @@ class MessageHandler(object):
 
         Allows motors and axes to moving freely.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'disable_steppers',
             'params': {}
-        }))
+        })
         return True
 
     def pause_print(self):
         """
         Pause the current print job.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'pause_execution',
             'params': {}
-        }))
+        })
         return True
 
     def resume_print(self):
         """
         Resume a paused print job.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'resume_execution',
             'params': {}
-        }))
+        })
         return True
 
     def cancel_print(self):
@@ -349,10 +349,10 @@ class MessageHandler(object):
 
         The current print job status and position will be discarded.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'stop_execution',
             'params': {}
-        }))
+        })
         return True
 
     def emergency_stop(self):
@@ -364,10 +364,10 @@ class MessageHandler(object):
             Use only in emergencies as this will most likely lock the printer
             and require a reboot.
         """
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'emergency_stop',
             'params': {}
-        }))
+        })
         return True
 
     def put_gcode_file(self, payload, name, print_material='',
@@ -532,12 +532,12 @@ class MessageHandler(object):
                          '{1}'.format(id, err))
             raise IndexError('Error reading gcode file with '
                              'id {0}'.format(id))
-        self._to_printer.put(json.dumps({
+        self._to_printer.put({
             'method':   'execute_gcode',
             'params': {
                 'gcode_sequence':    gcode,
             }
-        }))
+        })
         return True
 
     def get_filesystem_utilization(self):
@@ -620,7 +620,10 @@ class StatusHandler(RequestHandler):
 def broadcast_message(message):
     """
     Broadcast message to websocket clients.
+
+    Adds 'jsonrpc' field required to satisfy the JSON-RPC 2.0 spec.
     """
+    message['jsonrpc'] = '2.0'
     for each in CLIENTS:
         each.write_message(message)
 
@@ -667,7 +670,7 @@ def process_printer_events(from_printer):
     """
     if not from_printer.empty():
         try:
-            event = json.loads(from_printer.get())
+            event = from_printer.get()
             if event['event'] == 'log':
                 LOGGER.log(event['params']['level'], event['params']['msg'])
             else:
