@@ -538,7 +538,7 @@ class Marlin(IPrinter):
         """
         command = self._gcode_sequence[self._gcode_sequence_position].encode()
         try:
-            self._send_command(command) 
+            self._send_command(command)
             self._gcode_sequence_position += 1
             # Complete execution if previous line was last in sequence.
             if self._gcode_sequence_position >= len(self._gcode_sequence):
