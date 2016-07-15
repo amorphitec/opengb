@@ -161,6 +161,7 @@ class Marlin(IPrinter):
         self._serial_lock = threading.Lock()
         self._serial_buffersize = DEFAULT_SERIAL_BUFFER_SIZE
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
+        self._serial_buffer_last_log = ''
         # Timing
         self._read_loop_delay_sec = 0.001
         self._write_loop_delay_sec = 0.001
@@ -530,8 +531,8 @@ class Marlin(IPrinter):
             self._gcode_command_queue.pop(0)
         except BufferFullException as err:
             # This probably means we're waiting for bed or nozzle temperature.
-            self._callbacks.log(logging.DEBUG, 'Execution '
-                                'delayed: ' + str(err.args[0]))
+            self._log_buffer_full_message('Execution '
+                                          'delayed: ' + str(err.args[0]))
 
     def _execute_next_sequence_command(self):
         """
@@ -552,8 +553,8 @@ class Marlin(IPrinter):
                 self._update_state(State.READY)
         except BufferFullException as err:
             # This probably means we're waiting for bed or nozzle temperature.
-            self._callbacks.log(logging.DEBUG, 'Execution '
-                                'delayed: ' + str(err.args[0]))
+            self._log_buffer_full_message('Execution '
+                                          'delayed: ' + str(err.args[0]))
 
     def _reader(self):
         """
@@ -669,3 +670,25 @@ class Marlin(IPrinter):
             getattr(self, message['method'])(**message['params'])
         else:
             raise KeyError('Message does not contain `method` and `params`')
+
+    def _log_buffer_full_message(self, message):
+        """
+        Log a message relating to the serial buffer being full.
+
+        Logging the state of the serial buffer is important for debugging.
+        However in situations where the serial buffer fills up expectedly
+        (e.g. during a wait for temp or a long move of the print head) this
+        generates DEBUG log messages at the rate of ~1000/sec. Such volume
+        backs up the log, obscuring and delaying useful messages.
+
+        To mitigate this we keep a record of the last "buffer full" log
+        message and don't bother sending it again.
+
+        :param message: Message to be logged.
+        :type message: :class:`str`
+        """
+
+        if message == self._serial_buffer_last_log:
+            return
+        self._callbacks.log(logging.DEBUG, message)
+        self._serial_buffer_last_log = message
