@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+## Added
+- Limited logging of serial buffer full events
+
 ## Removed
 - Internal use of jsonrpc printer -> server
 - Internal use of jsonrpc server -> printer
