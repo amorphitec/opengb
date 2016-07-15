@@ -112,6 +112,7 @@ USB_PATTERNS = [
 DEFAULT_BAUD_RATE = 115200
 DEFAULT_SERIAL_BUFFER_SIZE = 4
 
+
 class BufferFullException(Exception):
     """
     Raised when a serial command cannot be sent to the printer because the
@@ -377,12 +378,12 @@ class Marlin(IPrinter):
             self._serial_buffer.get()
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
-        if bed != None:
+        if bed is not None:
             self._queue_command(b'M140 S' + str(bed).encode())
-        if nozzle1 != None:
+        if nozzle1 is not None:
             self._queue_command(b'T0')
             self._queue_command(b'M104 S' + str(nozzle1).encode())
-        if nozzle2 != None:
+        if nozzle2 is not None:
             self._queue_command(b'T1')
             self._queue_command(b'M104 S' + str(nozzle2).encode())
 
@@ -628,7 +629,7 @@ class Marlin(IPrinter):
             if (self._state == State.EXECUTING and
                 len(self._gcode_sequence) > 0):
                 self._execute_next_sequence_command()
-                # Request a position update if the requisite interval has 
+                # Request a position update if the requisite interval has
                 # passed.
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
