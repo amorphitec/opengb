@@ -524,8 +524,6 @@ class Marlin(IPrinter):
         Execute the next priority gcode command.
         """
         command = self._gcode_command_queue[0]
-        self._callbacks.log(logging.DEBUG,
-                            'Executing queued command: ' + str(command))
         try:
             self._send_command(command)
             self._gcode_command_queue.pop(0)
