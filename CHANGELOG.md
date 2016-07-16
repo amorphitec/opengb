@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ## Added
 - Limited logging of serial buffer full events
+- Default absolute/relative movement rate of 300mm/sec
 
 ## Removed
 - Internal use of jsonrpc printer -> server

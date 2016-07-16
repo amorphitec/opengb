@@ -352,7 +352,7 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
-    def move_head_relative(self, x=0, y=0, z=0):
+    def move_head_relative(self, x=0, y=0, z=0, rate=300):
         """
         Move the print head along one or more axes relative to the current
         position.
@@ -363,11 +363,13 @@ class IPrinter(multiprocessing.Process):
         :type y: :class:`float`
         :param z: Millimeters to move along the Z axis.
         :type z: :class:`float`
+        :param rate: Rate at which to move in mm/s.
+        :type rate: :class:`float`
         """
         pass
 
     @abc.abstractmethod
-    def move_head_absolute(self, x=0, y=0, z=0):
+    def move_head_absolute(self, x=0, y=0, z=0, rate=300):
         """
         Move the print head along one or more axes to an absolute position.
 
@@ -377,6 +379,8 @@ class IPrinter(multiprocessing.Process):
         :type y: :class:`float`
         :param z: Position to move to along the Z axis.
         :type z: :class:`float`
+        :param rate: Rate at which to move in mm/s.
+        :type rate: :class:`float`
         """
         pass
 
@@ -395,7 +399,7 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
-    def retract_filament(self, head=0, length=0, rate=0):
+    def retract_filament(self, head=0, length=0, rate=300):
         """
         Retract filament into the print head.
 
@@ -409,7 +413,7 @@ class IPrinter(multiprocessing.Process):
         pass
 
     @abc.abstractmethod
-    def unretract_filament(self, head=0, length=0, rate=0):
+    def unretract_filament(self, head=0, length=0, rate=300):
         """
         Unretract filament from the print head.
 

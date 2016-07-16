@@ -388,16 +388,22 @@ class Marlin(IPrinter):
             self._queue_command(b'T1')
             self._queue_command(b'M104 S' + str(nozzle2).encode())
 
-    def move_head_relative(self, x=0, y=0, z=0):
+    def move_head_relative(self, x=0, y=0, z=0, rate=300):
+        # Convert rate from mm/sec to mm/min.
+        rate *= 60
         # Switch to relative coordinates before sending.
         self._queue_command(b'G91')
-        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command('G0 X{0} Y{1} Z{2} F{3}'.format(
+            x, y, z, rate).encode())
         self._request_printer_position()
 
-    def move_head_absolute(self, x=0, y=0, z=0):
+    def move_head_absolute(self, x=0, y=0, z=0, rate=300):
+        # Convert rate from mm/sec to mm/min.
+        rate *= 60
         # Switch to absolute coordinates before sending.
         self._queue_command(b'G90')
-        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command('G0 X{0} Y{1} Z{2} F{3}'.format(
+            x, y, z, rate).encode())
         self._request_printer_position()
 
     def home_head(self, x=True, y=True, z=True):
