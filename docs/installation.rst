@@ -13,7 +13,7 @@ Add OpenGB Repo
 
 ::
 
-    sudo echo "deb https://dl.bintray.com/amorphic/opengb jessie main" >> /etc/apt/sources.list.d/opengb.list
+    echo "deb http://dl.bintray.com/amorphic/opengb jessie main" | sudo tee /etc/apt/sources.list.d/opengb.list
 
 Install OpenGB
 --------------
