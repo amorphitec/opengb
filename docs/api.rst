@@ -113,9 +113,10 @@ Example request: ::
         "id": 1,
         "method": "move_head_relative",
         "params": {
-            "x": 13.2,
-            "y": -2,
-            "z": 0.03
+            "x":    13.2,
+            "y":    -2,
+            "z":    0.03,
+            "rate": 60
         }
     }
 
@@ -139,9 +140,10 @@ Example request: ::
         "id": 1,
         "method": "move_head_absolute",
         "params": {
-            "x": 105,
-            "y": 80,
-            "z": 20
+            "x":    105,
+            "y":    80,
+            "z":    20,
+            "rate": 60
         }
     }
 
