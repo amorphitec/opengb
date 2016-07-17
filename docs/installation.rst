@@ -12,7 +12,7 @@ Add OpenGB Repo
 ---------------
 
 ::
-
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61 
     echo "deb http://dl.bintray.com/amorphic/opengb jessie main" | sudo tee /etc/apt/sources.list.d/opengb.list
 
 Install OpenGB
