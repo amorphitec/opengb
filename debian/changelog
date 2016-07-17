@@ -1,3 +1,13 @@
+opengb (0.22.2) stable; urgency=medium
+
+  * Add limited logging of serial buffer full events
+  * Add default absolute/relative movement rate of 300mm/sec
+
+  * Remove internal use of jsonrpc printer -> server
+  * Remove internal use of jsonrpc server -> printer
+
+ -- James <james@kobold>  Sun, 17 Jul 2016 11:41:52 +1000
+
 opengb (0.21.0) stable; urgency=medium
 
   * Add filament swap
