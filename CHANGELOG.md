@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.22.2] - 2016-07-17
+## Fixed
+- Debian package version
+
 ## [0.22.1] - 2016-07-17
 ## Added
 - Rates parameter to move_head_* docs
