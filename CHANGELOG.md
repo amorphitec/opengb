@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.22.1] - 2016-07-17
+## Added
+- Rates parameter to move_head_* docs
+
 ## [0.22.0] - 2016-07-17
 ## Added
 - Limited logging of serial buffer full events
