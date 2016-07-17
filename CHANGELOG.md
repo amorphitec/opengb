@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.22.3] - 2016-07-17
+## Fixed
+- Virtualenv now ues any available python 3
+
 ## [0.22.2] - 2016-07-17
 ## Fixed
 - Debian package version

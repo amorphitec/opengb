@@ -3,4 +3,4 @@ export DH_VIRTUALENV_INSTALL_ROOT=/usr/share/python3/opengb
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with python-virtualenv --python python3.4
+	dh $@ --with python-virtualenv --python python3
