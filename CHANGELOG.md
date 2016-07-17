@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.22.0] - 2016-07-17
+## Added
+- Limited logging of serial buffer full events
+- Default absolute/relative movement rate of 300mm/sec
+
+## Removed
+- Internal use of jsonrpc printer -> server
+- Internal use of jsonrpc server -> printer
+
 ## [0.21.0] - 2016-05-24
 ## Added
 - Filament swap 

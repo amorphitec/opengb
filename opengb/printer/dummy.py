@@ -196,7 +196,7 @@ class Dummy(IPrinter):
                 self._update_state(State.READY)
             # Process a message from the to_printer queue.
             if not self._to_printer.empty():
-                message = json.loads(self._to_printer.get())
+                message = self._to_printer.get()
                 try:
                     if 'method' and 'params' in message.keys():
                         getattr(self, message['method'])(**message['params'])

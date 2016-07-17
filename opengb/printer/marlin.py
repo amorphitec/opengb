@@ -5,7 +5,6 @@ import multiprocessing
 import threading
 import logging
 import re
-import json
 
 from opengb.printer import IPrinter
 from opengb.printer import State
@@ -113,6 +112,7 @@ USB_PATTERNS = [
 DEFAULT_BAUD_RATE = 115200
 DEFAULT_SERIAL_BUFFER_SIZE = 4
 
+
 class BufferFullException(Exception):
     """
     Raised when a serial command cannot be sent to the printer because the
@@ -161,6 +161,7 @@ class Marlin(IPrinter):
         self._serial_lock = threading.Lock()
         self._serial_buffersize = DEFAULT_SERIAL_BUFFER_SIZE
         self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
+        self._serial_buffer_last_log = ''
         # Timing
         self._read_loop_delay_sec = 0.001
         self._write_loop_delay_sec = 0.001
@@ -235,6 +236,8 @@ class Marlin(IPrinter):
             the queue.
         :type deduplicate: :class:`bool`
         """
+        self._callbacks.log(logging.DEBUG, 'Queueing '
+                            'command: ' + str(command))
         if deduplicate and command in self._gcode_command_queue:
             self._callbacks.log(logging.DEBUG, 'Deduplicated queued '
                                 'command: ' + str(command))
@@ -376,25 +379,31 @@ class Marlin(IPrinter):
             self._serial_buffer.get()
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
-        if bed != None:
+        if bed is not None:
             self._queue_command(b'M140 S' + str(bed).encode())
-        if nozzle1 != None:
+        if nozzle1 is not None:
             self._queue_command(b'T0')
             self._queue_command(b'M104 S' + str(nozzle1).encode())
-        if nozzle2 != None:
+        if nozzle2 is not None:
             self._queue_command(b'T1')
             self._queue_command(b'M104 S' + str(nozzle2).encode())
 
-    def move_head_relative(self, x=0, y=0, z=0):
+    def move_head_relative(self, x=0, y=0, z=0, rate=300):
+        # Convert rate from mm/sec to mm/min.
+        rate *= 60
         # Switch to relative coordinates before sending.
         self._queue_command(b'G91')
-        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command('G0 X{0} Y{1} Z{2} F{3}'.format(
+            x, y, z, rate).encode())
         self._request_printer_position()
 
-    def move_head_absolute(self, x=0, y=0, z=0):
+    def move_head_absolute(self, x=0, y=0, z=0, rate=300):
+        # Convert rate from mm/sec to mm/min.
+        rate *= 60
         # Switch to absolute coordinates before sending.
         self._queue_command(b'G90')
-        self._queue_command('G0 X{0} Y{1} Z{2}'.format(x, y, z).encode())
+        self._queue_command('G0 X{0} Y{1} Z{2} F{3}'.format(
+            x, y, z, rate).encode())
         self._request_printer_position()
 
     def home_head(self, x=True, y=True, z=True):
@@ -520,21 +529,22 @@ class Marlin(IPrinter):
         """
         Execute the next priority gcode command.
         """
+        command = self._gcode_command_queue[0]
         try:
-            self._send_command(
-                self._gcode_command_queue[0])
+            self._send_command(command)
             self._gcode_command_queue.pop(0)
-        except BufferFullException:
+        except BufferFullException as err:
             # This probably means we're waiting for bed or nozzle temperature.
-            pass
+            self._log_buffer_full_message('Execution '
+                                          'delayed: ' + str(err.args[0]))
 
     def _execute_next_sequence_command(self):
         """
         Execute the next gcode command in the current sequence.
         """
+        command = self._gcode_sequence[self._gcode_sequence_position].encode()
         try:
-            self._send_command(
-                self._gcode_sequence[self._gcode_sequence_position].encode())
+            self._send_command(command)
             self._gcode_sequence_position += 1
             # Complete execution if previous line was last in sequence.
             if self._gcode_sequence_position >= len(self._gcode_sequence):
@@ -545,9 +555,10 @@ class Marlin(IPrinter):
                         len(self._gcode_sequence))
                 self._reset_gcode_state()
                 self._update_state(State.READY)
-        except BufferFullException:
+        except BufferFullException as err:
             # This probably means we're waiting for bed or nozzle temperature.
-            pass
+            self._log_buffer_full_message('Execution '
+                                          'delayed: ' + str(err.args[0]))
 
     def _reader(self):
         """
@@ -597,24 +608,20 @@ class Marlin(IPrinter):
                 time.sleep(self._write_loop_delay_sec)
                 continue
             # Request a metric update if the requisite interval has passed.
-            try:
-                metric_interval = time.time() - self._temp_update_time
-                if (self._state == State.EXECUTING and
-                    metric_interval > self._temp_poll_execute_sec):
-                    self._request_printer_temperature()
-                    self._temp_update_time = time.time()
-                elif (self._state in [State.READY, State.PAUSED] and
-                    metric_interval > self._temp_poll_ready_sec):
-                    self._request_printer_temperature()
-                    self._temp_update_time = time.time()
-            except BufferFullException:
-                # Buffer is full so wait until next time.
-                pass
+            metric_interval = time.time() - self._temp_update_time
+            if (self._state == State.EXECUTING and
+                metric_interval > self._temp_poll_execute_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
+            elif (self._state in [State.READY, State.PAUSED] and
+                metric_interval > self._temp_poll_ready_sec):
+                self._request_printer_temperature()
+                self._temp_update_time = time.time()
             # Process a message from the to_printer queue.
             if not self._to_printer.empty():
                 message = self._to_printer.get()
                 try:
-                    self._process_message_to_printer(json.loads(message))
+                    self._process_message_to_printer(message)
                 except KeyError as err:
                     self._callbacks.log(logging.ERROR,
                                         'Malformed message sent to '
@@ -627,7 +634,7 @@ class Marlin(IPrinter):
             if (self._state == State.EXECUTING and
                 len(self._gcode_sequence) > 0):
                 self._execute_next_sequence_command()
-                # Request a position update if the requisite interval has 
+                # Request a position update if the requisite interval has
                 # passed.
                 progress_interval = time.time() - self._progress_update_time
                 if progress_interval > self._progress_update_sec:
@@ -665,3 +672,27 @@ class Marlin(IPrinter):
         # NotReadyException and log error?
         if 'method' and 'params' in message.keys():
             getattr(self, message['method'])(**message['params'])
+        else:
+            raise KeyError('Message does not contain `method` and `params`')
+
+    def _log_buffer_full_message(self, message):
+        """
+        Log a message relating to the serial buffer being full.
+
+        Logging the state of the serial buffer is important for debugging.
+        However in situations where the serial buffer fills up expectedly
+        (e.g. during a wait for temp or a long move of the print head) this
+        generates DEBUG log messages at the rate of ~1000/sec. Such volume
+        backs up the log, obscuring and delaying useful messages.
+
+        To mitigate this we keep a record of the last "buffer full" log
+        message and don't bother sending it again.
+
+        :param message: Message to be logged.
+        :type message: :class:`str`
+        """
+
+        if message == self._serial_buffer_last_log:
+            return
+        self._callbacks.log(logging.DEBUG, message)
+        self._serial_buffer_last_log = message
