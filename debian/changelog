@@ -1,3 +1,11 @@
+opengb (0.22.3) stable; urgency=medium
+
+  * Virtualenv now ues any available python 3
+  * Fixed move_head_absolute not passing rate to to_printer queue
+  * Tests updated for new rate parameter
+
+ -- James <james@kobold>  Sun, 17 Jul 2016 23:50:48 +1000
+
 opengb (0.22.2) stable; urgency=medium
 
   * Add limited logging of serial buffer full events
