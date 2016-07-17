@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 - Virtualenv now ues any available python 3
 - move_head_absolute not passing rate to to_printer queue
+- Tests updated for new rate parameter
 
 ## [0.22.2] - 2016-07-17
 ## Fixed
