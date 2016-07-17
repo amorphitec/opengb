@@ -63,13 +63,13 @@ class TestSetTemp(OpengbTestCase):
     def test_pass_set_temps_method_to_printer(self):
         """Valid temps result in 'set_temp' message on the to_printer queue."""
         self.message_handler.set_temp(bed=100, nozzle1=200, nozzle2=200)
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "set_temp")
 
     def test_valid_set_temps_passed_to_printer(self):
         """Valid temps are added as a message on the to_printer queue."""
         self.message_handler.set_temp(bed=100, nozzle1=200, nozzle2=200)
-        self.assertDictEqual(json.loads(self.to_printer.get()), {
+        self.assertDictEqual(self.to_printer.get(), {
             "method": "set_temp",
             "params": {"bed": 100, "nozzle2": 200, "nozzle1": 200}})
 
@@ -77,19 +77,19 @@ class TestSetTemp(OpengbTestCase):
         """Unspecified bed_temperature is passed to_the printer as None."""
         self.message_handler.set_temp(nozzle1=200, nozzle2=200)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["bed"], None)
+            self.to_printer.get()["params"]["bed"], None)
 
     def test_set_nozzle1_temp_defaults_to_none(self):
         """Unspecified nozzle1_temperature is passed to_the printer as None."""
         self.message_handler.set_temp(bed=100, nozzle2=200)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["nozzle1"], None)
+            self.to_printer.get()["params"]["nozzle1"], None)
 
     def test_set_nozzle2_temp_defaults_to_none(self):
         """Unspecified nozzle2_temperature is passed to_the printer as None."""
         self.message_handler.set_temp(bed=100, nozzle1=200)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["nozzle2"], None)
+            self.to_printer.get()["params"]["nozzle2"], None)
 
 
 class TestMoveHeadRelative(OpengbTestCase):
@@ -100,36 +100,36 @@ class TestMoveHeadRelative(OpengbTestCase):
             to_printer=self.to_printer)
 
     def test_pass_move_head_relative_method_to_printer(self):
-        """Valid x,y,z vals result in 'move_head_relative' msg on to_printer
-        queue."""
-        self.message_handler.move_head_relative(x=0.02, y=-4, z=2)
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        """Valid x,y,z,rate vals result in 'move_head_relative' msg on
+        to_printer queue."""
+        self.message_handler.move_head_relative(x=0.02, y=-4, z=2, rate=60)
+        self.assertEqual(self.to_printer.get()["method"],
                          "move_head_relative")
 
-    def test_valid_xyz_passed_to_printer(self):
-        """Valid x,y,z vals are added as msg on to_printer queue."""
-        self.message_handler.move_head_relative(x=0.02, y=-4, z=2)
-        self.assertDictEqual(json.loads(self.to_printer.get()), {
+    def test_valid_xyzr_passed_to_printer(self):
+        """Valid x,y,z,rate vals are added as msg on to_printer queue."""
+        self.message_handler.move_head_relative(x=0.02, y=-4, z=2, rate=60)
+        self.assertDictEqual(self.to_printer.get(), {
             "method": "move_head_relative",
-            "params": {"x": 0.02, "y": -4, "z": 2}})
+            "params": {"x": 0.02, "y": -4, "z": 2, "rate": 60}})
 
     def test_move_head_relative_x_defaults_to_zero(self):
         """Unspecified x is passed to_the printer as 0."""
         self.message_handler.move_head_relative(y=-4, z=2)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["x"], 0)
+            self.to_printer.get()["params"]["x"], 0)
 
     def test_move_head_relative_y_defaults_to_zero(self):
         """Unspecified y is passed to_the printer as 0."""
         self.message_handler.move_head_relative(x=0.02, z=2)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["y"], 0)
+            self.to_printer.get()["params"]["y"], 0)
 
     def test_move_head_relative_z_defaults_to_zero(self):
         """Unspecified z is passed to_the printer as 0."""
         self.message_handler.move_head_relative(x=0.02, y=-4)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["z"], 0)
+            self.to_printer.get()["params"]["z"], 0)
 
 
 class TestMoveHeadAbsolute(OpengbTestCase):
@@ -143,33 +143,33 @@ class TestMoveHeadAbsolute(OpengbTestCase):
         """Valid x,y,z vals result in 'move_head_absolute' msg on to_printer
         queue."""
         self.message_handler.move_head_absolute(x=105, y=80, z=20)
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "move_head_absolute")
 
-    def test_valid_xyz_passed_to_printer(self):
+    def test_valid_xyzr_passed_to_printer(self):
         """Valid x,y,z vals are added as msg on to_printer queue."""
-        self.message_handler.move_head_absolute(x=105, y=80, z=20)
-        self.assertDictEqual(json.loads(self.to_printer.get()), {
+        self.message_handler.move_head_absolute(x=105, y=80, z=20, rate=60)
+        self.assertDictEqual(self.to_printer.get(), {
             "method": "move_head_absolute",
-            "params": {"x": 105, "y": 80, "z": 20}})
+            "params": {"x": 105, "y": 80, "z": 20, "rate": 60}})
 
     def test_move_head_absolute_x_defaults_to_zero(self):
         """Unspecified x is passed to_the printer as 0."""
         self.message_handler.move_head_absolute(y=80, z=20)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["x"], 0)
+            self.to_printer.get()["params"]["x"], 0)
 
     def test_move_head_absolute_y_defaults_to_zero(self):
         """Unspecified y is passed to_the printer as 0."""
         self.message_handler.move_head_absolute(x=105, z=20)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["y"], 0)
+            self.to_printer.get()["params"]["y"], 0)
 
     def test_move_head_absolute_z_defaults_to_zero(self):
         """Unspecified z is passed to_the printer as 0."""
         self.message_handler.move_head_absolute(x=105, y=80)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["z"], 0)
+            self.to_printer.get()["params"]["z"], 0)
 
 
 class TestHomeHead(OpengbTestCase):
@@ -182,13 +182,13 @@ class TestHomeHead(OpengbTestCase):
     def test_pass_home_head_method_to_printer(self):
         """Valid x,y,z vals result in 'home_head' msg on to_printer queue."""
         self.message_handler.home_head(x=True, y=True, z=False)
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "home_head")
 
     def test_valid_xyz_passed_to_printer(self):
         """Valid x,y,z vals are added as a msg on to_printer queue."""
         self.message_handler.home_head(x=True, y=True, z=False)
-        self.assertDictEqual(json.loads(self.to_printer.get()), {
+        self.assertDictEqual(self.to_printer.get(), {
             "method": "home_head",
             "params": {"x": True, "y": True, "z": False}})
 
@@ -196,7 +196,7 @@ class TestHomeHead(OpengbTestCase):
         """Unspecified x is passed to_the printer as True."""
         self.message_handler.home_head(y=True, z=False)
         self.assertEqual(
-            json.loads(self.to_printer.get())["params"]["x"], True)
+            self.to_printer.get()["params"]["x"], True)
 
 
 class TestEnableSteppers(OpengbTestCase):
@@ -209,7 +209,7 @@ class TestEnableSteppers(OpengbTestCase):
     def test_pass_enable_steppers_method_to_printer(self):
         """Enable steppers adds 'enable_steppers' msg to to_printer queue."""
         self.message_handler.enable_steppers()
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "enable_steppers")
 
 
@@ -223,7 +223,7 @@ class TestDisableSteppers(OpengbTestCase):
     def test_pass_disable_steppers_method_to_printer(self):
         """Disable steppers adds 'disable_steppers' msg to to_printer queue."""
         self.message_handler.disable_steppers()
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "disable_steppers")
 
 
@@ -237,7 +237,7 @@ class TestEmergencyStop(OpengbTestCase):
     def test_pass_emergency_stop_method_to_printer(self):
         """Emergency stop adds 'emergency_stop' msg to to_printer queue."""
         self.message_handler.emergency_stop()
-        self.assertEqual(json.loads(self.to_printer.get())["method"],
+        self.assertEqual(self.to_printer.get()["method"],
                          "emergency_stop")
 
 

@@ -116,9 +116,10 @@ class MessageHandler(object):
         self._to_printer.put({
             'method':   'move_head_relative',
             'params': {
-                'x':    x,
-                'y':    y,
-                'z':    z,
+                'x':        x,
+                'y':        y,
+                'z':        z,
+                'rate':     rate,
             }
         })
         return True
