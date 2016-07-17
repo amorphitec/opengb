@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.22.0] - 2016-07-17
 ## Added
 - Limited logging of serial buffer full events
 - Default absolute/relative movement rate of 300mm/sec

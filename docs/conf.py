@@ -60,7 +60,7 @@ author = 're3D'
 # built documents.
 #
 # The short X.Y version.
-version = '0.21.0'
+version = '0.22.0'
 # The full version, including alpha/beta/rc tags.
 release = '0.22.0'
 
