@@ -29,7 +29,7 @@ Upgrade OpenGB
 ::
 
     sudo apt-get update
-    sudo apt-get upgrade opengb
+    sudo apt-get install --only-upgrade opengb
 
 Post-Install
 ------------
