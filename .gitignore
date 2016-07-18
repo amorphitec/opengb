@@ -55,3 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Debina build
+debian/opengb
+debian/debhelper-build-stamp
+debian/opengb.postinst.debhelper
+
