@@ -1,7 +1,7 @@
 import os
 import serial
 import time
-import multiprocessing
+import queue
 import threading
 import logging
 import re
@@ -168,7 +168,7 @@ class Marlin(IPrinter):
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
         self._serial_buffersize = DEFAULT_SERIAL_BUFFER_SIZE
-        self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
+        self._serial_buffer = queue.Queue(self._serial_buffersize)
         self._serial_buffer_last_log = ''
         # Timing
         self._read_loop_delay_sec = 0.001
