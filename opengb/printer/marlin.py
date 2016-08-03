@@ -360,10 +360,9 @@ class Marlin(IPrinter):
                 self._callbacks.log(logging.DEBUG,
                                     'Parsed response: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
-                # Response message indicates a command was processed.
-                # Pop an item off the serial buffer.
-                if not self._serial_buffer.empty():
-                    self._serial_buffer.get()
+                # Response message indicates a command was processed so pop.
+                # an item off the serial buffer.
+                self._pop_serial_buffer()
                 return
         for each in EVENT_MSG_PATTERNS:
             matched = each[0].match(message)
@@ -380,11 +379,24 @@ class Marlin(IPrinter):
         self._callbacks.log(logging.ERROR, 'Unparsed message: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
         # multiple lines and thus did not match a regex. This should not
-        # happen but occasionally does causing the buffer to fill and printing
-        # to stop. Until we work out why this splitting occurs and how to fix
-        # it we simply take a message off the buffer for each of these.
-        if not self._serial_buffer.empty():
-            self._serial_buffer.get()
+        # happen but occasionally does so we simply pop the buffer for each of
+        # these.
+        self._pop_serial_buffer()
+
+    def _pop_serial_buffer(self):
+        """
+        Pop an item from the serial buffer.
+
+        Note that we do not care about the content of the item itself. The
+        serial buffer is used purely as a counter to ensure we keep Marlin's
+        buffer full without over-running.
+        """
+        try:
+            self._serial_buffer.get_nowait()
+        except queue.Empty:
+            # Because unparsed messages can occur before we've sent anything
+            # to Marlin we may try to pop from an empty queue.
+            pass
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed is not None:
