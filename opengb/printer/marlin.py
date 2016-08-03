@@ -69,6 +69,14 @@ EVENT_MSG_PATTERNS = [
     # Standard 'echo' message.
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
      lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
+    # Resend message.
+    # At the moment we simply catch these and log them as We do not currently
+    # add line numbers (http://reprap.org/wiki/G-code#N:_Line_number) to the
+    # messages that we send Marlin. This is mostly because Marlin doesn't
+    # bother providing line numbers in its acknowledging "Ok:" messages,
+    # making them largely useless.
+    (re.compile(r'Resend:\s*(?P<line_number>.*)$'),
+     lambda g, c: (getattr(c, 'log')(logging.ERROR, 'Resend requested'))),
     # Bed heating temperature update.
     (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:(?P<extruded>\d*)\s'
                 'B:(?P<btemp>\d*\.?\d+)$'),
