@@ -55,7 +55,7 @@ RESPONSE_MSG_PATTERNS = [
                                              g['n1temp'], g['n1target'],
                                              g['n2temp'], g['n2target']))),
     # Position update.
-    # Note: Marlin sends an errant space between X: and <xsteps>.
+    # NOTE: Marlin sends an errant space between X: and <xsteps>.
     (re.compile(r'X:(?P<xpos>\d*\.?\d+)\sY:(?P<ypos>\d*\.?\d+)\s'
                 'Z:(?P<zpos>\d*\.?\d+)\sE:(?P<epos>\d*\.?\d+)\sCount\s'
                 'X:\s(?P<xsteps>\d*\.?\d+)\sY:(?P<ysteps>\d*\.?\d+)\s'
