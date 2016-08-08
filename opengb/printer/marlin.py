@@ -1,7 +1,7 @@
 import os
 import serial
 import time
-import multiprocessing
+import queue
 import threading
 import logging
 import re
@@ -55,7 +55,7 @@ RESPONSE_MSG_PATTERNS = [
                                              g['n1temp'], g['n1target'],
                                              g['n2temp'], g['n2target']))),
     # Position update.
-    # Note: Marlin sends an errant space between X: and <xsteps>.
+    # NOTE: Marlin sends an errant space between X: and <xsteps>.
     (re.compile(r'X:(?P<xpos>\d*\.?\d+)\sY:(?P<ypos>\d*\.?\d+)\s'
                 'Z:(?P<zpos>\d*\.?\d+)\sE:(?P<epos>\d*\.?\d+)\sCount\s'
                 'X:\s(?P<xsteps>\d*\.?\d+)\sY:(?P<ysteps>\d*\.?\d+)\s'
@@ -69,6 +69,14 @@ EVENT_MSG_PATTERNS = [
     # Standard 'echo' message.
     (re.compile(r'echo:\s*(?P<msg>.*)$'),
      lambda g, c: (getattr(c, 'log')(logging.DEBUG, g['msg']))),
+    # Resend message.
+    # At the moment we simply catch these and log them as We do not currently
+    # add line numbers (http://reprap.org/wiki/G-code#N:_Line_number) to the
+    # messages that we send Marlin. This is mostly because Marlin doesn't
+    # bother providing line numbers in its acknowledging "Ok:" messages,
+    # making them largely useless.
+    (re.compile(r'Resend:\s*(?P<line_number>.*)$'),
+     lambda g, c: (getattr(c, 'log')(logging.ERROR, 'Resend requested'))),
     # Bed heating temperature update.
     (re.compile(r'T:(?P<ntemp>\d*\.?\d+)\sE:(?P<extruded>\d*)\s'
                 'B:(?P<btemp>\d*\.?\d+)$'),
@@ -160,7 +168,7 @@ class Marlin(IPrinter):
         self._serial = serial.Serial()
         self._serial_lock = threading.Lock()
         self._serial_buffersize = DEFAULT_SERIAL_BUFFER_SIZE
-        self._serial_buffer = multiprocessing.Queue(self._serial_buffersize)
+        self._serial_buffer = queue.Queue(self._serial_buffersize)
         self._serial_buffer_last_log = ''
         # Timing
         self._read_loop_delay_sec = 0.001
@@ -352,10 +360,9 @@ class Marlin(IPrinter):
                 self._callbacks.log(logging.DEBUG,
                                     'Parsed response: ' + message)
                 each[1](matched.groupdict(), self._callbacks)
-                # Response message indicates a command was processed.
-                # Pop an item off the serial buffer.
-                if not self._serial_buffer.empty():
-                    self._serial_buffer.get()
+                # Response message indicates a command was processed so pop.
+                # an item off the serial buffer.
+                self._pop_serial_buffer()
                 return
         for each in EVENT_MSG_PATTERNS:
             matched = each[0].match(message)
@@ -372,11 +379,24 @@ class Marlin(IPrinter):
         self._callbacks.log(logging.ERROR, 'Unparsed message: ' + message)
         # An unparsed message sometimes indicates a message was "split" across
         # multiple lines and thus did not match a regex. This should not
-        # happen but occasionally does causing the buffer to fill and printing
-        # to stop. Until we work out why this splitting occurs and how to fix
-        # it we simply take a message off the buffer for each of these.
-        if not self._serial_buffer.empty():
-            self._serial_buffer.get()
+        # happen but occasionally does so we simply pop the buffer for each of
+        # these.
+        self._pop_serial_buffer()
+
+    def _pop_serial_buffer(self):
+        """
+        Pop an item from the serial buffer.
+
+        Note that we do not care about the content of the item itself. The
+        serial buffer is used purely as a counter to ensure we keep Marlin's
+        buffer full without over-running.
+        """
+        try:
+            self._serial_buffer.get_nowait()
+        except queue.Empty:
+            # Because unparsed messages can occur before we've sent anything
+            # to Marlin we may try to pop from an empty queue.
+            pass
 
     def set_temp(self, bed=None, nozzle1=None, nozzle2=None):
         if bed is not None:
