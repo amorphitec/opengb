@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.23.0] - 2016-08-08
+## Changed:
+- Pop serial buffer in single call to prevent race conditions
+- Instead of multiprocessing.Queue use the more generic queue.Queue
+- Catch Marlin Resend messages
+
 ## [0.22.3] - 2016-07-17
 ## Fixed
 - Virtualenv now ues any available python 3
