@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 * This project follows the guidelines outlined on [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.23.0] - 2016-08-08
+## Changed:
 - Pop serial buffer in single call to prevent race conditions
 - Instead of multiprocessing.Queue use the more generic queue.Queue
 - Catch Marlin Resend messages
