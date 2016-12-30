@@ -5,7 +5,13 @@ OpenGB is a 3D printer control interface.
 
 .. image:: ../images/interface_01.png
 
-OpenGB is designed for the `Open Gigabot`_ open-source 3D printer designed and built by `re:3D`_. It should also be compatible with other printers running `Marlin`_ firmware and a wider range of open-source firmware will be supported in the future.
+OpenGB was originally created for the `Open Gigabot`_ open-source 3D printer designed and built by `re:3D`_:
+
+* __Interface Design:__ Katy Jeremko
+* __Backend Development:__ James Stewart
+* __Frontend Development:__ Levi Lalla
+
+OpenGB is also be compatible with other printers running `Marlin`_ firmware and a wider range of open-source firmware will be supported in the future.
 
 .. toctree::
     :caption: Usage
