@@ -1,5 +1,13 @@
 # Open Gigabot Controller.
 
+**This project is discontinued.**
+
+OpenGB was partly sponsored by [re:3D](https://re3d.org) as part of the [Open Gigabot](https://www.kickstarter.com/projects/re3d/open-gigabot-an-open-source-gigabot-3d-printer-exp) project.
+
+Ultimately [Octoprint](https://octoprint.org/) emerged as a better-resourced and more mature alternative and so work on OpenGB was discontinued in 2017.
+
+You can learn more about OpenGB by watching [@amorphic](https://github.com/amorphic/)'s PyCon AU talk _[Controlling a 3D printer with Python](https://www.youtube.com/watch?v=qgvnPB_77z8)_.
+
 ## Docs
 
 Visit http://opengb.readthedocs.org for all documentation

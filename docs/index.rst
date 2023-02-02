@@ -1,6 +1,14 @@
 OpenGB
 ======
 
+**This project is discontinued.**
+
+OpenGB was partly sponsored by re:3D as part of the Open Gigabot project.
+
+Ultimately Octoprint emerged as a better-resourced and more mature alternative and so work on OpenGB was discontinued in 2017.
+
+You can learn more about OpenGB by watching @amorphic's PyCon AU `talk`_ **Controlling a 3D printer with Python**.
+
 OpenGB is a 3D printer control interface.
 
 .. image:: ../images/interface_01.png
@@ -38,3 +46,4 @@ Indices and tables
 .. _Open Gigabot: https://www.kickstarter.com/projects/re3d/open-gigabot-an-open-source-gigabot-3d-printer-exp
 .. _`re:3D`: https://re3d.org/
 .. _Marlin: http://www.marlinfirmware.org/index.php/Main_Page
+.. _talk: https://www.youtube.com/watch?v=qgvnPB_77z8
